@@ -11,7 +11,7 @@ public class ConstraintHandler {
         Constraints currentConstraints = new Constraints(incumbents,majMin,pop,vap,cvap,geoComp,graphComp,popFat);
         currentJob.setCurrentConstraints(currentConstraints);
         // count the remaining districts
-        return currentJob.countRemainDistrictings(currentConstraints);
+        return currentJob.countRemainDistrictings();
     }
 
     @Override

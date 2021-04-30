@@ -4,6 +4,8 @@ import java.util.Collection;
 
 public class Constraints {
     private Collection<Integer> incumbentsID;
+    private Minorities minoritySelected;
+    private float minorityThreshold;
     private int majorityMinorityDistricts;
     private float totalPopulation;
     private float votingAgePopulation;
@@ -12,8 +14,13 @@ public class Constraints {
     private float graphCompactness;
     private float populationFatness;
 
-    public Constraints(Collection<Integer> incumbentsID, int majorityMinorityDistricts, float totalPopulation, float votingAgePopulation, float citizenAgePopulation, float geographicCompactness, float graphCompactness, float populationFatness) {
+    public Constraints(Collection<Integer> incumbentsID, Minorities minoritySelected, float minorityThreshold,
+                       int majorityMinorityDistricts, float totalPopulation, float votingAgePopulation,
+                       float citizenAgePopulation, float geographicCompactness, float graphCompactness,
+                       float populationFatness) {
         this.incumbentsID = incumbentsID;
+        this.minoritySelected = minoritySelected;
+        this.minorityThreshold = minorityThreshold;
         this.majorityMinorityDistricts = majorityMinorityDistricts;
         this.totalPopulation = totalPopulation;
         this.votingAgePopulation = votingAgePopulation;

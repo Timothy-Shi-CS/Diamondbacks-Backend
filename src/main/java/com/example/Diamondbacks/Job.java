@@ -35,12 +35,14 @@ public class Job {
     public Collection<Districting> filterJobByConstraint(Constraints constraints){
         return null;
     }
-    public int countRemainDistrictings(Constraints constraints){
+    public int countRemainDistrictings(){
         // write method here to count districtings that fit constraints
+
         return 10;
     }
     public String getJobSummary(){
-        return null;
+        String jobSummary = "Cooling Period:" + this.getCoolingPeriod() + "Rounds:" + this.getRounds();
+        return jobSummary;
     }
     public String getPrelimAnalysis(){
         return null;
