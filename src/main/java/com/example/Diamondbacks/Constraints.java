@@ -7,27 +7,43 @@ public class Constraints {
     private Minorities minoritySelected;
     private float minorityThreshold;
     private int majorityMinorityDistricts;
-    private float totalPopulation;
-    private float votingAgePopulation;
-    private float citizenAgePopulation;
+    private float totalPopulationEquality;
+    private float votingAgePopulationEquality;
+    private float citizenAgePopulationEquality;
     private float geographicCompactness;
     private float graphCompactness;
     private float populationFatness;
 
     public Constraints(Collection<Integer> incumbentsID, Minorities minoritySelected, float minorityThreshold,
-                       int majorityMinorityDistricts, float totalPopulation, float votingAgePopulation,
-                       float citizenAgePopulation, float geographicCompactness, float graphCompactness,
+                       int majorityMinorityDistricts, float totalPopulationEquality, float votingAgePopulationEquality,
+                       float citizenAgePopulationEquality, float geographicCompactness, float graphCompactness,
                        float populationFatness) {
         this.incumbentsID = incumbentsID;
         this.minoritySelected = minoritySelected;
         this.minorityThreshold = minorityThreshold;
         this.majorityMinorityDistricts = majorityMinorityDistricts;
-        this.totalPopulation = totalPopulation;
-        this.votingAgePopulation = votingAgePopulation;
-        this.citizenAgePopulation = citizenAgePopulation;
+        this.totalPopulationEquality = totalPopulationEquality;
+        this.votingAgePopulationEquality = votingAgePopulationEquality;
+        this.citizenAgePopulationEquality = citizenAgePopulationEquality;
         this.geographicCompactness = geographicCompactness;
         this.graphCompactness = graphCompactness;
         this.populationFatness = populationFatness;
+    }
+
+    public Minorities getMinoritySelected() {
+        return minoritySelected;
+    }
+
+    public void setMinoritySelected(Minorities minoritySelected) {
+        this.minoritySelected = minoritySelected;
+    }
+
+    public float getMinorityThreshold() {
+        return minorityThreshold;
+    }
+
+    public void setMinorityThreshold(float minorityThreshold) {
+        this.minorityThreshold = minorityThreshold;
     }
 
     @Override
@@ -60,20 +76,28 @@ public class Constraints {
         this.majorityMinorityDistricts = majorityMinorityDistricts;
     }
 
-    public float getTotalPopulation() {
-        return totalPopulation;
+    public float getTotalPopulationEquality() {
+        return totalPopulationEquality;
     }
 
-    public void setTotalPopulation(float totalPopulation) {
-        this.totalPopulation = totalPopulation;
+    public void setTotalPopulationEquality(float totalPopulationEquality) {
+        this.totalPopulationEquality = totalPopulationEquality;
     }
 
-    public float getVotingAgePopulation() {
-        return votingAgePopulation;
+    public float getVotingAgePopulationEquality() {
+        return votingAgePopulationEquality;
     }
 
-    public void setVotingAgePopulation(float votingAgePopulation) {
-        this.votingAgePopulation = votingAgePopulation;
+    public void setVotingAgePopulationEquality(float votingAgePopulationEquality) {
+        this.votingAgePopulationEquality = votingAgePopulationEquality;
+    }
+
+    public float getCitizenAgePopulationEquality() {
+        return citizenAgePopulationEquality;
+    }
+
+    public void setCitizenAgePopulationEquality(float citizenAgePopulationEquality) {
+        this.citizenAgePopulationEquality = citizenAgePopulationEquality;
     }
 
     public float getCitizenAgePopulation() {

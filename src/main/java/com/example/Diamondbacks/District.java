@@ -19,21 +19,6 @@ public class District {
     public Measure calDeviationFromAvgDist(){
         return null;
     }
-    public Measure calDeviationFromEnactDistGeometric(){
-        return null;
-    }
-    public Measure calDeviationFromEnactDistPopulation() {
-        return null;
-    }
-    public Measure calDeometricCompactness() {
-        return null;
-    }
-    public Measure calGraphCompactness() {
-        return null;
-    }
-    public Measure calPopulationFatness(){
-        return null;
-    }
     public Measure calPoliticalFairness(){
         return null;
     }

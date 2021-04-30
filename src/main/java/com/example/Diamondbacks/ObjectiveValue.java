@@ -1,13 +1,15 @@
 package com.example.Diamondbacks;
 
 import java.util.Collection;
+import java.util.Map;
 
 public class ObjectiveValue {
     private float overallObjectiveValueScore;
-    private Collection<Measure> measures;
+    private Map<MeasureType, Measure> measures;
     public float calOverallObjectiveValueScore(){
         return 0;
     }
+
 
     @Override
     public String toString() {
@@ -25,11 +27,11 @@ public class ObjectiveValue {
         this.overallObjectiveValueScore = overallObjectiveValueScore;
     }
 
-    public Collection<Measure> getMeasures() {
+    public Map<MeasureType, Measure> getMeasures() {
         return measures;
     }
 
-    public void setMeasures(Collection<Measure> measures) {
+    public void setMeasures(Map<MeasureType, Measure> measures) {
         this.measures = measures;
     }
 }
