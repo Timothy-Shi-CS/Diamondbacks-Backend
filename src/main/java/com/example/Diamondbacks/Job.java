@@ -54,7 +54,8 @@ public class Job {
     public float calMajMinDevFromAvg(Map<Integer, Float> map){
         return 0;
     }
-    public Districting findDistrinctingByID(int id){
+    public Districting findDistrictingByID(int id){
+        // Implement method for use case 15
         return null;
     }
 
