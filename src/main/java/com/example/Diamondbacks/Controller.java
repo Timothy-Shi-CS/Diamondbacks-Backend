@@ -136,13 +136,19 @@ public class Controller {
                                          @PathParam("tvap") float tvaPop, @PathParam("geoComp") float geoComp,
                                          @PathParam("graphComp") float graphComp, @PathParam("popFat") float popFat){
         ConstraintHandler constraintHandler = new ConstraintHandler();
+        Collection<Integer> incumbentsProtected = convertIncumbentsArray(incumbentIDs);
+
+        int remainingDistrictings = constraintHandler.setConstraintsHandler(this.currentJob,majMin,incumbentsProtected,totalPop,tvaPop,cvaPop,geoComp,graphComp,popFat);
+        //return the number of districtings remaining
+        return Response.status(Response.Status.OK).entity(Integer.toString(remainingDistrictings)).build();
+    }
+
+    private Collection<Integer> convertIncumbentsArray(String incumbentIDs){
         String[] incumbents = incumbentIDs.split(",");
         Collection<Integer> incumbentsProtected = new ArrayList<>();
         for(String incumbent: incumbents) {
             incumbentsProtected.add(Integer.parseInt(incumbent));
         }
-        int remainingDistrictings = constraintHandler.setConstraintsHandler(this.currentJob,majMin,incumbentsProtected,totalPop,tvaPop,cvaPop,geoComp,graphComp,popFat);
-        //return the number of districtings remaining
-        return Response.status(Response.Status.OK).entity(Integer.toString(remainingDistrictings)).build();
+        return incumbentsProtected;
     }
 }
