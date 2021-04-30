@@ -8,6 +8,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Collection;
 
@@ -44,12 +45,14 @@ public class Controller {
     @GET
     @Path("/job/state={stateName}")
     public Response callJobHandler(@PathParam("stateName") String stateName){
+        JobHandler job = new JobHandler();
         return Response.status(Response.Status.OK).entity("Hello").build();
     }
 
     @GET
     @Path("/box-and-whisker/districting={id}&minority={minority}")
     public Response callBAWHandler(@PathParam("id") int id, @PathParam("minority") String minority){
+        BoxAndWhiskerHandler baw = new BoxAndWhiskerHandler();
         return Response.status(Response.Status.OK).entity("Hello").build();
     }
 
@@ -60,24 +63,28 @@ public class Controller {
                                           @PathParam("pop") float pop, @PathParam("vap") float vap,
                                           @PathParam("cvap") float cvap, @PathParam("geoComp") float geoComp,
                                           @PathParam("graphComp") float  graphComp, @PathParam("popFat") float popFat){
+        ConstraintHandler constraint = new ConstraintHandler();
         return Response.status(Response.Status.OK).entity("Hello").build();
     }
 
     @GET
     @Path("/districting/id={districtingID}")
     public Response callDistrictingHandler(@PathParam("districtingID") int districtingID){
+        DistrictingHandler districting = new DistrictingHandler();
         return Response.status(Response.Status.OK).entity("Hello").build();
     }
 
     @GET
     @Path("/district/id={districtID}")
     public Response callDistrictHandler(@PathParam("districtID") int districtID){
+        DistrictHandler district = new DistrictHandler();
         return Response.status(Response.Status.OK).entity("Hello").build();
     }
 
     @GET
     @Path("/state={stateName}")
     public Response callStateHandler(@PathParam("stateName") String stateName){
+        StateHandler state = new StateHandler();
         return Response.status(Response.Status.OK).entity("Hello").build();
     }
 
@@ -119,7 +126,10 @@ public class Controller {
 
     @GET
     @Path("/jobs={stateName}")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getJobs(@PathParam("stateName") String stateName){
+        StateHandler state = new StateHandler();
+        state.getJobs(stateName);
         return Response.status(Response.Status.OK).entity("Hello").build();
     }
 
