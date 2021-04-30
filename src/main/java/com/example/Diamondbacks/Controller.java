@@ -130,7 +130,10 @@ public class Controller {
     @GET
     @Path("/districting-objective-value/id={districtingID}")
     public Response getDistrictingObjectiveValue(@PathParam("districtingID") int districtingID){
-        return Response.status(Response.Status.OK).entity("Hello").build();
+        DistrictingHandler districtingHandler = new DistrictingHandler();
+        currentJob = new Job();
+        String result = districtingHandler.getObjectiveFunctionScore(currentJob, districtingID);
+        return Response.status(Response.Status.OK).entity(result).build();
     }
 
     @GET

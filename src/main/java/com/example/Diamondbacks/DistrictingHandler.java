@@ -4,8 +4,10 @@ import java.util.Collection;
 
 public class DistrictingHandler {
     private Districting currentDistricting;
-    public ObjectiveValue getObjectiveFunctionScore(int districtingID){
-        return null;
+    public String getObjectiveFunctionScore(Job currentJob, int districtingID){
+        Districting currentDistricting = currentJob.findDistrictingByID(districtingID);
+        ObjectiveValue districtingMeasures = currentDistricting.getDistrictingMeasures();
+        return districtingMeasures.toString();
     }
     public String getDistrictingBoundary(int districtingID){
         return null;
