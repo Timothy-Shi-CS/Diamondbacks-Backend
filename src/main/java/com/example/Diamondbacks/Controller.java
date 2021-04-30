@@ -15,6 +15,10 @@ import java.util.Collection;
 // http://localhost:8080/Diamondbacks-1.0-SNAPSHOT/api/controller
 @Path("/controller")
 public class Controller {
+    private State state;
+    private Job job;
+    private EntityManager em;
+
     @GET
     @Path("/data")
     @Produces("text/plain")
@@ -53,13 +57,26 @@ public class Controller {
     @Path("/box-and-whisker/districting={id}&minority={minority}")
     public Response callBAWHandler(@PathParam("id") int id, @PathParam("minority") String minority){
         BoxAndWhiskerHandler baw = new BoxAndWhiskerHandler();
+        Minorities minorityName = null;
+        switch (minority) {
+            case "hispanic":
+                minorityName = Minorities.HISPANIC;
+                break;
+            case "black":
+                minorityName = Minorities.BLACK;
+                break;
+            case "asian":
+                minorityName = Minorities.ASIAN;
+                break;
+        }
+        baw.makeBoxAndWhisker(state, id, minorityName);
         return Response.status(Response.Status.OK).entity("Hello").build();
     }
 
     @GET
     @Path("/constraint/job={jobID}&maj-min={majMin}&incumbent={incumID}&pop={pop}&vap={vap}&cvap={cvap}&geo-comp={geoComp}&graph-comp={graphComp}&pop-fat={popFat}")
     public Response callConstraintHandler(@PathParam("jobID") int jobID, @PathParam("majMin") int majMin,
-                                          @PathParam("incumID") Collection<Integer> incumbentIDs,
+                                          @PathParam("incumID") int incumbentIDs,
                                           @PathParam("pop") float pop, @PathParam("vap") float vap,
                                           @PathParam("cvap") float cvap, @PathParam("geoComp") float geoComp,
                                           @PathParam("graphComp") float  graphComp, @PathParam("popFat") float popFat){
@@ -89,14 +106,17 @@ public class Controller {
     }
 
     @GET
-    @Path("/deviation/id={districtingID}")
-    public Response calculateDeviation(@PathParam("districtingID") int districtingID){
+    @Path("/deviation/districting={id}")
+    public Response calculateDeviation(@PathParam("id") int districtingID){
+//        DistrictingHandler districting =
         return Response.status(Response.Status.OK).entity("Hello").build();
     }
 
     @GET
     @Path("/objective-value")
     public Response getObjectiveValue(){
+        DistrictingHandler districting = new DistrictingHandler();
+//        districting.getObjectiveFunctionScore();
         return Response.status(Response.Status.OK).entity("Hello").build();
     }
 
@@ -133,10 +153,10 @@ public class Controller {
         return Response.status(Response.Status.OK).entity("Hello").build();
     }
 
-    @GET
     @Path("/constructed-constraint/job={jobID}&maj-min={majMin}&incumbent={incumID}&pop={pop}&vap={vap}&cvap={cvap}&tvap={tvap}&geo-comp={geoComp}&graph-comp={graphComp}&pop-fat={popFat}")
+    @GET
     public Response constructConstraints(@PathParam("jobID") float jobID, @PathParam("majMin") int majMin,
-                                         @PathParam("incumID") Collection<Integer> incumbentIDs,
+                                         @PathParam("incumID") int incumbentIDs,
                                          @PathParam("pop") float totalPop, @PathParam("cvap") float cvaPop,
                                          @PathParam("tvap") float tvaPop, @PathParam("geoComp") float geoComp,
                                          @PathParam("graphComp") float graphComp, @PathParam("popFat") float popFat){
