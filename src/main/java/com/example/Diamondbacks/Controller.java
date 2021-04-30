@@ -1,11 +1,14 @@
 package com.example.Diamondbacks;
 
+import com.mysql.cj.x.protobuf.MysqlxCrud;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.Collection;
 
 // http://localhost:8080/Diamondbacks-1.0-SNAPSHOT/api/controller
@@ -133,8 +136,13 @@ public class Controller {
                                          @PathParam("tvap") float tvaPop, @PathParam("geoComp") float geoComp,
                                          @PathParam("graphComp") float graphComp, @PathParam("popFat") float popFat){
         ConstraintHandler constraintHandler = new ConstraintHandler();
-//        int remainingDistrictings = constraintHandler.setConstraintsHandler(this.currentJob,majMin,incumbentIDs,totalPop,tvaPop,cvaPop,geoComp,graphComp,popFat);
+        String[] incumbents = incumbentIDs.split(",");
+        Collection<Integer> incumbentsProtected = new ArrayList<>();
+        for(String incumbent: incumbents) {
+            incumbentsProtected.add(Integer.parseInt(incumbent));
+        }
+        int remainingDistrictings = constraintHandler.setConstraintsHandler(this.currentJob,majMin,incumbentsProtected,totalPop,tvaPop,cvaPop,geoComp,graphComp,popFat);
         //return the number of districtings remaining
-        return Response.status(Response.Status.OK).entity("hello").build();
+        return Response.status(Response.Status.OK).entity(Integer.toString(remainingDistrictings)).build();
     }
 }
