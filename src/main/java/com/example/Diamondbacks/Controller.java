@@ -8,6 +8,7 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -49,12 +50,27 @@ public class Controller {
     @GET
     @Path("/job/state={stateName}")
     public Response callJobHandler(@PathParam("stateName") String stateName){
+        JobHandler job = new JobHandler();
         return Response.status(Response.Status.OK).entity("Hello").build();
     }
 
     @GET
     @Path("/box-and-whisker/districting={id}&minority={minority}")
     public Response callBAWHandler(@PathParam("id") int id, @PathParam("minority") String minority){
+        BoxAndWhiskerHandler baw = new BoxAndWhiskerHandler();
+        Minorities minorityName = null;
+        switch (minority) {
+            case "hispanic":
+                minorityName = Minorities.HISPANIC;
+                break;
+            case "black":
+                minorityName = Minorities.BLACK;
+                break;
+            case "asian":
+                minorityName = Minorities.ASIAN;
+                break;
+        }
+        baw.makeBoxAndWhisker(state, id, minorityName);
         return Response.status(Response.Status.OK).entity("Hello").build();
     }
 
@@ -65,36 +81,43 @@ public class Controller {
                                           @PathParam("pop") float pop, @PathParam("vap") float vap,
                                           @PathParam("cvap") float cvap, @PathParam("geoComp") float geoComp,
                                           @PathParam("graphComp") float  graphComp, @PathParam("popFat") float popFat){
+        ConstraintHandler constraint = new ConstraintHandler();
         return Response.status(Response.Status.OK).entity("Hello").build();
     }
 
     @GET
     @Path("/districting/id={districtingID}")
     public Response callDistrictingHandler(@PathParam("districtingID") int districtingID){
+        DistrictingHandler districting = new DistrictingHandler();
         return Response.status(Response.Status.OK).entity("Hello").build();
     }
 
     @GET
     @Path("/district/id={districtID}")
     public Response callDistrictHandler(@PathParam("districtID") int districtID){
+        DistrictHandler district = new DistrictHandler();
         return Response.status(Response.Status.OK).entity("Hello").build();
     }
 
     @GET
     @Path("/state={stateName}")
     public Response callStateHandler(@PathParam("stateName") String stateName){
+        StateHandler state = new StateHandler();
         return Response.status(Response.Status.OK).entity("Hello").build();
     }
 
     @GET
-    @Path("/deviation/id={districtingID}")
-    public Response calculateDeviation(@PathParam("districtingID") int districtingID){
+    @Path("/deviation/districting={id}")
+    public Response calculateDeviation(@PathParam("id") int districtingID){
+//        DistrictingHandler districting =
         return Response.status(Response.Status.OK).entity("Hello").build();
     }
 
     @GET
     @Path("/objective-value")
     public Response getObjectiveValue(){
+        DistrictingHandler districting = new DistrictingHandler();
+//        districting.getObjectiveFunctionScore();
         return Response.status(Response.Status.OK).entity("Hello").build();
     }
 
@@ -124,12 +147,15 @@ public class Controller {
 
     @GET
     @Path("/jobs={stateName}")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getJobs(@PathParam("stateName") String stateName){
+        StateHandler state = new StateHandler();
+        state.getJobs(stateName);
         return Response.status(Response.Status.OK).entity("Hello").build();
     }
 
-    @GET
     @Path("/constructed-constraint/job={jobID}&maj-min={majMin}&incumbent={incumID}&pop={pop}&vap={vap}&cvap={cvap}&tvap={tvap}&geo-comp={geoComp}&graph-comp={graphComp}&pop-fat={popFat}")
+    @GET
     public Response constructConstraints(@PathParam("jobID") float jobID, @PathParam("majMin") int majMin,
                                          @PathParam("incumID") String incumbentIDs,
                                          @PathParam("pop") float totalPop, @PathParam("cvap") float cvaPop,

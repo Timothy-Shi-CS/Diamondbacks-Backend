@@ -3,10 +3,19 @@ package com.example.Diamondbacks;
 import java.util.Collection;
 
 public class Districting {
+
     private CensusInfo censusInfo;
     private ObjectiveValue districtingMeasures;
     private Collection<District> districtsList;
     private int districtingID;
+
+    public Districting(CensusInfo censusInfo, ObjectiveValue districtingMeasures, Collection<District> districtsList,
+                       int districtingID){
+        this.censusInfo = censusInfo;
+        this.districtingMeasures = districtingMeasures;
+        this.districtsList = districtsList;
+        this.districtingID = districtingID;
+    }
 
     public Geometry calGeometry(){
         return null;

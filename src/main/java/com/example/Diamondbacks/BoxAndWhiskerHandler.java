@@ -3,7 +3,11 @@ package com.example.Diamondbacks;
 import javax.json.Json;
 
 public class BoxAndWhiskerHandler {
-    public Json makeBoxAndWhisker(String state, int id, String minority){
+    public Json makeBoxAndWhisker(State state, int id, Minorities minority){
+        BoxAndWhisker currentBAW = state.getCurrentBoxAndWhisker();
+        Districting currentDistricting = state.getCurrentDistricting();
+        currentBAW.setCurrentDistricting(currentDistricting);
+        currentBAW.setMinorityToGraph(minority);
         return null;
     }
 }

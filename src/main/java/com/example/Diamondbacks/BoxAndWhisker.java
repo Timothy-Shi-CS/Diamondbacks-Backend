@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Map;
 
 public class BoxAndWhisker {
+    private Districting currentDistricting;
     private Map<Minorities, Collection<Float>> currentDistrictingData;
     private Map<Minorities, Collection<Float>> enactedDistrictingData;
     private Minorities minorityToGraph;
@@ -110,5 +111,10 @@ public class BoxAndWhisker {
 
     public void setMinorityDataMap(Map<Minorities, Collection<Collection<Float>>> minorityDataMap) {
         this.minorityDataMap = minorityDataMap;
+    }
+
+    public void setCurrentDistricting(Districting currentDistricting) {
+        // Build currentDistrictingData map
+
     }
 }
