@@ -61,18 +61,7 @@ public class Controller {
     @Path("/box-and-whisker/districting={id}&minority={minority}")
     public Response callBAWHandler(@PathParam("id") int id, @PathParam("minority") String minority) {
         BoxAndWhiskerHandler baw = new BoxAndWhiskerHandler();
-        Minorities minorityName = null;
-        switch (minority) {
-            case "hispanic":
-                minorityName = Minorities.HISPANIC;
-                break;
-            case "black":
-                minorityName = Minorities.BLACK;
-                break;
-            case "asian":
-                minorityName = Minorities.ASIAN;
-                break;
-        }
+        Minorities minorityName = this.minority;
         baw.makeBoxAndWhisker(this.state, id, minorityName);
         return Response.status(Response.Status.OK).entity("Hello").build();
     }
@@ -187,6 +176,7 @@ public class Controller {
                 minorityName = Minorities.ASIAN;
                 break;
         }
+        this.minority = minorityName;
         int remainingDistrictings = constraintHandler.setConstraintsHandler(this.currentJob, minorityName,
                 minorityThreshold, majMin, incumbentsProtected, totalPop, tvaPop, cvaPop, geoComp, graphComp, popFat);
         //return the number of districtings remaining
