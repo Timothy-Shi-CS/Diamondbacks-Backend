@@ -11,6 +11,7 @@ public class Job {
     private Districting currentAvergageDistricting;
     private int id;
     private Analysis analysis;
+    private Districting currentDistricting;
 
     public void getMGGGAtt() {
 
@@ -31,7 +32,8 @@ public class Job {
         return null;
     }
     public int countRemainDistrictings(Constraints constraints){
-        return 0;
+        // write method here to count districtings that fit constraints
+        return 10;
     }
     public String getJobSummary(){
         return null;

@@ -26,6 +26,9 @@ public class DistrictingHandler {
                 '}';
     }
 
+//    private Geometry getDistrictingGeometry(int districtingID, Job currentJob){
+//        this.currentDistricting = currentJob.getDistrictingByID(districtingID);
+//    }
     public Districting getCurrentDistricting() {
         return currentDistricting;
     }
