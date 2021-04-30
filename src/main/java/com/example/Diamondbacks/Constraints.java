@@ -12,6 +12,17 @@ public class Constraints {
     private float graphCompactness;
     private float populationFatness;
 
+    public Constraints(Collection<Integer> incumbentsID, int majorityMinorityDistricts, float totalPopulation, float votingAgePopulation, float citizenAgePopulation, float geographicCompactness, float graphCompactness, float populationFatness) {
+        this.incumbentsID = incumbentsID;
+        this.majorityMinorityDistricts = majorityMinorityDistricts;
+        this.totalPopulation = totalPopulation;
+        this.votingAgePopulation = votingAgePopulation;
+        this.citizenAgePopulation = citizenAgePopulation;
+        this.geographicCompactness = geographicCompactness;
+        this.graphCompactness = graphCompactness;
+        this.populationFatness = populationFatness;
+    }
+
     @Override
     public String toString() {
         return "Constraints{" +
