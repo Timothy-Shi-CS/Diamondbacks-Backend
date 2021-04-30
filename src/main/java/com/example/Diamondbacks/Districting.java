@@ -8,20 +8,20 @@ public class Districting {
     private CensusInfo censusInfo;
     private ObjectiveValue districtingMeasures;
     private Map<Integer, District> districtsMap;
+    private Collection<IncumbentCandidate> protectedIncumbentCandidateList;
     private int districtingID;
 
-    public Districting(CensusInfo censusInfo, ObjectiveValue districtingMeasures, Map<Integer, District> districtsMap, int districtingID) {
+    public Districting(CensusInfo censusInfo, ObjectiveValue districtingMeasures, Map<Integer, District> districtsMap,
+                       Collection<IncumbentCandidate> protectedIncumbentCandidateList, int districtingID) {
         this.censusInfo = censusInfo;
         this.districtingMeasures = districtingMeasures;
         this.districtsMap = districtsMap;
+        this.protectedIncumbentCandidateList = protectedIncumbentCandidateList;
         this.districtingID = districtingID;
     }
 
     public boolean satisfyConstraints(Constraints userConstraints){
 //        this.incumbentsID = incumbentsID;
-//        this.minoritySelected = minoritySelected;
-//        this.minorityThreshold = minorityThreshold;
-//        this.majorityMinorityDistricts = majorityMinorityDistricts;
 
         if(userConstraints.getIncumbentsID().size() != 0){
             //check if the incumebents are protected
@@ -73,12 +73,6 @@ public class Districting {
         }
         return true;
     }
-    public Geometry calGeometry(){
-        return null;
-    }
-    public void renumberDistricts(){
-        //done as part of pre-processing on seawulf
-    }
     public int countMajorityMinorityDistrict(Constraints userConstraints){
         int count = 0;
         Minorities minorityLookUp = userConstraints.getMinoritySelected();
@@ -88,7 +82,6 @@ public class Districting {
             if(dist.getCensusInfo().getMinorities().get(minorityLookUp) > minorityMin){
                 count++;
             }
-
         }
         return count;
     }
@@ -96,6 +89,7 @@ public class Districting {
         //optinal?
         return null;
     }
+
     public Measure calDevFromAvgDistGeo(){
         return null;
     }
