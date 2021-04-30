@@ -27,16 +27,20 @@ public class DistrictingHandler {
                 '}';
     }
 
-    private Collection<Geometry> getDistrictingGeometry(int districtingID, Job currentJob){
-        this.currentDistricting = currentJob.getDistrictingByID(districtingID);
-        currentJob.setCurrentDistricting(this.currentDistricting);
-        Collection<District> districts = this.currentDistricting.getDistrictsList();
+    private Collection<Geometry> getGeometries(Collection<District> districts){
         Collection<Geometry> districtGeometries = new ArrayList<>();
         for(District district: districts){
             Geometry districtGeometry = district.getDistrictGeometry();
             districtGeometries.add(districtGeometry);
         }
         return districtGeometries;
+    }
+
+    private Collection<Geometry> getDistrictingGeometry(int districtingID, Job currentJob){
+        this.currentDistricting = currentJob.getDistrictingByID(districtingID);
+        currentJob.setCurrentDistricting(this.currentDistricting);
+        Collection<District> districts = this.currentDistricting.getDistrictsList();
+        return getGeometries(districts);
     }
 
     public Districting getCurrentDistricting() {
