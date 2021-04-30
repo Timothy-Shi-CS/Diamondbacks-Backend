@@ -140,8 +140,8 @@ public class Controller {
     @Path("/districting-boundary/id={districtingID}")
     public Response getDistrictingBoundary(@PathParam("districtingID") int districtingID){
         DistrictingHandler districtingHandler = new DistrictingHandler();
-
-        return Response.status(Response.Status.OK).entity("Hello").build();
+        Collection<Geometry> geometries = districtingHandler.getDistrictingGeometry(districtingID, this.currentJob);
+        return Response.status(Response.Status.OK).entity(geometries).build();
     }
 
     @GET

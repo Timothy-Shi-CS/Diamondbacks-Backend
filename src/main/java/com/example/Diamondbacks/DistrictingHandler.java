@@ -36,7 +36,7 @@ public class DistrictingHandler {
         return districtGeometries;
     }
 
-    private Collection<Geometry> getDistrictingGeometry(int districtingID, Job currentJob){
+    public Collection<Geometry> getDistrictingGeometry(int districtingID, Job currentJob){
         this.currentDistricting = currentJob.getDistrictingByID(districtingID);
         currentJob.setCurrentDistricting(this.currentDistricting);
         Collection<District> districts = this.currentDistricting.getDistrictsList();
