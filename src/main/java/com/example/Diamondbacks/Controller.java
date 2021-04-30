@@ -4,16 +4,18 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.util.Collection;
 
 // http://localhost:8080/Diamondbacks-1.0-SNAPSHOT/api/controller
 @Path("/controller")
 public class Controller {
+
+    private State state;
+    private Job currentJob;
+    private EntityManager em;
+
     @GET
     @Path("/data")
     @Produces("text/plain")
@@ -56,7 +58,7 @@ public class Controller {
     @GET
     @Path("/constraint/job={jobID}&maj-min={majMin}&incumbent={incumID}&pop={pop}&vap={vap}&cvap={cvap}&geo-comp={geoComp}&graph-comp={graphComp}&pop-fat={popFat}")
     public Response callConstraintHandler(@PathParam("jobID") int jobID, @PathParam("majMin") int majMin,
-                                          @PathParam("incumID") Collection<Integer> incumbentIDs,
+                                          @PathParam("incumID") String incumbentIDs,
                                           @PathParam("pop") float pop, @PathParam("vap") float vap,
                                           @PathParam("cvap") float cvap, @PathParam("geoComp") float geoComp,
                                           @PathParam("graphComp") float  graphComp, @PathParam("popFat") float popFat){
@@ -126,10 +128,13 @@ public class Controller {
     @GET
     @Path("/constructed-constraint/job={jobID}&maj-min={majMin}&incumbent={incumID}&pop={pop}&vap={vap}&cvap={cvap}&tvap={tvap}&geo-comp={geoComp}&graph-comp={graphComp}&pop-fat={popFat}")
     public Response constructConstraints(@PathParam("jobID") float jobID, @PathParam("majMin") int majMin,
-                                         @PathParam("incumID") Collection<Integer> incumbentIDs,
+                                         @PathParam("incumID") String incumbentIDs,
                                          @PathParam("pop") float totalPop, @PathParam("cvap") float cvaPop,
                                          @PathParam("tvap") float tvaPop, @PathParam("geoComp") float geoComp,
                                          @PathParam("graphComp") float graphComp, @PathParam("popFat") float popFat){
-        return Response.status(Response.Status.OK).entity("Hello").build();
+        ConstraintHandler constraintHandler = new ConstraintHandler();
+//        int remainingDistrictings = constraintHandler.setConstraintsHandler(this.currentJob,majMin,incumbentIDs,totalPop,tvaPop,cvaPop,geoComp,graphComp,popFat);
+        //return the number of districtings remaining
+        return Response.status(Response.Status.OK).entity("hello").build();
     }
 }
