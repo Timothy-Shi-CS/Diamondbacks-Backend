@@ -13,6 +13,10 @@ public class Job {
     private Analysis analysis;
     private Districting currentDistricting;
 
+    public void setCurrentDistricting(Districting currentDistricting) {
+        this.currentDistricting = currentDistricting;
+    }
+
     public void getMGGGAtt() {
 
     }

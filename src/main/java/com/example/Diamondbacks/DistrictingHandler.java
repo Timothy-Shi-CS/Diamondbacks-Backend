@@ -1,5 +1,6 @@
 package com.example.Diamondbacks;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class DistrictingHandler {
@@ -26,9 +27,18 @@ public class DistrictingHandler {
                 '}';
     }
 
-//    private Geometry getDistrictingGeometry(int districtingID, Job currentJob){
-//        this.currentDistricting = currentJob.getDistrictingByID(districtingID);
-//    }
+    private Collection<Geometry> getDistrictingGeometry(int districtingID, Job currentJob){
+        this.currentDistricting = currentJob.getDistrictingByID(districtingID);
+        currentJob.setCurrentDistricting(this.currentDistricting);
+        Collection<District> districts = this.currentDistricting.getDistrictsList();
+        Collection<Geometry> districtGeometries = new ArrayList<>();
+        for(District district: districts){
+            Geometry districtGeometry = district.getDistrictGeometry();
+            districtGeometries.add(districtGeometry);
+        }
+        return districtGeometries;
+    }
+
     public Districting getCurrentDistricting() {
         return currentDistricting;
     }
