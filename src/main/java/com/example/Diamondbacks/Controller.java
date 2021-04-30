@@ -18,6 +18,7 @@ import java.util.List;
 public class Controller {
 
     private State state;
+    private Minorities minority;
     private Job currentJob;
     private EntityManager em;
     private EntityManagerFactory emf = Persistence.createEntityManagerFactory("Diamondbacks");
@@ -60,19 +61,8 @@ public class Controller {
     @Path("/box-and-whisker/districting={id}&minority={minority}")
     public Response callBAWHandler(@PathParam("id") int id, @PathParam("minority") String minority) {
         BoxAndWhiskerHandler baw = new BoxAndWhiskerHandler();
-        Minorities minorityName = null;
-        switch (minority) {
-            case "hispanic":
-                minorityName = Minorities.HISPANIC;
-                break;
-            case "black":
-                minorityName = Minorities.BLACK;
-                break;
-            case "asian":
-                minorityName = Minorities.ASIAN;
-                break;
-        }
-        baw.makeBoxAndWhisker(state, id, minorityName);
+        Minorities minorityName = this.minority;
+        baw.makeBoxAndWhisker(this.state, id, minorityName);
         return Response.status(Response.Status.OK).entity("Hello").build();
     }
 
@@ -134,6 +124,7 @@ public class Controller {
     public Response getDistrictingObjectiveValue(@PathParam("districtingID") int districtingID) {
         DistrictingHandler districtingHandler = new DistrictingHandler();
         currentJob = new Job();
+        // needs to be this.currentJob
         String result = districtingHandler.getObjectiveFunctionScore(currentJob, districtingID);
         return Response.status(Response.Status.OK).entity(result).build();
     }
@@ -163,17 +154,31 @@ public class Controller {
         return Response.status(Response.Status.OK).entity(jobs).build();
     }
 
-    @Path("/constructed-constraint/job={jobID}&maj-min={majMin}&incumbent={incumID}&pop={pop}&vap={vap}&cvap={cvap}&tvap={tvap}&geo-comp={geoComp}&graph-comp={graphComp}&pop-fat={popFat}")
+    @Path("/constructed-constraint/job={jobID}&minority={minority}&threshold={threshold}&maj-min={majMin}&incumbent={incumID}&pop={pop}&vap={vap}&cvap={cvap}&tvap={tvap}&geo-comp={geoComp}&graph-comp={graphComp}&pop-fat={popFat}")
     @GET
-    public Response constructConstraints(@PathParam("jobID") float jobID, @PathParam("majMin") int majMin,
+    public Response constructConstraints(@PathParam("jobID") float jobID, @PathParam("minority") String minority,
+                                         @PathParam("threshold") float minorityThreshold, @PathParam("majMin") int majMin,
                                          @PathParam("incumID") String incumbentIDs,
                                          @PathParam("pop") float totalPop, @PathParam("cvap") float cvaPop,
                                          @PathParam("tvap") float tvaPop, @PathParam("geoComp") float geoComp,
                                          @PathParam("graphComp") float graphComp, @PathParam("popFat") float popFat) {
         ConstraintHandler constraintHandler = new ConstraintHandler();
         Collection<Integer> incumbentsProtected = convertIncumbentsArray(incumbentIDs);
-
-        int remainingDistrictings = constraintHandler.setConstraintsHandler(this.currentJob, majMin, incumbentsProtected, totalPop, tvaPop, cvaPop, geoComp, graphComp, popFat);
+        Minorities minorityName = null;
+        switch (minority) {
+            case "hispanic":
+                minorityName = Minorities.HISPANIC;
+                break;
+            case "black":
+                minorityName = Minorities.BLACK;
+                break;
+            case "asian":
+                minorityName = Minorities.ASIAN;
+                break;
+        }
+        this.minority = minorityName;
+        int remainingDistrictings = constraintHandler.setConstraintsHandler(this.currentJob, minorityName,
+                minorityThreshold, majMin, incumbentsProtected, totalPop, tvaPop, cvaPop, geoComp, graphComp, popFat);
         //return the number of districtings remaining
         return Response.status(Response.Status.OK).entity(Integer.toString(remainingDistrictings)).build();
     }
