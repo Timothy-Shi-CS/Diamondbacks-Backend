@@ -46,20 +46,6 @@ public class Constraints {
         this.minorityThreshold = minorityThreshold;
     }
 
-    @Override
-    public String toString() {
-        return "Constraints{" +
-                "incumbentsID=" + incumbentsID +
-                ", majorityMinorityDistricts=" + majorityMinorityDistricts +
-                ", totalPopulation=" + totalPopulation +
-                ", votingAgePopulation=" + votingAgePopulation +
-                ", citizenAgePopulation=" + citizenAgePopulation +
-                ", geographicCompactness=" + geographicCompactness +
-                ", graphCompactness=" + graphCompactness +
-                ", populationFatness=" + populationFatness +
-                '}';
-    }
-
     public Collection<Integer> getIncumbentsID() {
         return incumbentsID;
     }
@@ -98,14 +84,6 @@ public class Constraints {
 
     public void setCitizenAgePopulationEquality(float citizenAgePopulationEquality) {
         this.citizenAgePopulationEquality = citizenAgePopulationEquality;
-    }
-
-    public float getCitizenAgePopulation() {
-        return citizenAgePopulation;
-    }
-
-    public void setCitizenAgePopulation(float citizenAgePopulation) {
-        this.citizenAgePopulation = citizenAgePopulation;
     }
 
     public float getGeographicCompactness() {

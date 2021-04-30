@@ -80,13 +80,17 @@ public class Districting {
         //done as part of pre-processing on seawulf
     }
     public int countMajorityMinorityDistrict(Constraints userConstraints){
-        //todo
+        int count = 0;
         Minorities minorityLookUp = userConstraints.getMinoritySelected();
         float minorityMin = userConstraints.getMinorityThreshold();
         for(District dist: this.getDistrictsMap().values()){
+            //if the minority of the specified type has percentage > the one user selected
+            if(dist.getCensusInfo().getMinorities().get(minorityLookUp) > minorityMin){
+                count++;
+            }
 
         }
-        return 0;
+        return count;
     }
     public Measure calSplitCounties(){
         //optinal?
@@ -106,15 +110,6 @@ public class Districting {
         return null;
     }
 
-    @Override
-    public String toString() {
-        return "Districting{" +
-                "censusInfo=" + censusInfo +
-                ", districtingMeasures=" + districtingMeasures +
-                ", districtsList=" + districtsList +
-                ", districtingID=" + districtingID +
-                '}';
-    }
 
     public CensusInfo getCensusInfo() {
         return censusInfo;
