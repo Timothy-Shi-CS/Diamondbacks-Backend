@@ -10,7 +10,6 @@ public class ConstraintHandler {
         // construct a constraints object, pass in the constraints to setCurrentConstraints
         Constraints currentConstraints = new Constraints(incumbents,majMin,pop,vap,cvap,geoComp,graphComp,popFat);
         currentJob.setCurrentConstraints(currentConstraints);
-
         // count the remaining districts
         return currentJob.countRemainDistrictings(currentConstraints);
     }

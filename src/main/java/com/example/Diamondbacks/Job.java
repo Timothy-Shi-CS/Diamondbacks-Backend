@@ -11,6 +11,7 @@ public class Job {
     private Districting currentAvergageDistricting;
     private int id;
     private Analysis analysis;
+    private Districting currentDistricting;
 
     public void getMGGGAtt() {
 
