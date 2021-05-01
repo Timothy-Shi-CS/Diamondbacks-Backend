@@ -161,6 +161,11 @@ public class Job implements Serializable {
 //        return districtings.subList(0,10);
 //    }
 
+    /**
+     * This method sorts the constrained job by the deviation from enacted by area and return the districting
+     * with the highest deviation from enacted districting by area
+     * @return districting with the highest deviation from enacted districting by area
+     */
     public Districting getTopDistrictingsByDeviationFromEnactedGeo(){
         //sort the remaining districting by deviation from enacted
         //return the maximum deviation from enacted by geometric
@@ -179,6 +184,11 @@ public class Job implements Serializable {
         return districtings.get(0);
     }
 
+    /**
+     * This method sorts the constrained job by the deviation from enacted by population and return the districting
+     * with the highest deviation from enacted districting by population
+     * @return districting with the highest deviation from enacted districting by population
+     */
     public Districting getTopDistrictingsByDeviationFromEnactedPop() {
         //sort the remaining districting by deviation from enacted
         //return the maximum deviation from enacted by population
@@ -197,6 +207,11 @@ public class Job implements Serializable {
         return districtings.get(0);
     }
 
+    /**
+     * This method sorts the constrained job by the area of a specific district to find the pair of the districting
+     * with very different area
+     * @return a pair of districting with very different area by a specific district
+     */
     public Collection<Districting> getVeryDifferentAreaPairDeviations(){
         //this should return it in pairs?
         //pick a district, then sort the list by the area of that list
@@ -220,6 +235,11 @@ public class Job implements Serializable {
         return result;
     }
 
+    /**
+     * This method sorts the constrained job by the population of a specific district to find the pair of the districting
+     * with very different population
+     * @return a pair of districting with very different population by a specific district
+     */
     public Collection<Districting> getVeryDifferentPopulationPairDeviations(){
         //this should return it in pairs?
         //pick a district, then sort the list by the population of that list
