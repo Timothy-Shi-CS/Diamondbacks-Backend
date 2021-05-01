@@ -87,7 +87,7 @@ public class Controller {
 
     @GET
     @Path("/district/id={districtID}")
-    public Response callDistrictHandler(@PathParam("districtID") int districtID) {
+    public Response callDistrictHandler(@PathParam("districtID") String districtID) {
         DistrictHandler district = new DistrictHandler();
         return Response.status(Response.Status.OK).entity("Hello").build();
     }
@@ -116,7 +116,7 @@ public class Controller {
 
     @GET
     @Path("/district-objective-value/id={districtID}")
-    public Response getDistrictObjectiveValue(@PathParam("districtID") int districtID) {
+    public Response getDistrictObjectiveValue(@PathParam("districtID") String districtID) {
         DistrictingHandler districtingHandler = new DistrictingHandler();
         districtingHandler.getObjectiveFunctionDetail(this.currentJob, districtID, this.em);
         return Response.status(Response.Status.OK).entity("Hello").build();
