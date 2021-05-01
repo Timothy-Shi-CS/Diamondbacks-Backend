@@ -115,10 +115,41 @@ public class Job {
         //get the top 10 from the sorted
         return districtings.subList(0,10);
     }
-    public Map<Integer, Float> getTopDistrictingsByDeviationFromEnacted(){
+    public Districting getTopDistrictingsByDeviationFromEnactedGeo(){
         //sort the remaining districting by deviation from enacted
-        return null;
+        //return the maximum deviation from enacted by geometric
+        //make sure it is sorted from high to low !!!
+        Comparator<Districting> devEnactedAreaComparator = new Comparator<Districting>() {
+            @Override
+            public int compare(Districting d1, Districting d2) {
+                float objValue1 = d1.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_ENACTED_GEO).getMeasureScore();
+                float objValue2 = d2.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_ENACTED_GEO).getMeasureScore();
+                return Float.compare(objValue1, objValue2);
+            }
+        };
+        //sort by objective function value
+        List<Districting> districtings = (List<Districting>)this.getListDistrictings();
+        districtings.sort(devEnactedAreaComparator);
+        return districtings.get(0);
     }
+    public Districting getTopDistrictingsByDeviationFromEnactedPop(){
+        //sort the remaining districting by deviation from enacted
+        //return the maximum deviation from enacted by population
+        //make sure it is sorted from high to low !!!
+        Comparator<Districting> devEnactedPopulationComparator = new Comparator<Districting>() {
+            @Override
+            public int compare(Districting d1, Districting d2) {
+                float objValue1 = d1.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_ENACTED_POP).getMeasureScore();
+                float objValue2 = d2.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_ENACTED_POP).getMeasureScore();
+                return Float.compare(objValue1, objValue2);
+            }
+        };
+        //sort by objective function value
+        List<Districting> districtings = (List<Districting>)this.getListDistrictings();
+        districtings.sort(devEnactedPopulationComparator);
+        return districtings.get(0);
+    }
+
     public Map<Integer, Float> getDistrictingsByMajorMinorityRange(){
         //shouldn't this be all districtings? since it is being constrainted by this?
         return null;
