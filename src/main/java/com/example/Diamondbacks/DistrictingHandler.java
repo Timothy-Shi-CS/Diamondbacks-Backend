@@ -9,12 +9,12 @@ import java.util.Map;
 
 public class DistrictingHandler {
     private Districting currentDistricting;
-    public String getObjectiveFunctionScore(Job currentJob, int districtingID){
-        Districting currentDistricting = currentJob.findDistrictingByID(districtingID);
+    public String getObjectiveFunctionScore(Job currentJob, String districtingID, EntityManager em){
+        Districting currentDistricting = currentJob.findDistrictingByID(districtingID, em);
         ObjectiveValue districtingMeasures = currentDistricting.getDistrictingMeasures();
         return districtingMeasures.toString();
     }
-    public String getDistrictingBoundary(int districtingID){
+    public String getDistrictingBoundary(String districting){
         return null;
     }
     public String getObjectiveFunctionDetail(Job currentJob, String districtID, EntityManager em){
@@ -22,7 +22,7 @@ public class DistrictingHandler {
         currentDistricting.findDistrictByID(districtID, em);
         return null;
     }
-    public Collection<Float> calculateDeviationFromEnacted(Job job, int districtingID){
+    public Collection<Float> calculateDeviationFromEnacted(Job job, String districtingID){
         return null;
     }
 
@@ -42,7 +42,7 @@ public class DistrictingHandler {
         return districtGeometries;
     }
 
-    public Map<Integer,Geometry> getDistrictingGeometry(int districtingID, Job currentJob){
+    public Map<Integer,Geometry> getDistrictingGeometry(String districtingID, Job currentJob){
         this.currentDistricting = currentJob.getDistrictingByID(districtingID);
         currentJob.setCurrentDistricting(this.currentDistricting);
         Map<Integer,District> districts = this.currentDistricting.getDistrictsMap();
