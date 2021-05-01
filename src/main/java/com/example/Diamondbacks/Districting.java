@@ -112,6 +112,14 @@ public class Districting {
     public District findDistrictByID(String districtID, EntityManager em){
         Query q = em.createNativeQuery("SELECT * FROM Diamondbacks.Districts WHERE districtID = " + districtID);
         List districtInfo = q.getResultList();
+        System.out.println(districtInfo);
+//        ArrayList<String> info = new ArrayList<>();
+//        float devEnactedGeometric = (float) districtInfo.get(3);
+//        float devEnactedPopulation = (float)
+//        for (Object c : districtInfo){
+//            info.add((String) c);
+//        }
+//        District currentDistrict = new District()
         return null;
     }
 
