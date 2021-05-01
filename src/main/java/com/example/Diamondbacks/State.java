@@ -1,5 +1,6 @@
 package com.example.Diamondbacks;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
@@ -12,8 +13,23 @@ public class State {
     private Job constraintedJob;
     private BoxAndWhisker currentBoxAndWhisker;
 
-    public void calcBoxAndWhisker(Job constraintedJob, Districting enactedDistricting, Minorities minority){
-
+    public void makeConstraintedJob(){
+        Constraints userConstraints = this.getCurrentJob().getCurrentConstraints();
+        Job filteredJob = new Job();
+        Collection<Districting> filteredDistricting = new ArrayList<>();
+        for(Districting districting: this.getCurrentJob().getListDistrictings()){
+            if(districting.satisfyConstraints(userConstraints)){
+                filteredDistricting.add(districting);
+            }
+        }
+        filteredJob.setCoolingPeriod(this.getCurrentJob().getCoolingPeriod());
+        filteredJob.setRounds(this.getCurrentJob().getRounds());
+        filteredJob.setCurrentConstraints(this.getCurrentJob().getCurrentConstraints());
+        filteredJob.setId(this.getCurrentJob().getId());
+        filteredJob.setListDistrictings(filteredDistricting);
+    }
+    public void calcBoxAndWhisker(){
+        //???
     }
 
     @Override

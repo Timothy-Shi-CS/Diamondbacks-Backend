@@ -22,7 +22,7 @@ public class Job {
     }
 
     public Districting calAverageDistricting(){
-
+        //this method is called by the constraintedJob
         return null;
     }
     public Districting getDistrictingByID(int ID){
@@ -41,7 +41,6 @@ public class Job {
     public int countRemainDistrictings(){
         // write method here to count districtings that fit constraints
         int count = 0;
-        Constraints userConstraints = this.getCurrentConstraints();
         for(Districting dist: this.getListDistrictings()){
             if(dist.satisfyConstraints(this.getCurrentConstraints())){
                 count++;

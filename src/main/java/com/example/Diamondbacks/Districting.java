@@ -158,4 +158,12 @@ public class Districting {
     public void setProtectedIncumbentCandidateList(Collection<IncumbentCandidate> protectedIncumbentCandidateList) {
         this.protectedIncumbentCandidateList = protectedIncumbentCandidateList;
     }
+
+    public Map<Integer, Map<Minorities, Float>> getSortedMinorityData() {
+        return sortedMinorityData;
+    }
+
+    public void setSortedMinorityData(Map<Integer, Map<Minorities, Float>> sortedMinorityData) {
+        this.sortedMinorityData = sortedMinorityData;
+    }
 }
