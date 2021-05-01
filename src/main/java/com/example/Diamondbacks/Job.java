@@ -2,12 +2,13 @@ package com.example.Diamondbacks;
 
 import javax.persistence.*;
 import javax.swing.*;
+import java.io.Serializable;
 import java.sql.Array;
 import java.util.*;
 
 @Entity
 @Table(name = "Jobs")
-public class Job {
+public class Job implements Serializable {
     @Transient
     private Collection<Districting> listDistrictings;
 
@@ -97,6 +98,7 @@ public class Job {
         return null;
     }
 
+
     public int countRemainDistrictings(){
         // write method here to count districtings that fit constraints
         int count = 0;
@@ -116,24 +118,24 @@ public class Job {
         return null;
     }
 
-    public Collection<Districting> getTopDistrictingsObjectFunction(){
-        //sort the reamining districting by objective function value
-        //returns top5 or top 10 districting by objective function value
-        //make sure it is sorted from high to low !!!
-        Comparator<Districting> objValComparator = new Comparator<Districting>() {
-            @Override
-            public int compare(Districting d1, Districting d2) {
-                float objValue1 = d1.getDistrictingMeasures().getOverallObjectiveValueScore();
-                float objValue2 = d2.getDistrictingMeasures().getOverallObjectiveValueScore();
-                return Float.compare(objValue1, objValue2);
-            }
-        };
-        //sort by objective function value
-        List<Districting> districtings = (List<Districting>)this.getListDistrictings();
-        districtings.sort(objValComparator);
-        //get the top 10 from the sorted
-        return districtings.subList(0,10);
-    }
+//    public Collection<Districting> getTopDistrictingsObjectFunction(){
+//        //sort the reamining districting by objective function value
+//        //returns top5 or top 10 districting by objective function value
+//        //make sure it is sorted from high to low !!!
+//        Comparator<Districting> objValComparator = new Comparator<Districting>() {
+//            @Override
+//            public int compare(Districting d1, Districting d2) {
+//                float objValue1 = d1.getDistrictingMeasures().getOverallObjectiveValueScore();
+//                float objValue2 = d2.getDistrictingMeasures().getOverallObjectiveValueScore();
+//                return Float.compare(objValue1, objValue2);
+//            }
+//        };
+//        //sort by objective function value
+//        List<Districting> districtings = (List<Districting>)this.getListDistrictings();
+//        districtings.sort(objValComparator);
+//        //get the top 10 from the sorted
+//        return districtings.subList(0,10);
+//    }
     public Map<Integer, Float> getTopDistrictingsByDeviationFromEnacted(){
         //sort the remaining districting by deviation from enacted
         return null;
