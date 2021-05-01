@@ -5,6 +5,12 @@ public class Measure {
     private float measureWeight;
     private float measureScore;
 
+    public Measure(MeasureType measureType, float measureWeight, float measureScore) {
+        this.measureType = measureType;
+        this.measureWeight = measureWeight;
+        this.measureScore = measureScore;
+    }
+
     public MeasureType getMeasureType() {
         return measureType;
     }
