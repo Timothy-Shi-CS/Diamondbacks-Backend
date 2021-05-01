@@ -29,7 +29,11 @@ public class State {
         filteredJob.setListDistrictings(filteredDistricting);
     }
     public void calcBoxAndWhisker(){
-        //???
+        Constraints userConstraints = this.getConstraintedJob().getCurrentConstraints();
+        BoxAndWhisker newBAW = new BoxAndWhisker();
+        for(Districting districting: this.getConstraintedJob().getListDistrictings()){
+
+        }
     }
 
     @Override
