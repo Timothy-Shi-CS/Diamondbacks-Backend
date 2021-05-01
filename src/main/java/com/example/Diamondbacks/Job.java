@@ -18,6 +18,7 @@ public class Job {
     }
 
     public Districting calAverageDistricting(){
+
         return null;
     }
     public Districting getDistrictingByID(int ID){

@@ -12,7 +12,7 @@ public class State {
     private Job constraintedJob;
     private BoxAndWhisker currentBoxAndWhisker;
 
-    public void calcBoxAndWhisker(Job constraintedJob, Districting enactedDistricting, String minority){
+    public void calcBoxAndWhisker(Job constraintedJob, Districting enactedDistricting, Minorities minority){
 
     }
 

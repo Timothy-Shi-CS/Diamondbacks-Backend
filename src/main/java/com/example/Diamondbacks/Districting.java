@@ -12,14 +12,17 @@ public class Districting {
     private Map<Integer, District> districtsMap;
     private Collection<IncumbentCandidate> protectedIncumbentCandidateList;
     private int districtingID;
+    private Map<Integer, Map<Minorities, Float>> sortedMinorityData;
 
     public Districting(CensusInfo censusInfo, ObjectiveValue districtingMeasures, Map<Integer, District> districtsMap,
-                       Collection<IncumbentCandidate> protectedIncumbentCandidateList, int districtingID) {
+                       Collection<IncumbentCandidate> protectedIncumbentCandidateList, int districtingID,
+                       Map<Integer, Map<Minorities, Float>> sortedMinorityData) {
         this.censusInfo = censusInfo;
         this.districtingMeasures = districtingMeasures;
         this.districtsMap = districtsMap;
         this.protectedIncumbentCandidateList = protectedIncumbentCandidateList;
         this.districtingID = districtingID;
+        this.sortedMinorityData = sortedMinorityData;
     }
 
     public boolean satisfyConstraints(Constraints userConstraints){
