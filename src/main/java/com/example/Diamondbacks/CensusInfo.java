@@ -7,6 +7,12 @@ public class CensusInfo {
     private float censusNum;
     private Map<Minorities, Float> minorities;
 
+    public CensusInfo(CensusValues censusType, float censusNum, Map<Minorities, Float> minorities) {
+        this.censusType = censusType;
+        this.censusNum = censusNum;
+        this.minorities = minorities;
+    }
+
     @Override
     public String toString() {
         return "CensusInfo{" +

@@ -7,8 +7,16 @@ public class District {
     private int districtNumber;
     private Measure districtMeasures;
     private Collection<Precinct> precinctList;
-    private Collection<District> neighborDistricts;
     private Geometry districtGeometry;
+
+    public District(CensusInfo censusInfo, int districtNumber, Measure districtMeasures,
+                    Collection<Precinct> precinctList, Geometry districtGeometry) {
+        this.censusInfo = censusInfo;
+        this.districtNumber = districtNumber;
+        this.districtMeasures = districtMeasures;
+        this.precinctList = precinctList;
+        this.districtGeometry = districtGeometry;
+    }
 
     public Geometry calGeometry(){
         return null;
@@ -33,7 +41,6 @@ public class District {
                 ", districtNumber=" + districtNumber +
                 ", districtMeasures=" + districtMeasures +
                 ", precinctList=" + precinctList +
-                ", neighborDistricts=" + neighborDistricts +
                 ", districtGeometry=" + districtGeometry +
                 '}';
     }
@@ -68,14 +75,6 @@ public class District {
 
     public void setPrecinctList(Collection<Precinct> precinctList) {
         this.precinctList = precinctList;
-    }
-
-    public Collection<District> getNeighborDistricts() {
-        return neighborDistricts;
-    }
-
-    public void setNeighborDistricts(Collection<District> neighborDistricts) {
-        this.neighborDistricts = neighborDistricts;
     }
 
     public Geometry getDistrictGeometry() {

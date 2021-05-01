@@ -2,10 +2,7 @@ package com.example.Diamondbacks;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
+import java.util.*;
 
 public class Districting {
 
@@ -114,7 +111,7 @@ public class Districting {
     }
     public District findDistrictByID(String districtID, EntityManager em){
         Query q = em.createNativeQuery("SELECT * FROM Diamondbacks.Districts WHERE districtID = " + districtID);
-        q.getResultList();
+        List districtInfo = q.getResultList();
         return null;
     }
 
