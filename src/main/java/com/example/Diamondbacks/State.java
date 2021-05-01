@@ -1,17 +1,37 @@
 package com.example.Diamondbacks;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+@Entity
+@Table(name = "State")
 public class State {
+
+    @Transient
     private Districting enactedDistricting;
+
+    @Transient
     private Districting currentDistricting;
+
+    @Id
     private StateName stateName;
+
+    @Transient
     private Map<Integer, Collection<Float>> jobSummaries;
+
+    @Transient
     private Job currentJob;
+
+    @Transient
     private Job constraintedJob;
+
+    @Transient
     private BoxAndWhisker currentBoxAndWhisker;
 
     public void makeConstraintedJob(){

@@ -14,8 +14,8 @@ public class StateHandler {
         // convert stateName to int
         System.out.println(StateName.valueOf(stateName).getStateNumber());
         int stateValue = StateName.valueOf(stateName).getStateNumber();
-        String queryString = "SELECT * FROM Diamondbacks.Jobs WHERE state_stateName = " + stateValue;
-        Query q = em.createNativeQuery(queryString);
+        String queryString ="from Job";
+        Query q = em.createQuery(queryString);
         return q.getResultList();
     }
     public void calculateBoxAndWhiskerData(String state){
