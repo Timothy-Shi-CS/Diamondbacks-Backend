@@ -1,5 +1,7 @@
 package com.example.Diamondbacks;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -13,7 +15,9 @@ public class DistrictingHandler {
     public String getDistrictingBoundary(int districtingID){
         return null;
     }
-    public String getObjectiveFunctionDetail(Job currentJob, int districtID){
+    public String getObjectiveFunctionDetail(Job currentJob, int districtID, EntityManager em){
+        Districting currentDistricting = currentJob.getCurrentDistricting();
+        currentDistricting.findDistrictByID(districtID, em);
         return null;
     }
     public Collection<Float> calculateDeviationFromEnacted(Job job, int districtingID){

@@ -116,6 +116,8 @@ public class Controller {
     @GET
     @Path("/district-objective-value/id={districtID}")
     public Response getDistrictObjectiveValue(@PathParam("districtID") int districtID) {
+        DistrictingHandler districtingHandler = new DistrictingHandler();
+        districtingHandler.getObjectiveFunctionDetail(this.currentJob, districtID, this.em);
         return Response.status(Response.Status.OK).entity("Hello").build();
     }
 
