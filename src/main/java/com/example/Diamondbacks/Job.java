@@ -101,7 +101,7 @@ public class Job {
         //sort the reamining districting by objective function value
         //returns top5 or top 10 districting by objective function value
         //make sure it is sorted from high to low !!!
-        Comparator<Districting> DistrictingComparator = new Comparator<Districting>() {
+        Comparator<Districting> objValComparator = new Comparator<Districting>() {
             @Override
             public int compare(Districting d1, Districting d2) {
                 float objValue1 = d1.getDistrictingMeasures().getOverallObjectiveValueScore();
@@ -111,7 +111,7 @@ public class Job {
         };
         //sort by objective function value
         List<Districting> districtings = (List<Districting>)this.getListDistrictings();
-        districtings.sort(DistrictingComparator);
+        districtings.sort(objValComparator);
         //get the top 10 from the sorted
         return districtings.subList(0,10);
     }
