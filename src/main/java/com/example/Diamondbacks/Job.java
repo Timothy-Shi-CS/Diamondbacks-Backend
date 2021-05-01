@@ -122,9 +122,9 @@ public class Job {
         Comparator<Districting> devEnactedAreaComparator = new Comparator<Districting>() {
             @Override
             public int compare(Districting d1, Districting d2) {
-                float objValue1 = d1.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_ENACTED_GEO).getMeasureScore();
-                float objValue2 = d2.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_ENACTED_GEO).getMeasureScore();
-                return Float.compare(objValue1, objValue2);
+                float enactedGeo1 = d1.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_ENACTED_GEO).getMeasureScore();
+                float enactedGeo2 = d2.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_ENACTED_GEO).getMeasureScore();
+                return Float.compare(enactedGeo1, enactedGeo2);
             }
         };
         //sort by objective function value
@@ -139,9 +139,9 @@ public class Job {
         Comparator<Districting> devEnactedPopulationComparator = new Comparator<Districting>() {
             @Override
             public int compare(Districting d1, Districting d2) {
-                float objValue1 = d1.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_ENACTED_POP).getMeasureScore();
-                float objValue2 = d2.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_ENACTED_POP).getMeasureScore();
-                return Float.compare(objValue1, objValue2);
+                float enactedPop1 = d1.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_ENACTED_POP).getMeasureScore();
+                float enactedPop2 = d2.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_ENACTED_POP).getMeasureScore();
+                return Float.compare(enactedPop1, enactedPop2);
             }
         };
         //sort by objective function value
