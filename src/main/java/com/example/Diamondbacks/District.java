@@ -1,15 +1,17 @@
 package com.example.Diamondbacks;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 public class District {
     private CensusInfo censusInfo;
     private int districtNumber;
-    private Measure districtMeasures;
+    private Map<MeasureType, Measure> districtMeasures;
     private Collection<Precinct> precinctList;
     private Geometry districtGeometry;
 
-    public District(CensusInfo censusInfo, int districtNumber, Measure districtMeasures,
+    public District(CensusInfo censusInfo, int districtNumber, Map<MeasureType, Measure> districtMeasures,
                     Collection<Precinct> precinctList, Geometry districtGeometry) {
         this.censusInfo = censusInfo;
         this.districtNumber = districtNumber;
@@ -61,11 +63,11 @@ public class District {
         this.districtNumber = districtNumber;
     }
 
-    public Measure getDistrictMeasures() {
+    public Map<MeasureType, Measure> getDistrictMeasures() {
         return districtMeasures;
     }
 
-    public void setDistrictMeasures(Measure districtMeasures) {
+    public void setDistrictMeasures(Map<MeasureType, Measure> districtMeasures) {
         this.districtMeasures = districtMeasures;
     }
 
