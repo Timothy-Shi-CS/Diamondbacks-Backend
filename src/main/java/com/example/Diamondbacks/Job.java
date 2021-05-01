@@ -18,6 +18,9 @@ public class Job implements Serializable {
     @Column(name = "rounds", nullable = false)
     private int rounds;
 
+    @Column(name = "num_of_districtings", nullable = false)
+    private int numDistrictings;
+
     @Transient
     private Constraints currentConstraints;
 
@@ -35,6 +38,14 @@ public class Job implements Serializable {
 
     @ManyToOne
     private State state;
+
+    public int getNumDistrictings() {
+        return numDistrictings;
+    }
+
+    public void setNumDistrictings(int numDistrictings) {
+        this.numDistrictings = numDistrictings;
+    }
 
     private float percentError(Integer f1, Integer f2){
         return Math.abs((float)f1-(float)f2)/Math.abs((float)f2);
