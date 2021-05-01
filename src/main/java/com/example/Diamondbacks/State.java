@@ -33,19 +33,19 @@ public class State {
         Constraints userConstraints = this.getConstraintedJob().getCurrentConstraints();
         Minorities minorityToPlot = userConstraints.getMinoritySelected();
 
-        Map<Integer, Collection<Float>> dataToPlot = new HashMap<Integer, Collection<Float>>();
+        Map<Integer, Collection<Integer>> dataToPlot = new HashMap<Integer, Collection<Integer>>();
         for(Districting districting: this.getConstraintedJob().getListDistrictings()){
             for(Integer districtID: districting.getSortedMinorityData().keySet()){
-                Float countMinority = districting.getSortedMinorityData().get(districtID).get(minorityToPlot);
+                Integer countMinority = districting.getSortedMinorityData().get(districtID).get(minorityToPlot);
                 if(!dataToPlot.containsKey(districtID)){
                     //if the key does not exist, intitize it to an empty array list
-                    dataToPlot.put(districtID, new ArrayList<Float>());
+                    dataToPlot.put(districtID, new ArrayList<Integer>());
                 }
                 dataToPlot.get(districtID).add(countMinority);
             }
         }
-        Map<Integer, Float> currentDistrictingData = new HashMap<Integer, Float>();
-        Map<Integer, Float> enactedDistrictingData = new HashMap<Integer, Float>();
+        Map<Integer, Integer> currentDistrictingData = new HashMap<Integer, Integer>();
+        Map<Integer, Integer> enactedDistrictingData = new HashMap<Integer, Integer>();
         for(Integer districtID: this.currentDistricting.getSortedMinorityData().keySet()){
             currentDistrictingData.put(districtID, this.getCurrentDistricting().getSortedMinorityData().
                     get(districtID).get(minorityToPlot));

@@ -4,14 +4,14 @@ import javax.json.Json;
 import java.util.*;
 
 public class BoxAndWhisker {
-    private Map<Integer, Float> currentDistrictingData;
-    private Map<Integer, Float> enactedDistrictingData;
-    private Map<Integer, Float> averageMinorityData;
-    private Map<Integer, Float> firstQuartileMinorityData;
-    private Map<Integer, Float> thirdQuartileMinorityData;
-    private Map<Integer, Float> minMinorityData;
-    private Map<Integer, Float> maxMinorityData;
-    private Map<Integer, Collection<Float>> minorityData;
+    private Map<Integer, Integer> currentDistrictingData;
+    private Map<Integer, Integer> enactedDistrictingData;
+    private Map<Integer, Integer> averageMinorityData;
+    private Map<Integer, Integer> firstQuartileMinorityData;
+    private Map<Integer, Integer> thirdQuartileMinorityData;
+    private Map<Integer, Integer> minMinorityData;
+    private Map<Integer, Integer> maxMinorityData;
+    private Map<Integer, Collection<Integer>> minorityData;
 
     public Json generatePlot() {
         return null;
@@ -23,18 +23,18 @@ public class BoxAndWhisker {
         return null;
     }
 
-    public BoxAndWhisker(Map<Integer, Float> currentDistrictingData, Map<Integer, Float> enactedDistrictingData,
-                         Map<Integer, Collection<Float>> minorityData) {
+    public BoxAndWhisker(Map<Integer, Integer> currentDistrictingData, Map<Integer, Integer> enactedDistrictingData,
+                         Map<Integer, Collection<Integer>> minorityData) {
         this.currentDistrictingData = currentDistrictingData;
         this.enactedDistrictingData = enactedDistrictingData;
         this.minorityData = minorityData;
         this.calculateBoxAndWhiskerData();
     }
     public void calculateBoxAndWhiskerData(){
-        Comparator<Float> defaultComparator = new Comparator<Float>() {
+        Comparator<Integer> defaultComparator = new Comparator<Integer>() {
             @Override
-            public int compare(Float o1, Float o2) {
-                return Float.compare(o1, o2);
+            public int compare(Integer o1, Integer o2) {
+                return Integer.compare(o1, o2);
             }
         };
 
@@ -46,15 +46,15 @@ public class BoxAndWhisker {
 
         //get min, max, q1, q2, avg data for each district
         for(Integer districtID: this.getMinorityData().keySet()){
-            List<Float> districtData = (List<Float>)this.getMinorityData().get(districtID);
+            List<Integer> districtData = (List<Integer>)this.getMinorityData().get(districtID);
             districtData.sort(defaultComparator);
 //            Double tmp = districtData.stream().mapToDouble(val -> val).average().orElse(0.0);
 //            Float avg_data = tmp.floatValue();
-            Float min_data = districtData.get(0);
-            Float q1_data = districtData.get((districtData.size()/4));
-            Float avg_data = districtData.get(2*(districtData.size()/4));
-            Float q3_data = districtData.get(3*(districtData.size()/4));
-            Float max_data = districtData.get(districtData.size()-1);
+            Integer min_data = districtData.get(0);
+            Integer q1_data = districtData.get((districtData.size()/4));
+            Integer avg_data = districtData.get(2*(districtData.size()/4));
+            Integer q3_data = districtData.get(3*(districtData.size()/4));
+            Integer max_data = districtData.get(districtData.size()-1);
 
             this.firstQuartileMinorityData.put(districtID, q1_data);
             this.averageMinorityData.put(districtID, avg_data);
@@ -64,15 +64,15 @@ public class BoxAndWhisker {
         }
     }
 
-    public Map<Integer, Float> getAverageMinorityData() {
+    public Map<Integer, Integer> getAverageMinorityData() {
         return averageMinorityData;
     }
 
-    public Map<Integer, Collection<Float>> getMinorityData() {
+    public Map<Integer, Collection<Integer>> getMinorityData() {
         return minorityData;
     }
 
-    public void setMinorityData(Map<Integer, Collection<Float>> minorityData) {
+    public void setMinorityData(Map<Integer, Collection<Integer>> minorityData) {
         this.minorityData = minorityData;
     }
 }

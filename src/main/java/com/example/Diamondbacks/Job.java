@@ -24,30 +24,30 @@ public class Job {
         this.currentDistricting = currentDistricting;
     }
 
-    private float percentError(Float f1, Float f2){
+    private float percentError(Integer f1, Integer f2){
         return Math.abs(f1-f2)/Math.abs(f2);
     }
     public Districting calAverageDistricting(BoxAndWhisker currentBAW){
         //this method is only called by the constrainted jobs object
         Minorities minoritySelected= this.getCurrentConstraints().getMinoritySelected();
-        Map<Integer, Float> currentAverages = currentBAW.getAverageMinorityData();
+        Map<Integer, Integer> currentAverages = currentBAW.getAverageMinorityData();
         int num_districts = currentAverages.keySet().size();
         int start = 0;
         int mid = num_districts/2;
         int end = num_districts-1;
         Districting averagedDistricting = null;
 
-        Float start_avg = currentAverages.get(start);
-        Float mid_avg = currentAverages.get(mid);
-        Float end_avg = currentAverages.get(end);
+        Integer start_avg = currentAverages.get(start);
+        Integer mid_avg = currentAverages.get(mid);
+        Integer end_avg = currentAverages.get(end);
         float threshold = 0.05f;
         for(Districting dist: this.getListDistrictings()) {
-            Float start_val = dist.getSortedMinorityData().get(start).get(minoritySelected);
-            Float mid_val = dist.getSortedMinorityData().get(mid).get(minoritySelected);
-            Float end_val = dist.getSortedMinorityData().get(end).get(minoritySelected);
+            Integer start_val = dist.getSortedMinorityData().get(start).get(minoritySelected);
+            Integer mid_val = dist.getSortedMinorityData().get(mid).get(minoritySelected);
+            Integer end_val = dist.getSortedMinorityData().get(end).get(minoritySelected);
             if(percentError(start_avg, start_val)<threshold
                     && percentError(mid_avg, mid_val)<threshold
-                    && percentError(mid_avg, mid_val)<threshold){
+                    && percentError(end_avg, end_val)<threshold){
                 averagedDistricting = dist;
                 break;
             }
