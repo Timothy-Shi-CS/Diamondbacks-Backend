@@ -7,11 +7,11 @@ import java.util.Map;
 public class District {
     private CensusInfo censusInfo;
     private int districtNumber;
-    private Map<MeasureType, Measure> districtMeasures;
+    private ObjectiveValue districtMeasures;
     private Collection<Precinct> precinctList;
     private Geometry districtGeometry;
 
-    public District(CensusInfo censusInfo, int districtNumber, Map<MeasureType, Measure> districtMeasures,
+    public District(CensusInfo censusInfo, int districtNumber, ObjectiveValue districtMeasures,
                     Collection<Precinct> precinctList, Geometry districtGeometry) {
         this.censusInfo = censusInfo;
         this.districtNumber = districtNumber;
@@ -22,15 +22,21 @@ public class District {
 
     public Measure calDevFromAvgDistGeo(District avgDistrict){
         //sum of square differences by area by district
-        Measure currentMeasure = new Measure(MeasureType.DEV_AVERAGE_GEO, 0, 0);
-        float ans = (avgDistrict.getDistrictGeometry().getArea() - this.getDistrictGeometry().getArea());
-        ans = (float) Math.pow(ans,2);
-        currentMeasure.setMeasureScore(ans);
+        Measure currentMeasure = this.getDistrictMeasures().getMeasures().get(MeasureType.DEV_AVERAGE_GEO);
+        float avgArea = avgDistrict.getDistrictGeometry().getArea();
+        float recombArea = this.getDistrictGeometry().getArea();
+        float sse = (float) Math.pow(avgArea-recombArea,2);
+        currentMeasure.setMeasureScore(sse);
         return currentMeasure;
     }
     public Measure calDevFromAvgDistPop(District avgDistrict){
         //sum of square differences by population by district
-        return null;
+        Measure currentMeasure = this.getDistrictMeasures().getMeasures().get(MeasureType.DEV_AVERAGE_POP);
+        float avgPop = avgDistrict.getCensusInfo().getPopulationData().get(CensusValues.TOTAL_POPULATION);
+        float recombPop = this.getCensusInfo().getPopulationData().get(CensusValues.TOTAL_POPULATION);
+        float sse = (float) Math.pow(avgPop-recombPop, 2);
+        currentMeasure.setMeasureScore(sse);
+        return currentMeasure;
     }
 
     public Geometry calGeometry(){
@@ -73,11 +79,11 @@ public class District {
         this.districtNumber = districtNumber;
     }
 
-    public Map<MeasureType, Measure> getDistrictMeasures() {
+    public ObjectiveValue getDistrictMeasures() {
         return districtMeasures;
     }
 
-    public void setDistrictMeasures(Map<MeasureType, Measure> districtMeasures) {
+    public void setDistrictMeasures(ObjectiveValue districtMeasures) {
         this.districtMeasures = districtMeasures;
     }
 
