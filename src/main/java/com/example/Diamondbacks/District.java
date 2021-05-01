@@ -39,28 +39,12 @@ public class District {
         return currentMeasure;
     }
 
-    public Geometry calGeometry(){
-        return null;
-    }
+
     public Measure calSplitCounties(){
         return null;
     }
     public Measure calPoliticalFairness(){
         return null;
-    }
-    public ObjectiveValue calSummaryMeasures() {
-        return null;
-    }
-
-    @Override
-    public String toString() {
-        return "District{" +
-                "censusInfo=" + censusInfo +
-                ", districtNumber=" + districtNumber +
-                ", districtMeasures=" + districtMeasures +
-                ", precinctList=" + precinctList +
-                ", districtGeometry=" + districtGeometry +
-                '}';
     }
 
     public CensusInfo getCensusInfo() {

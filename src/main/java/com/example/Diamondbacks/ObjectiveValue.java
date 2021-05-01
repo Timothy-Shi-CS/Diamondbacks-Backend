@@ -6,21 +6,14 @@ import java.util.Map;
 public class ObjectiveValue {
     private float overallObjectiveValueScore;
     private Map<MeasureType, Measure> measures;
+
     public float calOverallObjectiveValueScore(){
         float total_score = 0;
         for(Measure measure:measures.values()){
             total_score+= measure.getMeasureWeight()*measure.getMeasureScore();
         }
+        this.setOverallObjectiveValueScore(total_score);
         return total_score;
-    }
-
-
-    @Override
-    public String toString() {
-        return "ObjectiveValue{" +
-                "overallObjectiveValueScore=" + overallObjectiveValueScore +
-                ", measures=" + measures +
-                '}';
     }
 
     public float getOverallObjectiveValueScore() {

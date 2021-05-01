@@ -126,9 +126,6 @@ public class Districting {
         return totMeasure;
     }
 
-    public ObjectiveValue calSummaryMeasures(){
-        return this.getDistrictingMeasures();
-    }
     public District findDistrictByID(String districtID, EntityManager em){
         Query q = em.createNativeQuery("SELECT * FROM Diamondbacks.Districts WHERE districtID = " + districtID);
         List districtInfo = q.getResultList();

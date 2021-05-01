@@ -97,18 +97,24 @@ public class Job {
         return null;
     }
     public Map<Integer, Float> getTopDistrictingsObjectFunction(){
+        //sort the reamining districting by objective function value
         return null;
     }
     public Map<Integer, Float> getTopDistrictingsByDeviationFromEnacted(){
+        //sort the remaining districting by deviation from enacted
         return null;
     }
     public Map<Integer, Float> getDistrictingsByMajorMinorityRange(){
+        //shouldn't this be all districtings? since it is being constrainted by this?
         return null;
     }
     public Map<Integer, Float> getVeryDifferentAreaPairDeviations(){
+        //this should return it in pairs?
+
         return null;
     }
     public float calMajMinDevFromAvg(Map<Integer, Float> map){
+        //what is this???
         return 0;
     }
     public Districting findDistrictingByID(String id, EntityManager em){
