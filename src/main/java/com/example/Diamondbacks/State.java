@@ -14,47 +14,66 @@ import java.util.Map;
 public class State {
 
     @Transient
-    private Districting enactedDistricting;
+    private Districting enactedDistricting; // the enacted districting for the state
 
     @Transient
-    private Districting currentDistricting;
+    private Districting currentDistricting; // the current districting that the user selects to view
 
     @Id
     private StateName stateName;
 
     @Transient
-    private Map<Integer, Collection<Float>> jobSummaries;
+    private Map<Integer, Collection<Float>> jobSummaries; // the summary of the job
 
     @Transient
-    private Job currentJob;
+    private Job currentJob; // the current job selected by the user to filter
 
     @Transient
-    private Job constraintedJob;
+    private Job constraintedJob; // clone of the current job with filtered down districtings
 
     @Transient
-    private BoxAndWhisker currentBoxAndWhisker;
+    private BoxAndWhisker currentBoxAndWhisker; //box and whisker data for plotting
 
+    /**
+     * This method makes a clone of the current job and filters it down by the constraints
+     * set by the user
+     *
+     * This method is not called until the constraints are set
+     */
     public void makeConstraintedJob(){
         Constraints userConstraints = this.getCurrentJob().getCurrentConstraints();
         Job filteredJob = new Job();
         Collection<Districting> filteredDistricting = new ArrayList<>();
         for(Districting districting: this.getCurrentJob().getListDistrictings()){
             if(districting.satisfyConstraints(userConstraints)){
+                //adds the districting to the constrained list if it satisfies the constraints
                 filteredDistricting.add(districting);
             }
         }
+        //cloning the original(unfiltered) job
         filteredJob.setCoolingPeriod(this.getCurrentJob().getCoolingPeriod());
         filteredJob.setRounds(this.getCurrentJob().getRounds());
         filteredJob.setCurrentConstraints(this.getCurrentJob().getCurrentConstraints());
         filteredJob.setId(this.getCurrentJob().getId());
+        //sets the constrained list of districtings
         filteredJob.setListDistrictings(filteredDistricting);
+
+        //the job has been constrained get the box and whisker
+        this.calcBoxAndWhisker();
     }
+
+    /**
+     * This method calculates the data necessary for the box and whisker object
+     * based on the constrained job
+     */
     public void calcBoxAndWhisker(){
         Constraints userConstraints = this.getConstraintedJob().getCurrentConstraints();
         Minorities minorityToPlot = userConstraints.getMinoritySelected();
 
         Map<Integer, Collection<Integer>> dataToPlot = new HashMap<Integer, Collection<Integer>>();
+        //Iterate through the constrained job
         for(Districting districting: this.getConstraintedJob().getListDistrictings()){
+            //for each district in the district add the data
             for(Integer districtID: districting.getSortedMinorityData().keySet()){
                 Integer countMinority = districting.getSortedMinorityData().get(districtID).get(minorityToPlot);
                 if(!dataToPlot.containsKey(districtID)){
@@ -64,6 +83,7 @@ public class State {
                 dataToPlot.get(districtID).add(countMinority);
             }
         }
+        //get the enacted and current disticting data for the box and whisker data
         Map<Integer, Integer> currentDistrictingData = new HashMap<Integer, Integer>();
         Map<Integer, Integer> enactedDistrictingData = new HashMap<Integer, Integer>();
         for(Integer districtID: this.currentDistricting.getSortedMinorityData().keySet()){
@@ -74,7 +94,7 @@ public class State {
         }
         BoxAndWhisker newBAW = new BoxAndWhisker(currentDistrictingData, enactedDistrictingData, dataToPlot);
         this.setCurrentBoxAndWhisker(newBAW);
-        //after setting the BAW object calculate the average districting for the constrainted job
+        //after setting the BAW object calculate the average districting for the constrained job
         this.getConstraintedJob().calAverageDistricting(newBAW);
     }
 

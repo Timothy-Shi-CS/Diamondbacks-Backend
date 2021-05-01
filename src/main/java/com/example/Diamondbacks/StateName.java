@@ -1,5 +1,8 @@
 package com.example.Diamondbacks;
 
+/**
+ * The State names which the user can choose from
+ */
 public enum StateName {
     UTAH(0),
     VIRGINIA(1),

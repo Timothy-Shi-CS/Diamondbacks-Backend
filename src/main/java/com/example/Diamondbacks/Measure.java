@@ -1,9 +1,12 @@
 package com.example.Diamondbacks;
 
+/**
+ * The Measure class encapsules the different types of measures for the district and districting
+ */
 public class Measure {
-    private MeasureType measureType;
-    private float measureWeight;
-    private float measureScore;
+    private MeasureType measureType; //Type of measure
+    private float measureWeight; //the weight of the measure set by the user
+    private float measureScore; //the score of the measure calculated(preprocessing or on the fly)
 
     public Measure(MeasureType measureType, float measureWeight, float measureScore) {
         this.measureType = measureType;

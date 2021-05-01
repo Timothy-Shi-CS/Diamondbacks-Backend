@@ -1,10 +1,10 @@
 package com.example.Diamondbacks;
 
 public class IncumbentCandidate {
-    private String candidateName;
-    private PoliticalParty candidateParty;
-    private int districtFrom;
-    private int candidateID;
+    private String candidateName; // name of the candidate
+    private PoliticalParty candidateParty; //the political party of the candidate
+    private int districtFrom; // the district which the candidate is from based on enacted plan
+    private int candidateID; //unique candidate ID for each candidate
 
     @Override
     public String toString() {
