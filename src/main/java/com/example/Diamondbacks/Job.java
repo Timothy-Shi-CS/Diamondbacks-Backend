@@ -17,9 +17,6 @@ public class Job {
         this.currentDistricting = currentDistricting;
     }
 
-    public void getMGGGAtt() {
-
-    }
     public Districting calAverageDistricting(){
         return null;
     }
@@ -51,6 +48,7 @@ public class Job {
         String jobSummary = "Cooling Period:" + this.getCoolingPeriod() + "Rounds:" + this.getRounds();
         return jobSummary;
     }
+
     public String getPrelimAnalysis(){
         return null;
     }
