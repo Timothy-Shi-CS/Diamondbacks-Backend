@@ -2,6 +2,7 @@ package com.example.Diamondbacks;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 public class State {
@@ -30,10 +31,29 @@ public class State {
     }
     public void calcBoxAndWhisker(){
         Constraints userConstraints = this.getConstraintedJob().getCurrentConstraints();
-        BoxAndWhisker newBAW = new BoxAndWhisker();
-        for(Districting districting: this.getConstraintedJob().getListDistrictings()){
+        Minorities minorityToPlot = userConstraints.getMinoritySelected();
 
+        Map<Integer, Collection<Float>> dataToPlot = new HashMap<Integer, Collection<Float>>();
+        for(Districting districting: this.getConstraintedJob().getListDistrictings()){
+            for(Integer districtID: districting.getSortedMinorityData().keySet()){
+                Float countMinority = districting.getSortedMinorityData().get(districtID).get(minorityToPlot);
+                if(!dataToPlot.containsKey(districtID)){
+                    //if the key does not exist, intitize it to an empty array list
+                    dataToPlot.put(districtID, new ArrayList<Float>());
+                }
+                dataToPlot.get(districtID).add(countMinority);
+            }
         }
+        Map<Integer, Float> currentDistrictingData = new HashMap<Integer, Float>();
+        Map<Integer, Float> enactedDistrictingData = new HashMap<Integer, Float>();
+        for(Integer districtID: this.currentDistricting.getSortedMinorityData().keySet()){
+            currentDistrictingData.put(districtID, this.getCurrentDistricting().getSortedMinorityData().
+                    get(districtID).get(minorityToPlot));
+            enactedDistrictingData.put(districtID, this.getEnactedDistricting().getSortedMinorityData().
+                    get(districtID).get(minorityToPlot));
+        }
+        BoxAndWhisker newBAW = new BoxAndWhisker(currentDistrictingData, enactedDistrictingData, dataToPlot);
+        this.setCurrentBoxAndWhisker(newBAW);
     }
 
     @Override
