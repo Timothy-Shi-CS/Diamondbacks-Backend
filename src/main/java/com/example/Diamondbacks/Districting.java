@@ -99,10 +99,18 @@ public class Districting {
         return null;
     }
 
-    public Measure calDevFromAvgDistGeo(){
-        return null;
+    public Measure calDevFromAvgDistGeo(Districting avgDistricting){
+        //sum of square differences by area by districting
+        Measure totMeasure = new Measure(MeasureType.DEV_AVERAGE_GEO, 0, 0);
+        for(int districtID: this.getDistrictsMap().keySet()){
+            Measure currentMeasure = this.getDistrictsMap().get(districtID).calDevFromAvgDistGeo(
+                    avgDistricting.getDistrictsMap().get(districtID));
+            totMeasure.setMeasureScore(totMeasure.getMeasureScore() + currentMeasure.getMeasureScore());
+        }
+        return totMeasure;
     }
-    public Measure calDevFromAvgDistPop(){
+    public Measure calDevFromAvgDistPop(Districting avgDistricting){
+        //sum of square differences by population by districting
         return null;
     }
 

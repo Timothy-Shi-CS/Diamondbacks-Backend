@@ -50,8 +50,19 @@ public class Job {
                 break;
             }
         }
+
+        this.setCurrentAvergageDistricting(averagedDistricting);
+        this.calDevFromAVG();
         return averagedDistricting;
     }
+
+    public void calDevFromAVG(){
+        for(Districting dist: this.getListDistrictings()){
+            dist.calDevFromAvgDistGeo(this.getCurrentAvergageDistricting());
+            dist.calDevFromAvgDistPop(this.getCurrentAvergageDistricting());
+        }
+    }
+
     public Districting getDistrictingByID(int ID){
         return null;
     }

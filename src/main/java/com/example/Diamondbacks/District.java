@@ -20,13 +20,23 @@ public class District {
         this.districtGeometry = districtGeometry;
     }
 
+    public Measure calDevFromAvgDistGeo(District avgDistrict){
+        //sum of square differences by area by district
+        Measure currentMeasure = new Measure(MeasureType.DEV_AVERAGE_GEO, 0, 0);
+        float ans = (avgDistrict.getDistrictGeometry().getArea() - this.getDistrictGeometry().getArea());
+        ans = (float) Math.pow(ans,2);
+        currentMeasure.setMeasureScore(ans);
+        return currentMeasure;
+    }
+    public Measure calDevFromAvgDistPop(District avgDistrict){
+        //sum of square differences by population by district
+        return null;
+    }
+
     public Geometry calGeometry(){
         return null;
     }
     public Measure calSplitCounties(){
-        return null;
-    }
-    public Measure calDeviationFromAvgDist(){
         return null;
     }
     public Measure calPoliticalFairness(){
