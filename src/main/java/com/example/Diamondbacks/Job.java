@@ -3,8 +3,8 @@ package com.example.Diamondbacks;
 import javax.swing.*;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import java.util.Collection;
-import java.util.Map;
+import java.sql.Array;
+import java.util.*;
 
 public class Job {
     private Collection<Districting> listDistrictings;
@@ -96,9 +96,24 @@ public class Job {
     public String getPrelimAnalysis(){
         return null;
     }
-    public Map<Integer, Float> getTopDistrictingsObjectFunction(){
+
+    public Collection<Districting> getTopDistrictingsObjectFunction(){
         //sort the reamining districting by objective function value
-        return null;
+        //returns top5 or top 10 districting by objective function value
+        //make sure it is sorted from high to low !!!
+        Comparator<Districting> DistrictingComparator = new Comparator<Districting>() {
+            @Override
+            public int compare(Districting d1, Districting d2) {
+                float objValue1 = d1.getDistrictingMeasures().getOverallObjectiveValueScore();
+                float objValue2 = d2.getDistrictingMeasures().getOverallObjectiveValueScore();
+                return Float.compare(objValue1, objValue2);
+            }
+        };
+        //sort by objective function value
+        List<Districting> districtings = (List<Districting>)this.getListDistrictings();
+        districtings.sort(DistrictingComparator);
+        //get the top 10 from the sorted
+        return districtings.subList(0,10);
     }
     public Map<Integer, Float> getTopDistrictingsByDeviationFromEnacted(){
         //sort the remaining districting by deviation from enacted
