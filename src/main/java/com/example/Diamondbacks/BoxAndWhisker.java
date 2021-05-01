@@ -64,6 +64,10 @@ public class BoxAndWhisker {
         }
     }
 
+    public Map<Integer, Float> getAverageMinorityData() {
+        return averageMinorityData;
+    }
+
     public Map<Integer, Collection<Float>> getMinorityData() {
         return minorityData;
     }

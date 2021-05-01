@@ -54,6 +54,8 @@ public class State {
         }
         BoxAndWhisker newBAW = new BoxAndWhisker(currentDistrictingData, enactedDistrictingData, dataToPlot);
         this.setCurrentBoxAndWhisker(newBAW);
+        //after setting the BAW object calculate the average districting for the constrainted job
+        this.getConstraintedJob().calAverageDistricting(newBAW);
     }
 
     @Override
