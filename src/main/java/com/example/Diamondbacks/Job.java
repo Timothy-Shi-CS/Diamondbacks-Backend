@@ -52,7 +52,18 @@ public class Job {
                 break;
             }
         }
+        //sets the current average districting after finding a good fit
+        this.setCurrentAvergageDistricting(averagedDistricting);
+        //calculates the deviation from average disitrciting for the constrainted job
+        this.calDeviationFromAvgDistricting();
         return averagedDistricting;
+    }
+    public void calDeviationFromAvgDistricting(){
+        //this method is only called by the constrained jobs
+        for(Districting dist: this.getListDistrictings()){
+            dist.calDevFromAvgDistGeo(this.getCurrentAvergageDistricting());
+            dist.calDevFromAvgDistPop(this.getCurrentAvergageDistricting());
+        }
     }
     public Districting getDistrictingByID(String id){
         return null;
