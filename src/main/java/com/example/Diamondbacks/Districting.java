@@ -2,6 +2,8 @@ package com.example.Diamondbacks;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 
@@ -23,11 +25,16 @@ public class Districting {
     }
 
     public boolean satisfyConstraints(Constraints userConstraints){
-//        this.incumbentsID = incumbentsID;
-
         if(userConstraints.getIncumbentsID().size() != 0){
-            //check if the incumebents are protected
-            return false;
+            Collection<Integer> protectedCandidateIds = new ArrayList<>();
+            // get the incumebents that are currently protected
+            for(IncumbentCandidate candid: this.getProtectedIncumbentCandidateList()){
+                protectedCandidateIds.add(candid.getCandidateID());
+            }
+            if(!Arrays.asList(protectedCandidateIds).containsAll(Arrays.asList(userConstraints))){
+                //if not all specified incumbents are protected
+                return false;
+            }
         }
         if(userConstraints.getMajorityMinorityDistricts() > 0){
             //check if the majority minority district counts is >= to the user selected counts
@@ -139,5 +146,13 @@ public class Districting {
 
     public void setDistrictingID(int districtingID) {
         this.districtingID = districtingID;
+    }
+
+    public Collection<IncumbentCandidate> getProtectedIncumbentCandidateList() {
+        return protectedIncumbentCandidateList;
+    }
+
+    public void setProtectedIncumbentCandidateList(Collection<IncumbentCandidate> protectedIncumbentCandidateList) {
+        this.protectedIncumbentCandidateList = protectedIncumbentCandidateList;
     }
 }

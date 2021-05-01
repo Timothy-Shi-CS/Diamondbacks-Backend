@@ -7,7 +7,11 @@ public class ObjectiveValue {
     private float overallObjectiveValueScore;
     private Map<MeasureType, Measure> measures;
     public float calOverallObjectiveValueScore(){
-        return 0;
+        float total_score = 0;
+        for(Measure measure:measures.values()){
+            total_score+= measure.getMeasureWeight()*measure.getMeasureScore();
+        }
+        return total_score;
     }
 
 
