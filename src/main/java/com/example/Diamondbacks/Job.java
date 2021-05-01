@@ -149,7 +149,6 @@ public class Job {
         districtings.sort(devEnactedPopulationComparator);
         return districtings.get(0);
     }
-
     public Collection<Districting> getVeryDifferentAreaPairDeviations(){
         //this should return it in pairs?
         //pick a district, then sort the list by the area of that list
@@ -173,7 +172,6 @@ public class Job {
         result.add(districtings.get(districtings.size()-1));
         return result;
     }
-
     public Collection<Districting> getVeryDifferentPopulationPairDeviations(){
         //this should return it in pairs?
         //pick a district, then sort the list by the population of that list
@@ -200,6 +198,14 @@ public class Job {
         return result;
     }
 
+//    public Collection<Districting> getInterestingDistictions(){
+//        this.getTopDistrictingsObjectFunction();
+//        this.getTopDistrictingsByDeviationFromEnactedGeo();
+//        this.getTopDistrictingsByDeviationFromEnactedPop();
+//        this.getVeryDifferentAreaPairDeviations();
+//        this.getVeryDifferentPopulationPairDeviations();
+//        return null;
+//    }
     public Map<Integer, Float> getDistrictingsByMajorMinorityRange(){
         //shouldn't this be all districtings? since it is being constrainted by this?
         return null;
