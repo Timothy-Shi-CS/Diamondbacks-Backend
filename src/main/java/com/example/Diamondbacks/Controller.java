@@ -12,6 +12,7 @@ import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 // http://localhost:8080/Diamondbacks-1.0-SNAPSHOT/api/controller
 @Path("/controller")
@@ -133,7 +134,7 @@ public class Controller {
     @Path("/districting-boundary/id={districtingID}")
     public Response getDistrictingBoundary(@PathParam("districtingID") int districtingID) {
         DistrictingHandler districtingHandler = new DistrictingHandler();
-        Collection<Geometry> geometries = districtingHandler.getDistrictingGeometry(districtingID, this.currentJob);
+        Map<Integer,Geometry> geometries = districtingHandler.getDistrictingGeometry(districtingID, this.currentJob);
         return Response.status(Response.Status.OK).entity(geometries).build();
     }
 
@@ -150,7 +151,6 @@ public class Controller {
         em = emf.createEntityManager();
         StateHandler state = new StateHandler();
         List jobs = state.getJobs(stateName, em);
-
         return Response.status(Response.Status.OK).entity(jobs).build();
     }
 
