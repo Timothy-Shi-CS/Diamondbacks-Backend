@@ -22,7 +22,7 @@ public class Job implements Serializable {
     private Constraints currentConstraints;
 
     @Transient
-    private Districting currentAvergageDistricting;
+    private Districting currentAverageDistricting;
 
     @Id
     private String id;
@@ -36,17 +36,10 @@ public class Job implements Serializable {
     @ManyToOne
     private State state;
 
-    public Districting getCurrentDistricting() {
-        return currentDistricting;
-    }
-
-    public void setCurrentDistricting(Districting currentDistricting) {
-        this.currentDistricting = currentDistricting;
-    }
-
     private float percentError(Integer f1, Integer f2){
         return Math.abs((float)f1-(float)f2)/Math.abs((float)f2);
     }
+
     public Districting calAverageDistricting(BoxAndWhisker currentBAW){
         //this method is only called by the constrainted jobs object
         Minorities minoritySelected= this.getCurrentConstraints().getMinoritySelected();
@@ -73,31 +66,35 @@ public class Job implements Serializable {
             }
         }
         //sets the current average districting after finding a good fit
-        this.setCurrentAvergageDistricting(averagedDistricting);
+        this.setcurrentAverageDistricting(averagedDistricting);
         //calculates the deviation from average disitrciting for the constrainted job
         this.calDeviationFromAvgDistricting();
         return averagedDistricting;
     }
+
     public void calDeviationFromAvgDistricting(){
         //this method is only called by the constrained jobs
         for(Districting dist: this.getListDistrictings()){
-            dist.calDevFromAvgDistGeo(this.getCurrentAvergageDistricting());
-            dist.calDevFromAvgDistPop(this.getCurrentAvergageDistricting());
+            dist.calDevFromAvgDistGeo(this.getcurrentAverageDistricting());
+            dist.calDevFromAvgDistPop(this.getcurrentAverageDistricting());
         }
     }
+
     public Districting getDistrictingByID(String id){
         return null;
     }
+
     public Collection<Float> getAvgDistrictingMinorityStats(String minority){
         return null;
     }
+
     public Collection<Districting> getDevFromAvgDistrictingGeometric(){
         return null;
     }
+
     public Collection<Districting> filterJobByConstraint(Constraints constraints){
         return null;
     }
-
 
     public int countRemainDistrictings(){
         // write method here to count districtings that fit constraints
@@ -109,9 +106,9 @@ public class Job implements Serializable {
         }
         return count;
     }
+
     public String getJobSummary(){
-        String jobSummary = "Cooling Period:" + this.getCoolingPeriod() + "Rounds:" + this.getRounds();
-        return jobSummary;
+        return "Cooling Period:" + this.getCoolingPeriod() + "Rounds:" + this.getRounds();
     }
 
     public String getPrelimAnalysis(){
@@ -136,23 +133,111 @@ public class Job implements Serializable {
 //        //get the top 10 from the sorted
 //        return districtings.subList(0,10);
 //    }
-    public Map<Integer, Float> getTopDistrictingsByDeviationFromEnacted(){
+
+    public Districting getTopDistrictingsByDeviationFromEnactedGeo(){
         //sort the remaining districting by deviation from enacted
-        return null;
+        //return the maximum deviation from enacted by geometric
+        //make sure it is sorted from high to low !!!
+        Comparator<Districting> devEnactedAreaComparator = new Comparator<Districting>() {
+            @Override
+            public int compare(Districting d1, Districting d2) {
+                float enactedGeo1 = d1.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_ENACTED_GEO).getMeasureScore();
+                float enactedGeo2 = d2.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_ENACTED_GEO).getMeasureScore();
+                return Float.compare(enactedGeo1, enactedGeo2);
+            }
+        };
+        //sort by objective function value
+        List<Districting> districtings = (List<Districting>)this.getListDistrictings();
+        districtings.sort(devEnactedAreaComparator);
+        return districtings.get(0);
     }
+
+    public Districting getTopDistrictingsByDeviationFromEnactedPop() {
+        //sort the remaining districting by deviation from enacted
+        //return the maximum deviation from enacted by population
+        //make sure it is sorted from high to low !!!
+        Comparator<Districting> devEnactedPopulationComparator = new Comparator<Districting>() {
+            @Override
+            public int compare(Districting d1, Districting d2) {
+                float enactedPop1 = d1.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_ENACTED_POP).getMeasureScore();
+                float enactedPop2 = d2.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_ENACTED_POP).getMeasureScore();
+                return Float.compare(enactedPop1, enactedPop2);
+            }
+        };
+        //sort by objective function value
+        List<Districting> districtings = (List<Districting>) this.getListDistrictings();
+        districtings.sort(devEnactedPopulationComparator);
+        return districtings.get(0);
+    }
+
+    public Collection<Districting> getVeryDifferentAreaPairDeviations(){
+        //this should return it in pairs?
+        //pick a district, then sort the list by the area of that list
+        //return the min and max of that list(very different area in terms of the district selected)
+        Integer districtToCompareArea = 1;
+        Comparator<Districting> areaComparator = new Comparator<Districting>() {
+            @Override
+            public int compare(Districting d1, Districting d2) {
+                float area1 = d1.getDistrictsMap().get(districtToCompareArea).getDistrictGeometry().getArea();
+                float area2 = d2.getDistrictsMap().get(districtToCompareArea).getDistrictGeometry().getArea();
+                return Float.compare(area1, area2);
+            }
+        };
+        //sort by objective function value
+        List<Districting> districtings = (List<Districting>)this.getListDistrictings();
+        districtings.sort(areaComparator);
+        List<Districting> result = new ArrayList<Districting>();
+        //the first element and the last element have very different area
+        result.add(districtings.get(0));
+        result.add(districtings.get(districtings.size()-1));
+        return result;
+    }
+
+    public Collection<Districting> getVeryDifferentPopulationPairDeviations(){
+        //this should return it in pairs?
+        //pick a district, then sort the list by the population of that list
+        //return the min and max of that list(very different population in terms of the district selected)
+        Integer districtToCompareArea = 1;
+        Comparator<Districting> populationComparator = new Comparator<Districting>() {
+            @Override
+            public int compare(Districting d1, Districting d2) {
+                float population1 = d1.getDistrictsMap().get(districtToCompareArea).getCensusInfo().getPopulationData()
+                        .get(CensusValues.TOTAL_POPULATION);
+                float population2 = d2.getDistrictsMap().get(districtToCompareArea).getCensusInfo().getPopulationData()
+                        .get(CensusValues.TOTAL_POPULATION);
+                return Float.compare(population1, population2);
+            }
+        };
+
+        //sort by objective function value
+        List<Districting> districtings = (List<Districting>)this.getListDistrictings();
+        districtings.sort(populationComparator);
+        List<Districting> result = new ArrayList<Districting>();
+        //the first element and the last element have very different population
+        result.add(districtings.get(0));
+        result.add(districtings.get(districtings.size()-1));
+        return result;
+    }
+
+//    public Collection<Districting> getInterestingDistictions(){
+//        this.getTopDistrictingsObjectFunction();
+//        this.getTopDistrictingsByDeviationFromEnactedGeo();
+//        this.getTopDistrictingsByDeviationFromEnactedPop();
+//        this.getVeryDifferentAreaPairDeviations();
+//        this.getVeryDifferentPopulationPairDeviations();
+//        return null;
+//    }
+
     public Map<Integer, Float> getDistrictingsByMajorMinorityRange(){
         //shouldn't this be all districtings? since it is being constrainted by this?
         return null;
     }
-    public Map<Integer, Float> getVeryDifferentAreaPairDeviations(){
-        //this should return it in pairs?
 
-        return null;
-    }
     public float calMajMinDevFromAvg(Map<Integer, Float> map){
         //what is this???
         return 0;
     }
+
     public Districting findDistrictingByID(String id, EntityManager em){
         // Implement method for use case 15
         String queryString = "SELECT * FROM Diamondbacks.Districtings WHERE recomb_file = " + id;
@@ -168,9 +253,11 @@ public class Job implements Serializable {
                 ", coolingPeriod=" + coolingPeriod +
                 ", rounds=" + rounds +
                 ", currentConstraints=" + currentConstraints +
-                ", currentAvergageDistricting=" + currentAvergageDistricting +
-                ", id=" + id +
+                ", currentAverageDistricting=" + currentAverageDistricting +
+                ", id='" + id + '\'' +
                 ", analysis=" + analysis +
+                ", currentDistricting=" + currentDistricting +
+                ", state=" + state +
                 '}';
     }
 
@@ -206,12 +293,12 @@ public class Job implements Serializable {
         this.currentConstraints = currentConstraints;
     }
 
-    public Districting getCurrentAvergageDistricting() {
-        return currentAvergageDistricting;
+    public Districting getcurrentAverageDistricting() {
+        return currentAverageDistricting;
     }
 
-    public void setCurrentAvergageDistricting(Districting currentAvergageDistricting) {
-        this.currentAvergageDistricting = currentAvergageDistricting;
+    public void setcurrentAverageDistricting(Districting currentAverageDistricting) {
+        this.currentAverageDistricting = currentAverageDistricting;
     }
 
     public String getId() {
@@ -222,11 +309,27 @@ public class Job implements Serializable {
         this.id = id;
     }
 
+    public Analysis getAnalysis() {
+        return analysis;
+    }
+
+    public void setAnalysis(Analysis analysis) {
+        this.analysis = analysis;
+    }
+
+    public Districting getCurrentDistricting() {
+        return currentDistricting;
+    }
+
+    public void setCurrentDistricting(Districting currentDistricting) {
+        this.currentDistricting = currentDistricting;
+    }
+
     public State getState() {
         return state;
     }
 
     public void setState(State state){
-        this.state=state;
+        this.state = state;
     }
 }
