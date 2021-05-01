@@ -150,13 +150,30 @@ public class Job {
         return districtings.get(0);
     }
 
+    public Collection<Districting> getVeryDifferentAreaPairDeviations(){
+        //this should return it in pairs?
+        //pick a district, then sort the list by the area of that list
+        //return the min and max of that list(very different area in terms of the district selected)
+        Integer districtToCompareArea = 1;
+        Comparator<Districting> areaComparator = new Comparator<Districting>() {
+            @Override
+            public int compare(Districting d1, Districting d2) {
+                float area1 = d1.getDistrictsMap().get(districtToCompareArea).getDistrictGeometry().getArea();
+                float area2 = d2.getDistrictsMap().get(districtToCompareArea).getDistrictGeometry().getArea();
+                return Float.compare(area1, area2);
+            }
+        };
+
+        //sort by objective function value
+        List<Districting> districtings = (List<Districting>)this.getListDistrictings();
+        districtings.sort(areaComparator);
+        List<Districting> result = new ArrayList<Districting>();
+        result.add(districtings.get(0));
+        result.add(districtings.get(districtings.size()-1));
+        return result;
+    }
     public Map<Integer, Float> getDistrictingsByMajorMinorityRange(){
         //shouldn't this be all districtings? since it is being constrainted by this?
-        return null;
-    }
-    public Map<Integer, Float> getVeryDifferentAreaPairDeviations(){
-        //this should return it in pairs?
-
         return null;
     }
     public float calMajMinDevFromAvg(Map<Integer, Float> map){
