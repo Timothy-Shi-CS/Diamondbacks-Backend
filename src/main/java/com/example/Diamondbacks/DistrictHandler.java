@@ -1,11 +1,17 @@
 package com.example.Diamondbacks;
 
+import javax.persistence.EntityManager;
+
 public class DistrictHandler {
     private District currentDistrict;
-    public ObjectiveValue getObjectiveFunctionScore(int districtID){
+    public ObjectiveValue getObjectiveFunctionScore(String districtID){
         return null;
     }
-
+    public String getObjectiveFunctionDetail(Job currentJob, String districtID, EntityManager em){
+        Districting currentDistricting = currentJob.getCurrentDistricting();
+        currentDistricting.findDistrictByID(districtID, em);
+        return null;
+    }
     @Override
     public String toString() {
         return "DistrictHandler{" +

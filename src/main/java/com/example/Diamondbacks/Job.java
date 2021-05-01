@@ -1,6 +1,8 @@
 package com.example.Diamondbacks;
 
 import javax.swing.*;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import java.util.Collection;
 import java.util.Map;
 
@@ -50,20 +52,9 @@ public class Job {
                 break;
             }
         }
-
-        this.setCurrentAvergageDistricting(averagedDistricting);
-        this.calDevFromAVG();
         return averagedDistricting;
     }
-
-    public void calDevFromAVG(){
-        for(Districting dist: this.getListDistrictings()){
-            dist.calDevFromAvgDistGeo(this.getCurrentAvergageDistricting());
-            dist.calDevFromAvgDistPop(this.getCurrentAvergageDistricting());
-        }
-    }
-
-    public Districting getDistrictingByID(int ID){
+    public Districting getDistrictingByID(String id){
         return null;
     }
     public Collection<Float> getAvgDistrictingMinorityStats(String minority){
@@ -109,8 +100,11 @@ public class Job {
     public float calMajMinDevFromAvg(Map<Integer, Float> map){
         return 0;
     }
-    public Districting findDistrictingByID(int id){
+    public Districting findDistrictingByID(String id, EntityManager em){
         // Implement method for use case 15
+        String queryString = "SELECT * FROM Diamondbacks.Districtings WHERE recomb_file = " + id + ".json";
+        Query q = em.createNativeQuery(queryString);
+        System.out.println(q.getResultList());
         return null;
     }
 

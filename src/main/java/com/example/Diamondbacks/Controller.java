@@ -60,7 +60,7 @@ public class Controller {
 
     @GET
     @Path("/box-and-whisker/districting={id}&minority={minority}")
-    public Response callBAWHandler(@PathParam("id") int id, @PathParam("minority") String minority) {
+    public Response callBAWHandler(@PathParam("id") String id, @PathParam("minority") String minority) {
         BoxAndWhiskerHandler baw = new BoxAndWhiskerHandler();
         Minorities minorityName = this.minority;
         baw.makeBoxAndWhisker(this.state, id, minorityName);
@@ -69,7 +69,7 @@ public class Controller {
 
     @GET
     @Path("/constraint/job={jobID}&maj-min={majMin}&incumbent={incumID}&pop={pop}&vap={vap}&cvap={cvap}&geo-comp={geoComp}&graph-comp={graphComp}&pop-fat={popFat}")
-    public Response callConstraintHandler(@PathParam("jobID") int jobID, @PathParam("majMin") int majMin,
+    public Response callConstraintHandler(@PathParam("jobID") String jobID, @PathParam("majMin") int majMin,
                                           @PathParam("incumID") String incumbentIDs,
                                           @PathParam("pop") float pop, @PathParam("vap") float vap,
                                           @PathParam("cvap") float cvap, @PathParam("geoComp") float geoComp,
@@ -80,7 +80,7 @@ public class Controller {
 
     @GET
     @Path("/districting/id={districtingID}")
-    public Response callDistrictingHandler(@PathParam("districtingID") int districtingID) {
+    public Response callDistrictingHandler(@PathParam("districtingID") String districtingID) {
         DistrictingHandler districting = new DistrictingHandler();
         return Response.status(Response.Status.OK).entity("Hello").build();
     }
@@ -101,7 +101,7 @@ public class Controller {
 
     @GET
     @Path("/deviation/districting={id}")
-    public Response calculateDeviation(@PathParam("id") int districtingID) {
+    public Response calculateDeviation(@PathParam("id") String districtingID) {
 //        DistrictingHandler districting =
         return Response.status(Response.Status.OK).entity("Hello").build();
     }
@@ -117,24 +117,23 @@ public class Controller {
     @GET
     @Path("/district-objective-value/id={districtID}")
     public Response getDistrictObjectiveValue(@PathParam("districtID") String districtID) {
-        DistrictingHandler districtingHandler = new DistrictingHandler();
-        districtingHandler.getObjectiveFunctionDetail(this.currentJob, districtID, this.em);
-        return Response.status(Response.Status.OK).entity("Hello").build();
+        DistrictHandler districtHandler = new DistrictHandler();
+        em = emf.createEntityManager();
+        String result = districtHandler.getObjectiveFunctionDetail(this.currentJob, districtID, this.em);
+        return Response.status(Response.Status.OK).entity(result).build();
     }
 
     @GET
     @Path("/districting-objective-value/id={districtingID}")
-    public Response getDistrictingObjectiveValue(@PathParam("districtingID") int districtingID) {
+    public Response getDistrictingObjectiveValue(@PathParam("districtingID") String districtingID) {
         DistrictingHandler districtingHandler = new DistrictingHandler();
-        currentJob = new Job();
-        // needs to be this.currentJob
-        String result = districtingHandler.getObjectiveFunctionScore(currentJob, districtingID);
+        String result = districtingHandler.getObjectiveFunctionScore(this.currentJob, districtingID, this.em);
         return Response.status(Response.Status.OK).entity(result).build();
     }
 
     @GET
     @Path("/districting-boundary/id={districtingID}")
-    public Response getDistrictingBoundary(@PathParam("districtingID") int districtingID) {
+    public Response getDistrictingBoundary(@PathParam("districtingID") String districtingID) {
         DistrictingHandler districtingHandler = new DistrictingHandler();
         Map<Integer,Geometry> geometries = districtingHandler.getDistrictingGeometry(districtingID, this.currentJob);
         return Response.status(Response.Status.OK).entity(geometries).build();
@@ -158,7 +157,7 @@ public class Controller {
 
     @Path("/constructed-constraint/job={jobID}&minority={minority}&threshold={threshold}&maj-min={majMin}&incumbent={incumID}&pop={pop}&vap={vap}&cvap={cvap}&tvap={tvap}&geo-comp={geoComp}&graph-comp={graphComp}&pop-fat={popFat}")
     @GET
-    public Response constructConstraints(@PathParam("jobID") float jobID, @PathParam("minority") String minority,
+    public Response constructConstraints(@PathParam("jobID") String jobID, @PathParam("minority") String minority,
                                          @PathParam("threshold") float minorityThreshold, @PathParam("majMin") int majMin,
                                          @PathParam("incumID") String incumbentIDs,
                                          @PathParam("pop") float totalPop, @PathParam("cvap") float cvaPop,
