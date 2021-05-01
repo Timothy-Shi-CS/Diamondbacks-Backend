@@ -25,7 +25,7 @@ public class Job {
     }
 
     private float percentError(Integer f1, Integer f2){
-        return Math.abs(f1-f2)/Math.abs(f2);
+        return Math.abs((float)f1-(float)f2)/Math.abs((float)f2);
     }
     public Districting calAverageDistricting(BoxAndWhisker currentBAW){
         //this method is only called by the constrainted jobs object
