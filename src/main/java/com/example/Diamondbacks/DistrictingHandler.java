@@ -4,6 +4,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DistrictingHandler {
     private Districting currentDistricting;
@@ -31,19 +33,19 @@ public class DistrictingHandler {
                 '}';
     }
 
-    private Collection<Geometry> getGeometries(Collection<District> districts){
-        Collection<Geometry> districtGeometries = new ArrayList<>();
-        for(District district: districts){
-            Geometry districtGeometry = district.getDistrictGeometry();
-            districtGeometries.add(districtGeometry);
+    private Map<Integer, Geometry> getGeometries(Map<Integer,District> districts){
+        Map<Integer,Geometry> districtGeometries = new HashMap<>();
+        for(Map.Entry<Integer,District> entry : districts.entrySet()){
+            Geometry districtGeometry = entry.getValue().getDistrictGeometry();
+            districtGeometries.put(entry.getKey(),districtGeometry);
         }
         return districtGeometries;
     }
 
-    public Collection<Geometry> getDistrictingGeometry(int districtingID, Job currentJob){
+    public Map<Integer,Geometry> getDistrictingGeometry(int districtingID, Job currentJob){
         this.currentDistricting = currentJob.getDistrictingByID(districtingID);
         currentJob.setCurrentDistricting(this.currentDistricting);
-        Collection<District> districts = this.currentDistricting.getDistrictsList();
+        Map<Integer,District> districts = this.currentDistricting.getDistrictsMap();
         return getGeometries(districts);
     }
 
