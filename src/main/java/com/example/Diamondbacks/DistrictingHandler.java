@@ -17,7 +17,7 @@ public class DistrictingHandler {
     public String getDistrictingBoundary(int districtingID){
         return null;
     }
-    public String getObjectiveFunctionDetail(Job currentJob, int districtID, EntityManager em){
+    public String getObjectiveFunctionDetail(Job currentJob, String districtID, EntityManager em){
         Districting currentDistricting = currentJob.getCurrentDistricting();
         currentDistricting.findDistrictByID(districtID, em);
         return null;
