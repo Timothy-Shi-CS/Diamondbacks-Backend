@@ -10,36 +10,49 @@ import java.util.*;
 @Table(name = "Jobs")
 public class Job implements Serializable {
     @Transient
-    private Collection<Districting> listDistrictings;
+    private Collection<Districting> listDistrictings; // the list of districting within this job
 
     @Column(name = "cooling_period", nullable = false)
-    private int coolingPeriod;
+    private int coolingPeriod; //the cooling period of the job
 
     @Column(name = "rounds", nullable = false)
-    private int rounds;
+    private int rounds; // the rounds of the job
 
     @Transient
-    private Constraints currentConstraints;
+    private Constraints currentConstraints; //the constraint set by the user
 
     @Transient
-    private Districting currentAverageDistricting;
+    private Districting currentAverageDistricting; //the average districting based on the constraint set by the user
 
     @Id
-    private String id;
+    private String id; //the id of the job
 
     @Transient
-    private Analysis analysis;
+    private Analysis analysis; //the analysis of the job
 
     @Transient
-    private Districting currentDistricting;
+    private Districting currentDistricting; // the districting the user selected to view
 
     @ManyToOne
-    private State state;
+    private State state; // the state of the job
 
+    /**
+     * The method calculates the percent error of two integers
+     * @param f1 first value
+     * @param f2 second value
+     * @return the percent error range(0,1)
+     */
     private float percentError(Integer f1, Integer f2){
         return Math.abs((float)f1-(float)f2)/Math.abs((float)f2);
     }
 
+    /**
+     * The method finds a districting that is closest to the average number of minorities
+     * by on the minority that the user selected and the constrained job that has been filtered
+     * down
+     * @param currentBAW The current box and whisker passed down by the State job
+     * @return the average districting by on the constrainted job
+     */
     public Districting calAverageDistricting(BoxAndWhisker currentBAW){
         //this method is only called by the constrainted jobs object
         Minorities minoritySelected= this.getCurrentConstraints().getMinoritySelected();
@@ -72,6 +85,10 @@ public class Job implements Serializable {
         return averagedDistricting;
     }
 
+    /**
+     * This method calculates the deviation from average disticting after the constrainted job has been set
+     * and the box and whisker data has been set
+     */
     public void calDeviationFromAvgDistricting(){
         //this method is only called by the constrained jobs
         for(Districting dist: this.getListDistrictings()){
@@ -96,6 +113,10 @@ public class Job implements Serializable {
         return null;
     }
 
+    /**
+     * This method counts how many districtings are remaining after the user selects the constraints
+     * @return the number of remaining districts
+     */
     public int countRemainDistrictings(){
         // write method here to count districtings that fit constraints
         int count = 0;
@@ -134,6 +155,11 @@ public class Job implements Serializable {
 //        return districtings.subList(0,10);
 //    }
 
+    /**
+     * This method sorts the constrained job by sorting the list of districtings by deivation from
+     * enacted districting by area
+     * @return the districting with the highest deviation from the enacted districting by area
+     */
     public Districting getTopDistrictingsByDeviationFromEnactedGeo(){
         //sort the remaining districting by deviation from enacted
         //return the maximum deviation from enacted by geometric
@@ -151,7 +177,11 @@ public class Job implements Serializable {
         districtings.sort(devEnactedAreaComparator);
         return districtings.get(0);
     }
-
+    /**
+     * This method sorts the constrained job by sorting the list of districtings by deivation from
+     * enacted districting by population
+     * @return the districting with the highest deviation from the enacted districting by population
+     */
     public Districting getTopDistrictingsByDeviationFromEnactedPop() {
         //sort the remaining districting by deviation from enacted
         //return the maximum deviation from enacted by population
@@ -170,6 +200,10 @@ public class Job implements Serializable {
         return districtings.get(0);
     }
 
+    /**
+     * This method gets a pair of districting that has very different area for a specific district
+     * @return the pair of districting with very different area
+     */
     public Collection<Districting> getVeryDifferentAreaPairDeviations(){
         //this should return it in pairs?
         //pick a district, then sort the list by the area of that list
@@ -192,7 +226,10 @@ public class Job implements Serializable {
         result.add(districtings.get(districtings.size()-1));
         return result;
     }
-
+    /**
+     * This method gets a pair of districting that has very different population for a specific district
+     * @return the pair of districting with very different population
+     */
     public Collection<Districting> getVeryDifferentPopulationPairDeviations(){
         //this should return it in pairs?
         //pick a district, then sort the list by the population of that list

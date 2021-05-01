@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.Map;
 
 public class District {
-    private CensusInfo censusInfo;
-    private int districtNumber;
-    private ObjectiveValue districtMeasures;
-    private Collection<Precinct> precinctList;
-    private Geometry districtGeometry;
+    private CensusInfo censusInfo; //the overall population and minority counts
+    private int districtNumber; //the district number
+    private ObjectiveValue districtMeasures; //OBJ value of the districting
+    private Collection<Precinct> precinctList; //the list of preincts within this district
+    private Geometry districtGeometry; // the geometry of the district
 
     public District(CensusInfo censusInfo, int districtNumber, ObjectiveValue districtMeasures,
                     Collection<Precinct> precinctList, Geometry districtGeometry) {
@@ -20,6 +20,11 @@ public class District {
         this.districtGeometry = districtGeometry;
     }
 
+    /**
+     * This method calculates the sum of square difference from the average district by area
+     * @param avgDistrict the district from average districting with corresponding districtID
+     * @return the sum of square difference from the average district by area
+     */
     public Measure calDevFromAvgDistGeo(District avgDistrict){
         //sum of square differences by area by district
         Measure currentMeasure = this.getDistrictMeasures().getMeasures().get(MeasureType.DEV_AVERAGE_GEO);
@@ -29,6 +34,11 @@ public class District {
         currentMeasure.setMeasureScore(sse);
         return currentMeasure;
     }
+    /**
+     * This method calculates the sum of square difference from the average district by population
+     * @param avgDistrict the district from average districting with corresponding districtID
+     * @return the sum of square difference from the average district by population
+     */
     public Measure calDevFromAvgDistPop(District avgDistrict){
         //sum of square differences by population by district
         Measure currentMeasure = this.getDistrictMeasures().getMeasures().get(MeasureType.DEV_AVERAGE_POP);

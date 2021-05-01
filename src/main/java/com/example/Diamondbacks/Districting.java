@@ -26,6 +26,11 @@ public class Districting {
         this.sortedMinorityData = sortedMinorityData;
     }
 
+    /**
+     * This method checks if this districting satisfies the constraints set by the user.
+     * @param userConstraints constraints set by the user
+     * @return true if the constraint is satisfied
+     */
     public boolean satisfyConstraints(Constraints userConstraints){
         if(userConstraints.getIncumbentsID().size() != 0){
             Collection<Integer> protectedCandidateIds = new ArrayList<>();
@@ -84,6 +89,13 @@ public class Districting {
         }
         return true;
     }
+
+    /**
+     * This method counts how many majority minority are in this districting based on the
+     * minority selected by the user and the threshold selected by the user
+     * @param userConstraints constraints set by the user
+     * @return number of majority minority districts
+     */
     public int countMajorityMinorityDistrict(Constraints userConstraints){
         int count = 0;
         Minorities minorityLookUp = userConstraints.getMinoritySelected();
@@ -101,26 +113,44 @@ public class Districting {
         return null;
     }
 
+    /**
+     * This method calculates the deviation from average districting by geometric
+     * by iterating through the districts to calcuates sum of square differences in area
+     * @param avgDistricting the average districting of the constrainted job
+     * @return deviation from average districting by geometric score
+     */
     public Measure calDevFromAvgDistGeo(Districting avgDistricting){
         //sum of square differences by area at districting level
         Measure totMeasure = this.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_AVERAGE_GEO);
         //resetting the previous dev from Average Districting
         totMeasure.setMeasureScore(0);
+        //iterates through all districts in the districting to calculate the SSE
         for(int districtID: this.getDistrictsMap().keySet()){
+            //calculates the SSE for the district
             Measure currentMeasure = this.getDistrictsMap().get(districtID)
                     .calDevFromAvgDistGeo(avgDistricting.getDistrictsMap().get(districtID));
+            //add the SSE to the overall score
             totMeasure.setMeasureScore(totMeasure.getMeasureScore() + currentMeasure.getMeasureScore());
         }
         return totMeasure;
     }
+    /**
+     * This method calculates the deviation from average districting by population
+     * by iterating through the districts to calcuates sum of square differences in population
+     * @param avgDistricting the average districting of the constrainted job
+     * @return deviation from average districting by population score
+     */
     public Measure calDevFromAvgDistPop(Districting avgDistricting){
         //sum of square differences by population at districting level
         Measure totMeasure = this.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_AVERAGE_GEO);
         //resetting the previous dev from Average Districting
         totMeasure.setMeasureScore(0);
+        //iterates through all districts in the districting to calculate the SSE
         for(int districtID: this.getDistrictsMap().keySet()){
+            //calculates the SSE for the district
             Measure currentMeasure = this.getDistrictsMap().get(districtID)
                     .calDevFromAvgDistPop(avgDistricting.getDistrictsMap().get(districtID));
+            //add the SSE to the overall score
             totMeasure.setMeasureScore(totMeasure.getMeasureScore() + currentMeasure.getMeasureScore());
         }
         return totMeasure;
