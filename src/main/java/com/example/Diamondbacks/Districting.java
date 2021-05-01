@@ -11,12 +11,13 @@ public class Districting {
     private Map<Integer, District> districtsMap; // Map[districNumber]= District
     private Collection<IncumbentCandidate> protectedIncumbentCandidateList; // read in from JSON as list
     private int districtingID; //unique districting ID read from JSON
-    private Map<Integer, Map<Minorities, Float>> sortedMinorityData; //count of minority for each district
+    private Map<Integer, Map<Minorities, Integer>> sortedMinorityData; //count of minority for each district
     // read in from JSON as integers
+
 
     public Districting(CensusInfo censusInfo, ObjectiveValue districtingMeasures, Map<Integer, District> districtsMap,
                        Collection<IncumbentCandidate> protectedIncumbentCandidateList, int districtingID,
-                       Map<Integer, Map<Minorities, Float>> sortedMinorityData) {
+                       Map<Integer, Map<Minorities, Integer>> sortedMinorityData) {
         this.censusInfo = censusInfo;
         this.districtingMeasures = districtingMeasures;
         this.districtsMap = districtsMap;
@@ -173,11 +174,11 @@ public class Districting {
         this.protectedIncumbentCandidateList = protectedIncumbentCandidateList;
     }
 
-    public Map<Integer, Map<Minorities, Float>> getSortedMinorityData() {
+    public Map<Integer, Map<Minorities, Integer>> getSortedMinorityData() {
         return sortedMinorityData;
     }
 
-    public void setSortedMinorityData(Map<Integer, Map<Minorities, Float>> sortedMinorityData) {
+    public void setSortedMinorityData(Map<Integer, Map<Minorities, Integer>> sortedMinorityData) {
         this.sortedMinorityData = sortedMinorityData;
     }
 }
