@@ -31,7 +31,7 @@ public class BoxAndWhisker {
         this.calculateBoxAndWhiskerData();
     }
     public void calculateBoxAndWhiskerData(){
-        Comparator<Integer> defaultComparator = new Comparator<Integer>() {
+        Comparator<Integer> IntegerComparator = new Comparator<Integer>() {
             @Override
             public int compare(Integer o1, Integer o2) {
                 return Integer.compare(o1, o2);
@@ -47,7 +47,7 @@ public class BoxAndWhisker {
         //get min, max, q1, q2, avg data for each district
         for(Integer districtID: this.getMinorityData().keySet()){
             List<Integer> districtData = (List<Integer>)this.getMinorityData().get(districtID);
-            districtData.sort(defaultComparator);
+            districtData.sort(IntegerComparator);
 //            Double tmp = districtData.stream().mapToDouble(val -> val).average().orElse(0.0);
 //            Float avg_data = tmp.floatValue();
             Integer min_data = districtData.get(0);
