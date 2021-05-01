@@ -51,6 +51,12 @@ public class Job implements Serializable {
         return Math.abs((float)f1-(float)f2)/Math.abs((float)f2);
     }
 
+    /**
+     * This metho iternates through the list of districtings in the constrained job and picks
+     * a districting with the closes minority data of the box and whisker averages
+     * @param currentBAW the box and whisker object with the averages
+     * @return the averaged districting based on the constraint set by the user
+     */
     public Districting calAverageDistricting(BoxAndWhisker currentBAW){
         //this method is only called by the constrainted jobs object
         Minorities minoritySelected= this.getCurrentConstraints().getMinoritySelected();
@@ -83,6 +89,10 @@ public class Job implements Serializable {
         return averagedDistricting;
     }
 
+    /**
+     * This method iternates through all the districtings in the constrained Job to calculate the
+     * deviation from average distircting
+     */
     public void calDeviationFromAvgDistricting(){
         //this method is only called by the constrained jobs
         for(Districting dist: this.getListDistrictings()){
@@ -107,6 +117,12 @@ public class Job implements Serializable {
         return null;
     }
 
+    /**
+     * This method counts the remaining districting after the user selects the constraints
+     * but doesn't actually create constrained Job due to the possibility of changing constraints
+     * back and forth
+     * @return the number of remaining districtings after the user selects the contraints
+     */
     public int countRemainDistrictings(){
         // write method here to count districtings that fit constraints
         int count = 0;
