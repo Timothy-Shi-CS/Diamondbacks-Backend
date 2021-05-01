@@ -3,39 +3,20 @@ package com.example.Diamondbacks;
 import java.util.Map;
 
 public class CensusInfo {
-    private CensusValues censusType;
-    private float censusNum;
-    private Map<Minorities, Float> minorities;
+    private Map<CensusValues, Integer> populationData;
+    private Map<Minorities, Float> minorities; // percent of minorities in each district
 
-    public CensusInfo(CensusValues censusType, float censusNum, Map<Minorities, Float> minorities) {
-        this.censusType = censusType;
-        this.censusNum = censusNum;
+    public CensusInfo(Map<CensusValues, Integer> populationData, Map<Minorities, Float> minorities) {
+        this.populationData = populationData;
         this.minorities = minorities;
     }
 
-    @Override
-    public String toString() {
-        return "CensusInfo{" +
-                "censusType=" + censusType +
-                ", censusNum=" + censusNum +
-                ", minorities=" + minorities +
-                '}';
+    public Map<CensusValues, Integer> getPopulationData() {
+        return populationData;
     }
 
-    public CensusValues getCensusType() {
-        return censusType;
-    }
-
-    public void setCensusType(CensusValues censusType) {
-        this.censusType = censusType;
-    }
-
-    public float getCensusNum() {
-        return censusNum;
-    }
-
-    public void setCensusNum(float censusNum) {
-        this.censusNum = censusNum;
+    public void setPopulationData(Map<CensusValues, Integer> populationData) {
+        this.populationData = populationData;
     }
 
     public Map<Minorities, Float> getMinorities() {

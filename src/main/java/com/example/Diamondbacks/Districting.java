@@ -6,12 +6,13 @@ import java.util.*;
 
 public class Districting {
 
-    private CensusInfo censusInfo;
-    private ObjectiveValue districtingMeasures;
-    private Map<Integer, District> districtsMap;
-    private Collection<IncumbentCandidate> protectedIncumbentCandidateList;
-    private int districtingID;
-    private Map<Integer, Map<Minorities, Float>> sortedMinorityData;
+    private CensusInfo censusInfo; //cenus info of the districting
+    private ObjectiveValue districtingMeasures; //OBJ value of the districting
+    private Map<Integer, District> districtsMap; // Map[districNumber]= District
+    private Collection<IncumbentCandidate> protectedIncumbentCandidateList; // read in from JSON as list
+    private int districtingID; //unique districting ID read from JSON
+    private Map<Integer, Map<Minorities, Float>> sortedMinorityData; //count of minority for each district
+    // read in from JSON as integers
 
     public Districting(CensusInfo censusInfo, ObjectiveValue districtingMeasures, Map<Integer, District> districtsMap,
                        Collection<IncumbentCandidate> protectedIncumbentCandidateList, int districtingID,
