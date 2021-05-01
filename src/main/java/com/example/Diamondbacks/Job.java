@@ -168,10 +168,38 @@ public class Job {
         List<Districting> districtings = (List<Districting>)this.getListDistrictings();
         districtings.sort(areaComparator);
         List<Districting> result = new ArrayList<Districting>();
+        //the first element and the last element have very different area
         result.add(districtings.get(0));
         result.add(districtings.get(districtings.size()-1));
         return result;
     }
+
+    public Collection<Districting> getVeryDifferentPopulationPairDeviations(){
+        //this should return it in pairs?
+        //pick a district, then sort the list by the population of that list
+        //return the min and max of that list(very different population in terms of the district selected)
+        Integer districtToCompareArea = 1;
+        Comparator<Districting> populationComparator = new Comparator<Districting>() {
+            @Override
+            public int compare(Districting d1, Districting d2) {
+                float population1 = d1.getDistrictsMap().get(districtToCompareArea).getCensusInfo().getPopulationData()
+                        .get(CensusValues.TOTAL_POPULATION);
+                float population2 = d2.getDistrictsMap().get(districtToCompareArea).getCensusInfo().getPopulationData()
+                        .get(CensusValues.TOTAL_POPULATION);
+                return Float.compare(population1, population2);
+            }
+        };
+
+        //sort by objective function value
+        List<Districting> districtings = (List<Districting>)this.getListDistrictings();
+        districtings.sort(populationComparator);
+        List<Districting> result = new ArrayList<Districting>();
+        //the first element and the last element have very different population
+        result.add(districtings.get(0));
+        result.add(districtings.get(districtings.size()-1));
+        return result;
+    }
+
     public Map<Integer, Float> getDistrictingsByMajorMinorityRange(){
         //shouldn't this be all districtings? since it is being constrainted by this?
         return null;
