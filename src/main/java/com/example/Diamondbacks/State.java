@@ -97,7 +97,7 @@ public class State {
      */
     public void makeConstraintedJob(){
         Constraints userConstraints = this.getCurrentJob().getCurrentConstraints();
-        Job filteredJob = new Job();
+        Job filteredJob = this.getConstraintedJob();
         Collection<Districting> filteredDistricting = new ArrayList<>();
         for(Districting districting: this.getCurrentJob().getListDistrictings()){
             if(districting.satisfyConstraints(userConstraints)){
