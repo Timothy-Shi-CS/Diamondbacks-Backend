@@ -4,7 +4,10 @@ import org.locationtech.jts.*;
 import org.wololo.geojson.Feature;
 import org.wololo.geojson.FeatureCollection;
 import org.wololo.geojson.GeoJSONFactory;
+import org.wololo.geojson.Geometry;
 import org.wololo.jts2geojson.GeoJSONReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -43,6 +46,11 @@ public class State {
     @Transient
     private BoxAndWhisker currentBoxAndWhisker; //box and whisker data for plotting
 
+    public static String readFileAsString(String file)throws Exception
+    {
+        return new String(Files.readAllBytes(Paths.get(file)));
+    }
+
     public void loadPrecinctGeometries(){
         System.out.println("loading precinct geometries");
         String filepath;
@@ -55,8 +63,25 @@ public class State {
 //            case ARIZONA:
 //                filepath="~/Arizona.json";
 //        }
-        FeatureCollection featureCollection = (FeatureCollection) GeoJSONFactory.create("../../../../az_precincts.json");
-        System.out.println(featureCollection.toString());
+        try{
+            String file = "/Users/garyjiang/IdeaProjects/Diamondbacks-Backend/az_precincts.json";
+            String json = readFileAsString(file);
+            GeoJSONReader reader = new GeoJSONReader();
+            FeatureCollection featureCollection = (FeatureCollection) GeoJSONFactory.create(json);
+            System.out.println(featureCollection.getFeatures().length);
+            Map<String,Object> properties = featureCollection.getFeatures()[0].getProperties();
+            String precinctCode = (String) properties.get("CODE");
+            System.out.println(precinctCode);
+            System.out.println(properties.toString());
+//            for(Feature feature: featureCollection.getFeatures()){
+//                Geometry geometry = feature.getGeometry();
+//                Map<String,Object> properties = feature.getProperties();
+//
+//            }
+        }
+        catch (Exception e){
+            System.out.println("Unable to read file");
+        }
 
         File inFile = new File("");
 
@@ -90,6 +115,10 @@ public class State {
 
         //the job has been constrained get the box and whisker
         this.calcBoxAndWhisker();
+    }
+
+    private void updatePrecinctMap(){
+
     }
 
     /**
