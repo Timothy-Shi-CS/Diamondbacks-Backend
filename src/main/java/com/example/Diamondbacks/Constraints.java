@@ -3,7 +3,7 @@ package com.example.Diamondbacks;
 import java.util.Collection;
 
 public class Constraints {
-    private Collection<Integer> incumbentsID;
+    private Collection<String> incumbentsID;
     private Minorities minoritySelected;
     private float minorityThreshold;
     private int majorityMinorityDistricts;
@@ -14,7 +14,7 @@ public class Constraints {
     private float graphCompactness;
     private float populationFatness;
 
-    public Constraints(Collection<Integer> incumbentsID, Minorities minoritySelected, float minorityThreshold,
+    public Constraints(Collection<String> incumbentsID, Minorities minoritySelected, float minorityThreshold,
                        int majorityMinorityDistricts, float totalPopulationEquality, float votingAgePopulationEquality,
                        float citizenAgePopulationEquality, float geographicCompactness, float graphCompactness,
                        float populationFatness) {
@@ -46,11 +46,11 @@ public class Constraints {
         this.minorityThreshold = minorityThreshold;
     }
 
-    public Collection<Integer> getIncumbentsID() {
+    public Collection<String> getIncumbentsID() {
         return incumbentsID;
     }
 
-    public void setIncumbentsID(Collection<Integer> incumbentsID) {
+    public void setIncumbentsID(Collection<String> incumbentsID) {
         this.incumbentsID = incumbentsID;
     }
 

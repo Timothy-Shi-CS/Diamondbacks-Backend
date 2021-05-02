@@ -32,8 +32,9 @@ public class StateHandler {
 
     }
 
-    public void setState(String stateName, State state){
+    public State setState(String stateName, State state){
         StateName name = StateName.valueOf(stateName);
         state.setStateName(name);
+        return state;
     }
 }

@@ -2,11 +2,12 @@ package com.example.Diamondbacks;
 
 import com.mysql.cj.x.protobuf.MysqlxCrud;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
+import javax.persistence.*;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
@@ -18,11 +19,14 @@ import java.util.Map;
 @Path("/controller")
 public class Controller {
 
+    @Context
+    ServletContext servletContext;
+
     private final State STATE = new State();
-    private Minorities minority;
     private Job currentJob;
-    private EntityManager em;
+
     private EntityManagerFactory emf = Persistence.createEntityManagerFactory("Diamondbacks");
+    private EntityManager em = emf.createEntityManager();
 
     @GET
     @Path("/data")
@@ -53,7 +57,7 @@ public class Controller {
 
     @GET
     @Path("/loadprecicntgeometries")
-    public Response loadPrecinctGeometries(){
+    public Response loadPrecinctGeometries() {
         StateHandler stateHandler = new StateHandler();
         stateHandler.loadPrecinctGeometries(this.STATE);
         return Response.status(Response.Status.OK).entity("Hello").build();
@@ -70,7 +74,7 @@ public class Controller {
     @Path("/box-and-whisker/districting={id}&minority={minority}")
     public Response callBAWHandler(@PathParam("id") String id, @PathParam("minority") String minority) {
         BoxAndWhiskerHandler baw = new BoxAndWhiskerHandler();
-        Minorities minorityName = this.minority;
+        Minorities minorityName = Minorities.valueOf(((String) (servletContext.getAttribute("minority"))).toUpperCase());
         baw.makeBoxAndWhisker(this.STATE, id, minorityName);
         return Response.status(Response.Status.OK).entity("Hello").build();
     }
@@ -101,11 +105,15 @@ public class Controller {
     }
 
     @GET
-    @Path("/state={stateName}")
-    public Response callStateHandler(@PathParam("stateName") String stateName) {
+    @Path("/state={stateName}&job={jobID}")
+    public Response setStateAndJob(@PathParam("stateName") String stateName, @PathParam("jobID") String jobID) {
         StateHandler stateHandler = new StateHandler();
-        stateHandler.setState(stateName,STATE);
-        return Response.status(Response.Status.OK).entity("Hello").build();
+        JobHandler jobHandler = new JobHandler();
+        stateHandler.setState(stateName, STATE);
+        currentJob = jobHandler.getJobByID(jobID, em);
+        servletContext.setAttribute("state", STATE);
+        servletContext.setAttribute("currentJob", currentJob);
+        return Response.status(Response.Status.OK).entity("hello").build();
     }
 
     @GET
@@ -144,7 +152,7 @@ public class Controller {
     @Path("/districting-boundary/id={districtingID}")
     public Response getDistrictingBoundary(@PathParam("districtingID") String districtingID) {
         DistrictingHandler districtingHandler = new DistrictingHandler();
-        Map<Integer,Geometry> geometries = districtingHandler.getDistrictingGeometry(districtingID, this.currentJob);
+        Map<Integer, Geometry> geometries = districtingHandler.getDistrictingGeometry(districtingID, this.currentJob);
         return Response.status(Response.Status.OK).entity(geometries).build();
     }
 
@@ -161,19 +169,20 @@ public class Controller {
         em = emf.createEntityManager();
         StateHandler state = new StateHandler();
         List jobs = state.getJobs(stateName, em);
+        em.close();
         return Response.status(Response.Status.OK).entity(jobs).build();
     }
 
-    @Path("/constructed-constraint/job={jobID}&minority={minority}&threshold={threshold}&maj-min={majMin}&incumbent={incumID}&pop={pop}&vap={vap}&cvap={cvap}&tvap={tvap}&geo-comp={geoComp}&graph-comp={graphComp}&pop-fat={popFat}")
     @GET
+    @Path("/construct-constraint/job={jobID}&minority={minority}&threshold={threshold}&majMin={majMin}&incumbent={incumID}&pop={pop}&vap={vap}&cvap={cvap}&geoComp={geoComp}&graphComp={graphComp}&popFat={popFat}")
     public Response constructConstraints(@PathParam("jobID") String jobID, @PathParam("minority") String minority,
-                                         @PathParam("threshold") float minorityThreshold, @PathParam("majMin") int majMin,
+                                         @PathParam("threshold") String minorityThreshold, @PathParam("majMin") String majMin,
                                          @PathParam("incumID") String incumbentIDs,
-                                         @PathParam("pop") float totalPop, @PathParam("cvap") float cvaPop,
-                                         @PathParam("tvap") float tvaPop, @PathParam("geoComp") float geoComp,
-                                         @PathParam("graphComp") float graphComp, @PathParam("popFat") float popFat) {
+                                         @PathParam("pop") String totalPop, @PathParam("vap") String vaPop,
+                                         @PathParam("cvap") String cvaPop, @PathParam("geoComp") String geoComp,
+                                         @PathParam("graphComp") String graphComp, @PathParam("popFat") String popFat) {
         ConstraintHandler constraintHandler = new ConstraintHandler();
-        Collection<Integer> incumbentsProtected = convertIncumbentsArray(incumbentIDs);
+        Collection<String> incumbentsProtected = convertIncumbentsArray(incumbentIDs);
         Minorities minorityName = null;
         switch (minority) {
             case "hispanic":
@@ -186,18 +195,19 @@ public class Controller {
                 minorityName = Minorities.ASIAN;
                 break;
         }
-        this.minority = minorityName;
-        int remainingDistrictings = constraintHandler.setConstraintsHandler(this.currentJob, minorityName,
-                minorityThreshold, majMin, incumbentsProtected, totalPop, tvaPop, cvaPop, geoComp, graphComp, popFat);
+        servletContext.setAttribute("minority", minorityName);
+        currentJob = (Job) servletContext.getAttribute("currentJob");
+        int remainingDistrictings = constraintHandler.getRemainingDistrictings(currentJob, minorityName,
+                Float.parseFloat(minorityThreshold), Integer.parseInt(majMin), incumbentsProtected, Float.parseFloat(totalPop), Float.parseFloat(vaPop), Float.parseFloat(cvaPop), Float.parseFloat(geoComp), Float.parseFloat(graphComp), Float.parseFloat(popFat));
         //return the number of districtings remaining
         return Response.status(Response.Status.OK).entity(Integer.toString(remainingDistrictings)).build();
     }
 
-    private Collection<Integer> convertIncumbentsArray(String incumbentIDs) {
-        String[] incumbents = incumbentIDs.split(",");
-        Collection<Integer> incumbentsProtected = new ArrayList<>();
+    private Collection<String> convertIncumbentsArray(String incumbentIDs) {
+        String[] incumbents = incumbentIDs.substring(1, incumbentIDs.length() - 1).split(",");
+        Collection<String> incumbentsProtected = new ArrayList<>();
         for (String incumbent : incumbents) {
-            incumbentsProtected.add(Integer.parseInt(incumbent));
+            incumbentsProtected.add(incumbent);
         }
         return incumbentsProtected;
     }

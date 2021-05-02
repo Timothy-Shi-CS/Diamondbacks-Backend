@@ -6,7 +6,7 @@ public class Precinct {
     private CensusInfo censusInfo;
     private String precinctName;
     private int enactedDistrict;
-    private IncumbentCandidate incumbent;
+    private Incumbent incumbent;
     private Collection<Precinct> neighborPrecincts;
     private Geometry precinctGeometry;
 
@@ -53,11 +53,11 @@ public class Precinct {
         this.enactedDistrict = enactedDistrict;
     }
 
-    public IncumbentCandidate getIncumbent() {
+    public Incumbent getIncumbent() {
         return incumbent;
     }
 
-    public void setIncumbent(IncumbentCandidate incumbent) {
+    public void setIncumbent(Incumbent incumbent) {
         this.incumbent = incumbent;
     }
 
