@@ -155,9 +155,9 @@ public class Districting {
         int count = 0;
         Minorities minorityLookUp = userConstraints.getMinoritySelected();
         float minorityMin = userConstraints.getMinorityThreshold();
-        for (District dist : this.getDistrictsMap().values()) {
+        for (Map<Minorities, Float> districtMinorities : this.getMinorityDistribution().values()) {
             //if the minority of the specified type has percentage > the one user selected
-            if (dist.getCensusInfo().getMinorities().get(minorityLookUp) > minorityMin) {
+            if (districtMinorities.get(minorityLookUp) > minorityMin) {
                 count++;
             }
         }
@@ -380,5 +380,13 @@ public class Districting {
 
     public String getRecomb_file() {
         return recomb_file;
+    }
+
+    public Map<Integer, Map<Minorities, Float>> getMinorityDistribution() {
+        return minorityDistribution;
+    }
+
+    public void setMinorityDistribution(Map<Integer, Map<Minorities, Float>> minorityDistribution) {
+        this.minorityDistribution = minorityDistribution;
     }
 }
