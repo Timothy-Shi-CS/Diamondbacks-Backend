@@ -14,12 +14,12 @@ public class StateHandler {
         // convert stateName to int
         System.out.println(StateName.valueOf(stateName).getStateNumber());
         int stateValue = StateName.valueOf(stateName).getStateNumber();
-        String queryString = "from Job";
+        String queryString = "from Job j where j.state.stateName="+stateValue;
         Query q = em.createQuery(queryString);
-        List<Job> jobList = q.getResultList();
-        for (Job j : jobList) {
-            System.out.println(j.toString());
-        }
+//        List<Job> jobList = q.getResultList();
+//        for (Job j : jobList) {
+//            System.out.println(j.toString());
+//        }
 
         return q.getResultList();
     }
