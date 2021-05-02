@@ -59,10 +59,15 @@ public class Districting {
     private Collection<Incumbent> protectedIncumbentCandidateList; // read in from JSON as list
 //    private int districtingID; //unique districting ID read from JSON
 
-    @Transient
-    private Map<Integer, Map<Minorities, Integer>> sortedMinorityData; //count of minority for each district
+    //count of minority for each district for box and whisker
     // read in from JSON as integers
+    @Transient
+    private Map<Integer, Map<Minorities, Integer>> sortedMinorityData;
 
+    //percent of minority in each district for majority minority district
+    // read in from JSON as integers
+    @Transient
+    private Map<Integer, Map<Minorities, Float>> minorityDistribution;
 
     public Districting(CensusInfo censusInfo, ObjectiveValue districtingMeasures, Map<Integer, District> districtsMap,
                        Collection<Incumbent> protectedIncumbentCandidateList, String districtingID,
