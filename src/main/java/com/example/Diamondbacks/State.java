@@ -143,18 +143,41 @@ public class State {
             }
         }
         //get the enacted and current disticting data for the box and whisker data
-        Map<Integer, Integer> currentDistrictingData = new HashMap<Integer, Integer>();
-        Map<Integer, Integer> enactedDistrictingData = new HashMap<Integer, Integer>();
-        for(Integer districtID: this.currentDistricting.getSortedMinorityData().keySet()){
-            currentDistrictingData.put(districtID, this.getCurrentDistricting().getSortedMinorityData().
-                    get(districtID).get(minorityToPlot));
-            enactedDistrictingData.put(districtID, this.getEnactedDistricting().getSortedMinorityData().
-                    get(districtID).get(minorityToPlot));
-        }
+        Map<Integer, Integer> currentDistrictingData = findCurrentDistictingData(minorityToPlot);
+        Map<Integer, Integer> enactedDistrictingData = findEnactedDistictingData(minorityToPlot);
+        //Building a new box and whisker object
         BoxAndWhisker newBAW = new BoxAndWhisker(currentDistrictingData, enactedDistrictingData, dataToPlot);
         this.setCurrentBoxAndWhisker(newBAW);
         //after setting the BAW object calculate the average districting for the constrained job
         this.getConstraintedJob().calAverageDistricting(newBAW);
+    }
+
+    /**
+     * This method gathers the recombination districting plan data for box and whisker
+     * @param minorityToPlot the minority that the user selects
+     * @return hashmap of minorities in each district for the recombination plan
+     */
+    public Map<Integer, Integer> findCurrentDistictingData(Minorities minorityToPlot ){
+        Map<Integer, Integer> currentDistrictingData = new HashMap<Integer, Integer>();
+        for(Integer districtID: this.currentDistricting.getSortedMinorityData().keySet()){
+            currentDistrictingData.put(districtID, this.getCurrentDistricting().getSortedMinorityData().
+                    get(districtID).get(minorityToPlot));
+        }
+        return currentDistrictingData;
+    }
+
+    /**
+     * This method gathers the enacted districting plan data for box and whisker
+     * @param minorityToPlot the minority that the user selects
+     * @return hashmap of minorities in each district for the enacted plan
+     */
+    public Map<Integer, Integer> findEnactedDistictingData(Minorities minorityToPlot ){
+        Map<Integer, Integer> enactedDistrictingData = new HashMap<Integer, Integer>();
+        for(Integer districtID: this.currentDistricting.getSortedMinorityData().keySet()){
+            enactedDistrictingData.put(districtID, this.getCurrentDistricting().getSortedMinorityData().
+                    get(districtID).get(minorityToPlot));
+        }
+        return enactedDistrictingData;
     }
 
     @Override
