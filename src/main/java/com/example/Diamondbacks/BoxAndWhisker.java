@@ -72,6 +72,22 @@ public class BoxAndWhisker {
         return minorityData;
     }
 
+    public Map<Integer, Integer> getCurrentDistrictingData() {
+        return currentDistrictingData;
+    }
+
+    public void setCurrentDistrictingData(Map<Integer, Integer> currentDistrictingData) {
+        this.currentDistrictingData = currentDistrictingData;
+    }
+
+    public Map<Integer, Integer> getEnactedDistrictingData() {
+        return enactedDistrictingData;
+    }
+
+    public void setEnactedDistrictingData(Map<Integer, Integer> enactedDistrictingData) {
+        this.enactedDistrictingData = enactedDistrictingData;
+    }
+
     public void setMinorityData(Map<Integer, Collection<Integer>> minorityData) {
         this.minorityData = minorityData;
     }

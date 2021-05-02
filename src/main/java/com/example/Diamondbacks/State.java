@@ -144,12 +144,13 @@ public class State {
         }
         //get the enacted and current disticting data for the box and whisker data
         Map<Integer, Integer> currentDistrictingData = findCurrentDistictingData(minorityToPlot);
-        Map<Integer, Integer> enactedDistrictingData = findEnactedDistictingData(minorityToPlot);
-        //Building a new box and whisker object
-        BoxAndWhisker newBAW = new BoxAndWhisker(currentDistrictingData, enactedDistrictingData, dataToPlot);
-        this.setCurrentBoxAndWhisker(newBAW);
+        // Map<Integer, Integer> enactedDistrictingData = findEnactedDistictingData(minorityToPlot);
+        //update the current BoxAndWhisker object with new data.
+        BoxAndWhisker currentBAW = this.getCurrentBoxAndWhisker();
+        currentBAW.setMinorityData(dataToPlot);
+        currentBAW.setCurrentDistrictingData(currentDistrictingData);
         //after setting the BAW object calculate the average districting for the constrained job
-        this.getConstraintedJob().calAverageDistricting(newBAW);
+        this.getConstraintedJob().calAverageDistricting(currentBAW);
     }
 
     /**
