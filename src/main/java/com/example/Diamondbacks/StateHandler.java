@@ -24,12 +24,16 @@ public class StateHandler {
         return q.getResultList();
     }
 
+    public void loadPrecinctGeometries(State state){
+        state.loadPrecinctGeometries();
+    }
+
     public void calculateBoxAndWhiskerData(String state) {
 
     }
 
-    public void setState(String stateName, State stateObj){
+    public void setState(String stateName, State state){
         StateName name = StateName.valueOf(stateName);
-        stateObj.setStateName(name);
+        state.setStateName(name);
     }
 }

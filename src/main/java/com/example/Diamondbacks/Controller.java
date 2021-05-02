@@ -18,7 +18,7 @@ import java.util.Map;
 @Path("/controller")
 public class Controller {
 
-    private State STATE;
+    private final State STATE = new State();
     private Minorities minority;
     private Job currentJob;
     private EntityManager em;
@@ -95,8 +95,8 @@ public class Controller {
     @GET
     @Path("/state={stateName}")
     public Response callStateHandler(@PathParam("stateName") String stateName) {
-        StateHandler state = new StateHandler();
-        state.setState(stateName,STATE);
+        StateHandler stateHandler = new StateHandler();
+        stateHandler.setState(stateName,STATE);
         return Response.status(Response.Status.OK).entity("Hello").build();
     }
 

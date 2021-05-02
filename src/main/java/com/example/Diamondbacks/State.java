@@ -1,5 +1,6 @@
 package com.example.Diamondbacks;
 
+import org.locationtech.jts.io.WKTReader;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.io.*;
 
 @Entity
 @Table(name = "State")
@@ -23,6 +25,9 @@ public class State {
     private StateName stateName;
 
     @Transient
+    private Map<String, Precinct> precinctMap = new HashMap<>();
+
+    @Transient
     private Map<Integer, Collection<Float>> jobSummaries; // the summary of the job
 
     @Transient
@@ -33,6 +38,22 @@ public class State {
 
     @Transient
     private BoxAndWhisker currentBoxAndWhisker; //box and whisker data for plotting
+
+    public void loadPrecinctGeometries(){
+        String filepath;
+        // change location of filepath
+        switch (stateName){
+            case UTAH:
+                filepath="~/Utah.json";
+            case VIRGINIA:
+                filepath="~/Virginia.json";
+            case ARIZONA:
+                filepath="~/Arizona.json";
+        }
+        File inFile = new File("");
+    }
+
+
 
     /**
      * This method makes a clone of the current job and filters it down by the constraints
