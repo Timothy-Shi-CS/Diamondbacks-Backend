@@ -27,4 +27,9 @@ public class StateHandler {
     public void calculateBoxAndWhiskerData(String state) {
 
     }
+
+    public void setState(String stateName, State stateObj){
+        StateName name = StateName.valueOf(stateName);
+        stateObj.setStateName(name);
+    }
 }

@@ -18,7 +18,7 @@ import java.util.Map;
 @Path("/controller")
 public class Controller {
 
-    private State state;
+    private State STATE;
     private Minorities minority;
     private Job currentJob;
     private EntityManager em;
@@ -63,7 +63,7 @@ public class Controller {
     public Response callBAWHandler(@PathParam("id") String id, @PathParam("minority") String minority) {
         BoxAndWhiskerHandler baw = new BoxAndWhiskerHandler();
         Minorities minorityName = this.minority;
-        baw.makeBoxAndWhisker(this.state, id, minorityName);
+        baw.makeBoxAndWhisker(this.STATE, id, minorityName);
         return Response.status(Response.Status.OK).entity("Hello").build();
     }
 
@@ -96,6 +96,7 @@ public class Controller {
     @Path("/state={stateName}")
     public Response callStateHandler(@PathParam("stateName") String stateName) {
         StateHandler state = new StateHandler();
+        state.setState(stateName,STATE);
         return Response.status(Response.Status.OK).entity("Hello").build();
     }
 
