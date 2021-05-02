@@ -142,31 +142,31 @@ public class Job implements Serializable {
         return null;
     }
 
-//    public Collection<Districting> getTopDistrictingsObjectFunction(){
-//        //sort the reamining districting by objective function value
-//        //returns top5 or top 10 districting by objective function value
-//        //make sure it is sorted from high to low !!!
-//        Comparator<Districting> objValComparator = new Comparator<Districting>() {
-//            @Override
-//            public int compare(Districting d1, Districting d2) {
-//                float objValue1 = d1.getDistrictingMeasures().getOverallObjectiveValueScore();
-//                float objValue2 = d2.getDistrictingMeasures().getOverallObjectiveValueScore();
-//                return Float.compare(objValue1, objValue2);
-//            }
-//        };
-//        //sort by objective function value
-//        List<Districting> districtings = (List<Districting>)this.getListDistrictings();
-//        districtings.sort(objValComparator);
-//        //get the top 10 from the sorted
-//        return districtings.subList(0,10);
-//    }
+    public Collection<Districting> findTopDistrictingsObjectFunction(){
+        //sort the reamining districting by objective function value
+        //returns top5 or top 10 districting by objective function value
+        //make sure it is sorted from high to low !!!
+        Comparator<Districting> objValComparator = new Comparator<Districting>() {
+            @Override
+            public int compare(Districting d1, Districting d2) {
+                float objValue1 = d1.getDistrictingMeasures().getOverallObjectiveValueScore();
+                float objValue2 = d2.getDistrictingMeasures().getOverallObjectiveValueScore();
+                return Float.compare(objValue1, objValue2);
+            }
+        };
+        //sort by objective function value
+        List<Districting> districtings = (List<Districting>)this.getListDistrictings();
+        districtings.sort(objValComparator);
+        //get the top 10 from the sorted
+        return districtings.subList(0,10);
+    }
 
     /**
      * This method sorts the constrained job by the deviation from enacted by area and return the districting
      * with the highest deviation from enacted districting by area
      * @return districting with the highest deviation from enacted districting by area
      */
-    public Districting getTopDistrictingsByDeviationFromEnactedGeo(){
+    public Districting findTopDistrictingsByDeviationFromEnactedGeo(){
         //sort the remaining districting by deviation from enacted
         //return the maximum deviation from enacted by geometric
         //make sure it is sorted from high to low !!!
@@ -189,7 +189,7 @@ public class Job implements Serializable {
      * with the highest deviation from enacted districting by population
      * @return districting with the highest deviation from enacted districting by population
      */
-    public Districting getTopDistrictingsByDeviationFromEnactedPop() {
+    public Districting findTopDistrictingsByDeviationFromEnactedPop() {
         //sort the remaining districting by deviation from enacted
         //return the maximum deviation from enacted by population
         //make sure it is sorted from high to low !!!
@@ -212,7 +212,7 @@ public class Job implements Serializable {
      * with very different area
      * @return a pair of districting with very different area by a specific district
      */
-    public Collection<Districting> getVeryDifferentAreaPairDeviations(){
+    public Collection<Districting> findVeryDifferentAreaPairDeviations(){
         //this should return it in pairs?
         //pick a district, then sort the list by the area of that list
         //return the min and max of that list(very different area in terms of the district selected)
@@ -240,7 +240,7 @@ public class Job implements Serializable {
      * with very different population
      * @return a pair of districting with very different population by a specific district
      */
-    public Collection<Districting> getVeryDifferentPopulationPairDeviations(){
+    public Collection<Districting> findVeryDifferentPopulationPairDeviations(){
         //this should return it in pairs?
         //pick a district, then sort the list by the population of that list
         //return the min and max of that list(very different population in terms of the district selected)
@@ -275,7 +275,7 @@ public class Job implements Serializable {
 //        return null;
 //    }
 
-    public Map<Integer, Float> getDistrictingsByMajorMinorityRange(){
+    public Map<Integer, Float> findDistrictingsByMajorMinorityRange(){
         //shouldn't this be all districtings? since it is being constrainted by this?
         return null;
     }
