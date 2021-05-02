@@ -1,6 +1,10 @@
 package com.example.Diamondbacks;
 
-import org.locationtech.jts.io.WKTReader;
+import org.locationtech.jts.*;
+import org.wololo.geojson.Feature;
+import org.wololo.geojson.FeatureCollection;
+import org.wololo.geojson.GeoJSONFactory;
+import org.wololo.jts2geojson.GeoJSONReader;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -16,10 +20,10 @@ import java.io.*;
 public class State {
 
     @Transient
-    private Districting enactedDistricting; // the enacted districting for the state
+    private Districting enactedDistricting;
 
     @Transient
-    private Districting currentDistricting; // the current districting that the user selects to view
+    private Districting currentDistricting;
 
     @Id
     private StateName stateName;
@@ -28,29 +32,34 @@ public class State {
     private Map<String, Precinct> precinctMap = new HashMap<>();
 
     @Transient
-    private Map<Integer, Collection<Float>> jobSummaries; // the summary of the job
+    private Map<Integer, Collection<Float>> jobSummaries;
 
     @Transient
-    private Job currentJob; // the current job selected by the user to filter
+    private Job currentJob;
 
     @Transient
-    private Job constraintedJob; // clone of the current job with filtered down districtings
+    private Job constraintedJob;
 
     @Transient
     private BoxAndWhisker currentBoxAndWhisker; //box and whisker data for plotting
 
     public void loadPrecinctGeometries(){
+        System.out.println("loading precinct geometries");
         String filepath;
         // change location of filepath
-        switch (stateName){
-            case UTAH:
-                filepath="~/Utah.json";
-            case VIRGINIA:
-                filepath="~/Virginia.json";
-            case ARIZONA:
-                filepath="~/Arizona.json";
-        }
+//        switch (stateName){
+//            case UTAH:
+//                filepath="~/Utah.json";
+//            case VIRGINIA:
+//                filepath="~/Virginia.json";
+//            case ARIZONA:
+//                filepath="~/Arizona.json";
+//        }
+        FeatureCollection featureCollection = (FeatureCollection) GeoJSONFactory.create("../../../../az_precincts.json");
+        System.out.println(featureCollection.toString());
+
         File inFile = new File("");
+
     }
 
 

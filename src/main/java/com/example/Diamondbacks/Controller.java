@@ -52,6 +52,14 @@ public class Controller {
     }
 
     @GET
+    @Path("/loadprecicntgeometries")
+    public Response loadPrecinctGeometries(){
+        StateHandler stateHandler = new StateHandler();
+        stateHandler.loadPrecinctGeometries(this.STATE);
+        return Response.status(Response.Status.OK).entity("Hello").build();
+    }
+
+    @GET
     @Path("/job/state={stateName}")
     public Response callJobHandler(@PathParam("stateName") String stateName) {
         JobHandler job = new JobHandler();

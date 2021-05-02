@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="org.wololo:jts2geojson:0.16.1" type="repository">
+    <properties maven-id="org.wololo:jts2geojson:0.16.1" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/wololo/jts2geojson/0.16.1/jts2geojson-0.16.1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/locationtech/jts/jts-core/1.18.1/jts-core-1.18.1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-databind/2.12.2/jackson-databind-2.12.2.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-core/2.12.2/jackson-core-2.12.2.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-annotations/2.12.2/jackson-annotations-2.12.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

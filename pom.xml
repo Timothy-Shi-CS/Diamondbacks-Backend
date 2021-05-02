@@ -16,6 +16,7 @@
         <junit.version>5.7.0</junit.version>
     </properties>
 
+
     <dependencies>
         <dependency>
             <groupId>javax.persistence</groupId>
@@ -72,6 +73,13 @@
             <artifactId>jts-core</artifactId>
             <version>1.18.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.wololo</groupId>
+            <artifactId>jts2geojson</artifactId>
+            <version>0.16.1</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>
