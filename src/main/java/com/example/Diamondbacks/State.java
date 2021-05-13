@@ -91,17 +91,48 @@ public class State {
      * This method calculates the data necessary for the box and whisker object
      * based on the constrained job
      */
-    public void calcBoxAndWhisker() {
+    public void calcBoxAndWhisker(Double popEqual, Double devAvgDistGeo, Double devAvgDistPop, Double devEnDistGeo, Double devEnDistPop, Double geo, Double graph, Double popFat) {
         Constraints userConstraints = this.getCurrentJob().getCurrentConstraints();
         Minorities minorityToPlot = userConstraints.getMinoritySelected();
         Map<Integer, Collection<Integer>> dataToPlot = new HashMap<Integer, Collection<Integer>>();
         //Iterate through the constrained job
+        boolean first=true;
         for (Districting districting : this.getCurrentJob().getListDistrictings()) {
             //for each district in the district add the data
             // if the constraint is satified
-            if(districting.getSatisfiesConstraints() == true){
-                for (Integer districtID : districting.getSortedMinorityData().keySet()) {
-                    Integer countMinority = districting.getSortedMinorityData().get(districtID).get(minorityToPlot);
+            if (districting.getSatisfiesConstraints()) {
+//                if(first){
+//                    this.setCurrentDistricting(districting);
+//                    first=false;
+//                }
+                ObjectiveValue objv = districting.getDistrictingMeasures();
+                HashMap<MeasureType, Measure> measures = (HashMap<MeasureType, Measure>) objv.getMeasures();
+                measures.get(MeasureType.GEOMETRIC_COMPACTNESS).setMeasureWeight(geo.floatValue());
+                measures.get(MeasureType.GRAPH_COMPACTNESS).setMeasureWeight(graph.floatValue());
+                measures.get(MeasureType.POPULATION_FATNESS).setMeasureWeight(popFat.floatValue());
+//                measures.put(MeasureType.GEOMETRIC_COMPACTNESS, new Measure(MeasureType.GEOMETRIC_COMPACTNESS, geo, districting.getGeographic_comp()));
+//                measures.put(MeasureType.GRAPH_COMPACTNESS, new Measure(MeasureType.GRAPH_COMPACTNESS, graph, districting.getGraph_comp()));
+//                measures.put(MeasureType.POPULATION_FATNESS, new Measure(MeasureType.POPULATION_FATNESS, popFat, districting.getPopulation_fatness()));
+                ///
+                measures.put(MeasureType.DEV_ENACTED_GEO, new Measure(MeasureType.DEV_ENACTED_GEO, devEnDistGeo, districting.getDev_enacted_geometric()));
+                measures.put(MeasureType.DEV_ENACTED_POP, new Measure(MeasureType.DEV_ENACTED_POP, devEnDistPop, districting.getDev_enacted_population()));
+                measures.put(MeasureType.DEV_AVERAGE_GEO, new Measure(MeasureType.DEV_AVERAGE_GEO, devAvgDistGeo, -1));
+                measures.put(MeasureType.DEV_AVERAGE_POP, new Measure(MeasureType.DEV_AVERAGE_POP, devAvgDistPop, -1));
+                ///
+//                measures.put(MeasureType.TOT_POP_EQU, new Measure(MeasureType.TOT_POP_EQU, popEqual, districting.getTot_pop_equality()));
+//                measures.put(MeasureType.VOT_POP_EQU, new Measure(MeasureType.VOT_POP_EQU, popEqual, districting.getVot_pop_equality()));
+                measures.get(MeasureType.TOT_POP_EQU).setMeasureWeight(popEqual.floatValue());
+                measures.get(MeasureType.VOT_POP_EQU).setMeasureWeight(popEqual.floatValue());
+
+                objv.setMeasures(measures);
+                districting.setDistrictingMeasures(objv);
+                for (Integer districtID : districting.getBawData().keySet()) {
+                    int countMinority = districting.getBawData().get(districtID).getTotAsianPop();
+                    if(minorityToPlot==Minorities.BLACK){
+                        countMinority = districting.getBawData().get(districtID).getTotBlackPop();
+                    }else if(minorityToPlot==Minorities.HISPANIC){
+                        countMinority = districting.getBawData().get(districtID).getTotHispanicPop();
+                    }
                     if (!dataToPlot.containsKey(districtID)) {
                         //if the key does not exist, intitize it to an empty array list
                         dataToPlot.put(districtID, new ArrayList<Integer>());
@@ -112,12 +143,16 @@ public class State {
 
         }
         //get the enacted and current disticting data for the box and whisker data
-        Map<Integer, Integer> currentDistrictingData = findCurrentDistictingData(minorityToPlot);
+        //Map<Integer, Integer> currentDistrictingData = findCurrentDistictingData(minorityToPlot);
         // Map<Integer, Integer> enactedDistrictingData = findEnactedDistictingData(minorityToPlot);
         //update the current BoxAndWhisker object with new data.
+        if(this.getCurrentBoxAndWhisker()==null){
+            this.setCurrentBoxAndWhisker(new BoxAndWhisker());
+        }
         BoxAndWhisker currentBAW = this.getCurrentBoxAndWhisker();
         currentBAW.setMinorityData(dataToPlot);
-        currentBAW.setCurrentDistrictingData(currentDistrictingData);
+        currentBAW.setEnactedDistrictingData(this.findEnactedDistictingData(minorityToPlot));
+        //currentBAW.setCurrentDistrictingData(currentDistrictingData);
         currentBAW.calculateBoxAndWhiskerData();
         //after setting the BAW object calculate the average districting for the constrained job
         this.getCurrentJob().calAverageDistricting(currentBAW);
@@ -146,8 +181,8 @@ public class State {
      */
     public Map<Integer, Integer> findEnactedDistictingData(Minorities minorityToPlot) {
         Map<Integer, Integer> enactedDistrictingData = new HashMap<Integer, Integer>();
-        for (Integer districtID : this.currentDistricting.getSortedMinorityData().keySet()) {
-            enactedDistrictingData.put(districtID, this.getCurrentDistricting().getSortedMinorityData().
+        for (Integer districtID : this.enactedDistricting.getSortedMinorityData().keySet()) {
+            enactedDistrictingData.put(districtID, this.enactedDistricting.getSortedMinorityData().
                     get(districtID).get(minorityToPlot));
         }
         return enactedDistrictingData;

@@ -91,8 +91,10 @@ public class Controller {
         StateHandler stateHandler = new StateHandler();
         JobHandler jobHandler = new JobHandler();
         stateHandler.setState(stateName, state);
-        if (servletContext.getAttribute("currentJob") != null) {
-            servletContext.setAttribute("currentJob", null);
+        if (servletContext.getAttribute("state") != null) {
+            State curstate = (State) servletContext.getAttribute("state");
+            curstate.setCurrentJob(null);
+            servletContext.setAttribute("state", curstate);
         }
         currentJob = jobHandler.getJobByID(jobID, em, emf);
 //        jobHandler.loadDistrictMinority(currentJob);
@@ -105,10 +107,21 @@ public class Controller {
     }
 
     @GET
-    @Path("/setWeights")
-    public Response setWeights() {
+    @Path("/setWeights/popEquality={populationEquality}&devAvgGeo={devAvgDistGeo}&devAvgPop={devAvgDistPop}&devEnactedGeo={devEnDistGeo}&devEnactedPop={devEnDistPop}&geoCompact={geo}&graphCompact={graph}&popFat={popFat}")
+    public Response setWeights(@PathParam("populationEquality") String populationEquality, @PathParam("devAvgDistGeo") String devAvgDistGeo, @PathParam("devAvgDistPop") String devAvgDistPop,
+                               @PathParam("devEnDistGeo") String devEnDistGeo, @PathParam("devEnDistPop") String devEnDistPop,
+                               @PathParam("geo") String geo,
+                               @PathParam("graph") String graph, @PathParam("popFat") String popFat) {
         State state = (State) servletContext.getAttribute("state");
-        return Response.status(Response.Status.OK).entity(state).build();
+        StateHandler stateHandler = new StateHandler();
+        int count = 0;
+        for (Districting districting : state.getCurrentJob().getListDistrictings()) {
+            if (districting.getSatisfiesConstraints() == true) {
+                count++;
+            }
+        }
+        servletContext.setAttribute("state", stateHandler.setObjectiveValueAndCalcBAW(state, Double.parseDouble(populationEquality), Double.parseDouble(devAvgDistGeo), Double.parseDouble(devAvgDistPop), Double.parseDouble(devEnDistGeo), Double.parseDouble(devEnDistPop), Double.parseDouble(geo), Double.parseDouble(graph), Double.parseDouble(popFat)));
+        return Response.status(Response.Status.OK).entity(count + ", " + populationEquality + ", " + devAvgDistGeo + ", " + devAvgDistPop + ", " + devEnDistGeo + ", " + devEnDistPop + ", " + geo + ", " + graph + ", " + popFat).build();
     }
 
     @GET
@@ -183,7 +196,7 @@ public class Controller {
         int remainingDistrictings = constraintHandler.getRemainingDistrictings(currentJob, minorityName,
                 Double.parseDouble(minorityThreshold), Integer.parseInt(majMin), incumbentsProtected, Double.parseDouble(totalPop), Double.parseDouble(vaPop), Double.parseDouble(cvaPop), Double.parseDouble(geoComp), Double.parseDouble(graphComp), Double.parseDouble(popFat));
         System.out.println(remainingDistrictings);
-        servletContext.setAttribute("state",state);
+        servletContext.setAttribute("state", state);
 //        int count=0;
 //        for(Districting districting: state.getCurrentJob().getListDistrictings()){
 //            if(districting.getSatisfiesConstraints()==true){

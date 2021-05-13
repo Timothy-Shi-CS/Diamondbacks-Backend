@@ -14,7 +14,7 @@ public class StateHandler {
         // convert stateName to int
         System.out.println(StateName.valueOf(stateName).getStateNumber());
         int stateValue = StateName.valueOf(stateName).getStateNumber();
-        String queryString = "from Job j where j.state.stateName="+stateValue;
+        String queryString = "from Job j where j.state.stateName=" + stateValue;
         Query q = em.createQuery(queryString);
 //        List<Job> jobList = q.getResultList();
 //        for (Job j : jobList) {
@@ -24,7 +24,7 @@ public class StateHandler {
         return q.getResultList();
     }
 
-    public void loadPrecinctGeometries(State state){
+    public void loadPrecinctGeometries(State state) {
         state.loadPrecinctGeometries();
     }
 
@@ -32,9 +32,15 @@ public class StateHandler {
 
     }
 
-    public State setState(String stateName, State state){
+    public State setState(String stateName, State state) {
         StateName name = StateName.valueOf(stateName);
         state.setStateName(name);
+        return state;
+    }
+
+    public State setObjectiveValueAndCalcBAW(State state, Double popEqual, Double devAvgDistGeo, Double devAvgDistPop, Double devEnDistGeo,
+                                             Double devEnDistPop, Double geo, Double graph, Double popFat) {
+        state.calcBoxAndWhisker(popEqual, devAvgDistGeo, devAvgDistPop, devEnDistGeo, devEnDistPop, geo, graph, popFat);
         return state;
     }
 }
