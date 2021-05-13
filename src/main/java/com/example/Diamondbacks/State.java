@@ -42,9 +42,6 @@ public class State {
     private Job currentJob;
 
     @Transient
-    private Job constrainedJob;
-
-    @Transient
     private BoxAndWhisker currentBoxAndWhisker; //box and whisker data for plotting
 
     public static String readFileAsString(String file) throws Exception {
@@ -84,35 +81,6 @@ public class State {
 
         File inFile = new File("");
 
-    }
-
-
-    /**
-     * This method makes a clone of the current job and filters it down by the constraints
-     * set by the user
-     * <p>
-     * This method is not called until the constraints are set
-     */
-    public void makeConstrainedJob() {
-        Constraints userConstraints = this.getCurrentJob().getCurrentConstraints();
-        Job filteredJob = this.getConstrainedJob();
-        Collection<Districting> filteredDistricting = new ArrayList<>();
-        for (Districting districting : this.getCurrentJob().getListDistrictings()) {
-            if (districting.satisfyConstraints(userConstraints)) {
-                //adds the districting to the constrained list if it satisfies the constraints
-                filteredDistricting.add(districting);
-            }
-        }
-        //cloning the original(unfiltered) job
-        filteredJob.setCoolingPeriod(this.getCurrentJob().getCoolingPeriod());
-        filteredJob.setRounds(this.getCurrentJob().getRounds());
-        filteredJob.setCurrentConstraints(this.getCurrentJob().getCurrentConstraints());
-        filteredJob.setId(this.getCurrentJob().getId());
-        //sets the constrained list of districtings
-        filteredJob.setListDistrictings(filteredDistricting);
-
-        //the job has been constrained get the box and whisker
-        this.calcBoxAndWhisker();
     }
 
     private void updatePrecinctMap() {
@@ -232,14 +200,6 @@ public class State {
 
     public void setCurrentJob(Job currentJob) {
         this.currentJob = currentJob;
-    }
-
-    public Job getConstrainedJob() {
-        return constrainedJob;
-    }
-
-    public void setConstrainedJob(Job constrainedJob) {
-        this.constrainedJob = constrainedJob;
     }
 
     public BoxAndWhisker getCurrentBoxAndWhisker() {
