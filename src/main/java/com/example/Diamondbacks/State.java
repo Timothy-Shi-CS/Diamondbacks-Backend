@@ -92,20 +92,24 @@ public class State {
      * based on the constrained job
      */
     public void calcBoxAndWhisker() {
-        Constraints userConstraints = this.getConstrainedJob().getCurrentConstraints();
+        Constraints userConstraints = this.getCurrentJob().getCurrentConstraints();
         Minorities minorityToPlot = userConstraints.getMinoritySelected();
         Map<Integer, Collection<Integer>> dataToPlot = new HashMap<Integer, Collection<Integer>>();
         //Iterate through the constrained job
-        for (Districting districting : this.getConstrainedJob().getListDistrictings()) {
+        for (Districting districting : this.getCurrentJob().getListDistrictings()) {
             //for each district in the district add the data
-            for (Integer districtID : districting.getSortedMinorityData().keySet()) {
-                Integer countMinority = districting.getSortedMinorityData().get(districtID).get(minorityToPlot);
-                if (!dataToPlot.containsKey(districtID)) {
-                    //if the key does not exist, intitize it to an empty array list
-                    dataToPlot.put(districtID, new ArrayList<Integer>());
+            // if the constraint is satified
+            if(districting.getSatisfiesConstraints() == true){
+                for (Integer districtID : districting.getSortedMinorityData().keySet()) {
+                    Integer countMinority = districting.getSortedMinorityData().get(districtID).get(minorityToPlot);
+                    if (!dataToPlot.containsKey(districtID)) {
+                        //if the key does not exist, intitize it to an empty array list
+                        dataToPlot.put(districtID, new ArrayList<Integer>());
+                    }
+                    dataToPlot.get(districtID).add(countMinority);
                 }
-                dataToPlot.get(districtID).add(countMinority);
             }
+
         }
         //get the enacted and current disticting data for the box and whisker data
         Map<Integer, Integer> currentDistrictingData = findCurrentDistictingData(minorityToPlot);
