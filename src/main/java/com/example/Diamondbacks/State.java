@@ -6,6 +6,7 @@ import org.wololo.geojson.FeatureCollection;
 import org.wololo.geojson.GeoJSONFactory;
 import org.wololo.geojson.Geometry;
 import org.wololo.jts2geojson.GeoJSONReader;
+
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import javax.persistence.Entity;
@@ -41,17 +42,16 @@ public class State {
     private Job currentJob;
 
     @Transient
-    private Job constraintedJob;
+    private Job constrainedJob;
 
     @Transient
     private BoxAndWhisker currentBoxAndWhisker; //box and whisker data for plotting
 
-    public static String readFileAsString(String file)throws Exception
-    {
+    public static String readFileAsString(String file) throws Exception {
         return new String(Files.readAllBytes(Paths.get(file)));
     }
 
-    public void loadPrecinctGeometries(){
+    public void loadPrecinctGeometries() {
         System.out.println("loading precinct geometries");
         String filepath;
         // change location of filepath
@@ -63,13 +63,13 @@ public class State {
 //            case ARIZONA:
 //                filepath="~/Arizona.json";
 //        }
-        try{
+        try {
             String file = "/Users/garyjiang/IdeaProjects/Diamondbacks-Backend/az_precincts.json";
             String json = readFileAsString(file);
             GeoJSONReader reader = new GeoJSONReader();
             FeatureCollection featureCollection = (FeatureCollection) GeoJSONFactory.create(json);
             System.out.println(featureCollection.getFeatures().length);
-            Map<String,Object> properties = featureCollection.getFeatures()[0].getProperties();
+            Map<String, Object> properties = featureCollection.getFeatures()[0].getProperties();
             String precinctCode = (String) properties.get("CODE");
             System.out.println(precinctCode);
             System.out.println(properties.toString());
@@ -78,8 +78,7 @@ public class State {
 //                Map<String,Object> properties = feature.getProperties();
 //
 //            }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Unable to read file");
         }
 
@@ -88,19 +87,18 @@ public class State {
     }
 
 
-
     /**
      * This method makes a clone of the current job and filters it down by the constraints
      * set by the user
-     *
+     * <p>
      * This method is not called until the constraints are set
      */
-    public void makeConstraintedJob(){
+    public void makeConstrainedJob() {
         Constraints userConstraints = this.getCurrentJob().getCurrentConstraints();
-        Job filteredJob = this.getConstraintedJob();
+        Job filteredJob = this.getConstrainedJob();
         Collection<Districting> filteredDistricting = new ArrayList<>();
-        for(Districting districting: this.getCurrentJob().getListDistrictings()){
-            if(districting.satisfyConstraints(userConstraints)){
+        for (Districting districting : this.getCurrentJob().getListDistrictings()) {
+            if (districting.satisfyConstraints(userConstraints)) {
                 //adds the districting to the constrained list if it satisfies the constraints
                 filteredDistricting.add(districting);
             }
@@ -117,7 +115,7 @@ public class State {
         this.calcBoxAndWhisker();
     }
 
-    private void updatePrecinctMap(){
+    private void updatePrecinctMap() {
 
     }
 
@@ -125,17 +123,16 @@ public class State {
      * This method calculates the data necessary for the box and whisker object
      * based on the constrained job
      */
-    public void calcBoxAndWhisker(){
-        Constraints userConstraints = this.getConstraintedJob().getCurrentConstraints();
+    public void calcBoxAndWhisker() {
+        Constraints userConstraints = this.getConstrainedJob().getCurrentConstraints();
         Minorities minorityToPlot = userConstraints.getMinoritySelected();
-
         Map<Integer, Collection<Integer>> dataToPlot = new HashMap<Integer, Collection<Integer>>();
         //Iterate through the constrained job
-        for(Districting districting: this.getConstraintedJob().getListDistrictings()){
+        for (Districting districting : this.getConstrainedJob().getListDistrictings()) {
             //for each district in the district add the data
-            for(Integer districtID: districting.getSortedMinorityData().keySet()){
+            for (Integer districtID : districting.getSortedMinorityData().keySet()) {
                 Integer countMinority = districting.getSortedMinorityData().get(districtID).get(minorityToPlot);
-                if(!dataToPlot.containsKey(districtID)){
+                if (!dataToPlot.containsKey(districtID)) {
                     //if the key does not exist, intitize it to an empty array list
                     dataToPlot.put(districtID, new ArrayList<Integer>());
                 }
@@ -151,17 +148,18 @@ public class State {
         currentBAW.setCurrentDistrictingData(currentDistrictingData);
         currentBAW.calculateBoxAndWhiskerData();
         //after setting the BAW object calculate the average districting for the constrained job
-        this.getConstraintedJob().calAverageDistricting(currentBAW);
+        this.getConstrainedJob().calAverageDistricting(currentBAW);
     }
 
     /**
      * This method gathers the recombination districting plan data for box and whisker
+     *
      * @param minorityToPlot the minority that the user selects
      * @return hashmap of minorities in each district for the recombination plan
      */
-    public Map<Integer, Integer> findCurrentDistictingData(Minorities minorityToPlot ){
+    public Map<Integer, Integer> findCurrentDistictingData(Minorities minorityToPlot) {
         Map<Integer, Integer> currentDistrictingData = new HashMap<Integer, Integer>();
-        for(Integer districtID: this.currentDistricting.getSortedMinorityData().keySet()){
+        for (Integer districtID : this.currentDistricting.getSortedMinorityData().keySet()) {
             currentDistrictingData.put(districtID, this.getCurrentDistricting().getSortedMinorityData().
                     get(districtID).get(minorityToPlot));
         }
@@ -170,12 +168,13 @@ public class State {
 
     /**
      * This method gathers the enacted districting plan data for box and whisker
+     *
      * @param minorityToPlot the minority that the user selects
      * @return hashmap of minorities in each district for the enacted plan
      */
-    public Map<Integer, Integer> findEnactedDistictingData(Minorities minorityToPlot ){
+    public Map<Integer, Integer> findEnactedDistictingData(Minorities minorityToPlot) {
         Map<Integer, Integer> enactedDistrictingData = new HashMap<Integer, Integer>();
-        for(Integer districtID: this.currentDistricting.getSortedMinorityData().keySet()){
+        for (Integer districtID : this.currentDistricting.getSortedMinorityData().keySet()) {
             enactedDistrictingData.put(districtID, this.getCurrentDistricting().getSortedMinorityData().
                     get(districtID).get(minorityToPlot));
         }
@@ -190,7 +189,7 @@ public class State {
                 ", stateName=" + stateName +
                 ", jobSummaries=" + jobSummaries +
                 ", currentJob=" + currentJob +
-                ", constraintedJob=" + constraintedJob +
+                ", constrainedJob=" + constrainedJob +
                 ", currentBoxAndWhisker=" + currentBoxAndWhisker +
                 '}';
     }
@@ -235,12 +234,12 @@ public class State {
         this.currentJob = currentJob;
     }
 
-    public Job getConstraintedJob() {
-        return constraintedJob;
+    public Job getConstrainedJob() {
+        return constrainedJob;
     }
 
-    public void setConstraintedJob(Job constraintedJob) {
-        this.constraintedJob = constraintedJob;
+    public void setConstrainedJob(Job constrainedJob) {
+        this.constrainedJob = constrainedJob;
     }
 
     public BoxAndWhisker getCurrentBoxAndWhisker() {

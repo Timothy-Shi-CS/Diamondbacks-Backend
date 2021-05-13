@@ -4,11 +4,15 @@ import java.util.Map;
 
 public class CensusInfo {
     private Map<CensusValues, Integer> populationData;
-    private Map<Minorities, Float> minorities; // percent of minorities in each district
+    private Map<Minorities, Double> minorities; // percent of minorities in each district
 
-    public CensusInfo(Map<CensusValues, Integer> populationData, Map<Minorities, Float> minorities) {
+    public CensusInfo(Map<CensusValues, Integer> populationData, Map<Minorities, Double> minorities) {
         this.populationData = populationData;
         this.minorities = minorities;
+    }
+
+    public CensusInfo(){
+
     }
 
     public Map<CensusValues, Integer> getPopulationData() {
@@ -19,11 +23,11 @@ public class CensusInfo {
         this.populationData = populationData;
     }
 
-    public Map<Minorities, Float> getMinorities() {
+    public Map<Minorities, Double> getMinorities() {
         return minorities;
     }
 
-    public void setMinorities(Map<Minorities, Float> minorities) {
+    public void setMinorities(Map<Minorities, Double> minorities) {
         this.minorities = minorities;
     }
 }

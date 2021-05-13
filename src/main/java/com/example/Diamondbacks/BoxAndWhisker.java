@@ -13,14 +13,22 @@ public class BoxAndWhisker {
     private Map<Integer, Integer> maxMinorityData;
     private Map<Integer, Collection<Integer>> minorityData;
 
+
+
     public Json generatePlot() {
         return null;
     }
-    public Map<Minorities, Collection<Collection<Float>>> calMinorityDataMap(Job constrainedJob){
+
+    public Map<Minorities, Collection<Collection<Float>>> calMinorityDataMap(Job constrainedJob) {
         return null;
     }
-    public Map<Minorities,Collection<Float>> calAverageMinorityMap(){
+
+    public Map<Minorities, Collection<Float>> calAverageMinorityMap() {
         return null;
+    }
+
+    public BoxAndWhisker() {
+
     }
 
     public BoxAndWhisker(Map<Integer, Integer> currentDistrictingData, Map<Integer, Integer> enactedDistrictingData,
@@ -30,7 +38,8 @@ public class BoxAndWhisker {
         this.minorityData = minorityData;
         this.calculateBoxAndWhiskerData();
     }
-    public void calculateBoxAndWhiskerData(){
+
+    public void calculateBoxAndWhiskerData() {
         Comparator<Integer> IntegerComparator = new Comparator<Integer>() {
             @Override
             public int compare(Integer o1, Integer o2) {
@@ -45,16 +54,16 @@ public class BoxAndWhisker {
         this.maxMinorityData = new HashMap<>();
 
         //get min, max, q1, q2, avg data for each district
-        for(Integer districtID: this.getMinorityData().keySet()){
-            List<Integer> districtData = (List<Integer>)this.getMinorityData().get(districtID);
+        for (Integer districtID : this.getMinorityData().keySet()) {
+            List<Integer> districtData = (List<Integer>) this.getMinorityData().get(districtID);
             districtData.sort(IntegerComparator);
 //            Double tmp = districtData.stream().mapToDouble(val -> val).average().orElse(0.0);
 //            Float avg_data = tmp.floatValue();
             Integer min_data = districtData.get(0);
-            Integer q1_data = districtData.get((districtData.size()/4));
-            Integer avg_data = districtData.get(2*(districtData.size()/4));
-            Integer q3_data = districtData.get(3*(districtData.size()/4));
-            Integer max_data = districtData.get(districtData.size()-1);
+            Integer q1_data = districtData.get((districtData.size() / 4));
+            Integer avg_data = districtData.get(2 * (districtData.size() / 4));
+            Integer q3_data = districtData.get(3 * (districtData.size() / 4));
+            Integer max_data = districtData.get(districtData.size() - 1);
 
             this.firstQuartileMinorityData.put(districtID, q1_data);
             this.averageMinorityData.put(districtID, avg_data);
@@ -91,4 +100,6 @@ public class BoxAndWhisker {
     public void setMinorityData(Map<Integer, Collection<Integer>> minorityData) {
         this.minorityData = minorityData;
     }
+
+
 }

@@ -1,59 +1,85 @@
 package com.example.Diamondbacks;
 
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
+@Entity
+@Table(name="Districts")
 public class District {
+    @Transient
     private CensusInfo censusInfo; //the overall population and minority counts
+
+    @Column(name="districtNumber",nullable = false)
     private int districtNumber; //the district number
+
+    @Id
+    private String districtID;
+
+    @Transient
     private ObjectiveValue districtMeasures; //OBJ value of the districting
-    private Collection<Precinct> precinctList; //the list of preincts within this district
+
+    @Transient
+    private Collection<String> precinctList; //the list of preincts within this district
+
+    @Transient
     private Geometry districtGeometry; // the geometry of the district
 
-    public District(CensusInfo censusInfo, int districtNumber, ObjectiveValue districtMeasures,
-                    Collection<Precinct> precinctList, Geometry districtGeometry) {
-        this.censusInfo = censusInfo;
-        this.districtNumber = districtNumber;
-        this.districtMeasures = districtMeasures;
-        this.precinctList = precinctList;
-        this.districtGeometry = districtGeometry;
+    @Column(name="ASIAN",nullable = false)
+    private Double ASIAN;
+
+    @Column(name="BLACK",nullable = false)
+    private Double BLACK;
+
+    @Column(name="HISPANIC",nullable = false)
+    private Double HISPANIC;
+
+    @ManyToOne
+    private Districting districting;
+
+    public District() {
+
     }
 
     /**
      * This method calculates the sum of square difference from the average district by area
+     *
      * @param avgDistrict the district from average districting with corresponding districtID
      * @return the sum of square difference from the average district by area
      */
-    public Measure calDevFromAvgDistGeo(District avgDistrict){
+    public Measure calDevFromAvgDistGeo(District avgDistrict) {
         //sum of square differences by area by district
         Measure currentMeasure = this.getDistrictMeasures().getMeasures().get(MeasureType.DEV_AVERAGE_GEO);
         float avgArea = avgDistrict.getDistrictGeometry().getArea();
         float recombArea = this.getDistrictGeometry().getArea();
-        float sse = (float) Math.pow(avgArea-recombArea,2);
+        float sse = (float) Math.pow(avgArea - recombArea, 2);
         currentMeasure.setMeasureScore(sse);
         return currentMeasure;
     }
+
     /**
      * This method calculates the sum of square difference from the average district by population
+     *
      * @param avgDistrict the district from average districting with corresponding districtID
      * @return the sum of square difference from the average district by population
      */
-    public Measure calDevFromAvgDistPop(District avgDistrict){
+    public Measure calDevFromAvgDistPop(District avgDistrict) {
         //sum of square differences by population by district
         Measure currentMeasure = this.getDistrictMeasures().getMeasures().get(MeasureType.DEV_AVERAGE_POP);
         float avgPop = avgDistrict.getCensusInfo().getPopulationData().get(CensusValues.TOTAL_POPULATION);
         float recombPop = this.getCensusInfo().getPopulationData().get(CensusValues.TOTAL_POPULATION);
-        float sse = (float) Math.pow(avgPop-recombPop, 2);
+        float sse = (float) Math.pow(avgPop - recombPop, 2);
         currentMeasure.setMeasureScore(sse);
         return currentMeasure;
     }
 
 
-    public Measure calSplitCounties(){
+    public Measure calSplitCounties() {
         return null;
     }
-    public Measure calPoliticalFairness(){
+
+    public Measure calPoliticalFairness() {
         return null;
     }
 
@@ -81,11 +107,11 @@ public class District {
         this.districtMeasures = districtMeasures;
     }
 
-    public Collection<Precinct> getPrecinctList() {
+    public Collection<String> getPrecinctList() {
         return precinctList;
     }
 
-    public void setPrecinctList(Collection<Precinct> precinctList) {
+    public void setPrecinctList(Collection<String> precinctList) {
         this.precinctList = precinctList;
     }
 
@@ -95,5 +121,45 @@ public class District {
 
     public void setDistrictGeometry(Geometry districtGeometry) {
         this.districtGeometry = districtGeometry;
+    }
+
+    public Double getASIAN() {
+        return ASIAN;
+    }
+
+    public Double getBLACK() {
+        return BLACK;
+    }
+
+    public Double getHISPANIC() {
+        return HISPANIC;
+    }
+
+    public void setASIAN(Double ASIAN) {
+        this.ASIAN = ASIAN;
+    }
+
+    public void setBLACK(Double BLACK) {
+        this.BLACK = BLACK;
+    }
+
+    public void setHISPANIC(Double HISPANIC) {
+        this.HISPANIC = HISPANIC;
+    }
+
+    public Districting getDistricting() {
+        return districting;
+    }
+
+    public void setDistrictID(String districtID) {
+        this.districtID = districtID;
+    }
+
+    public void setDistricting(Districting districting) {
+        this.districting = districting;
+    }
+
+    public String getDistrictID() {
+        return districtID;
     }
 }

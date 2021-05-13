@@ -1,12 +1,13 @@
 package com.example.Diamondbacks;
 
+import javax.persistence.EntityManager;
 import java.util.Collection;
 
 public class ConstraintHandler {
     private Job currentJob;
-    public int getRemainingDistrictings(Job curJob, Minorities selectedMinority, float minorityThreshold, int majMin,
-                              Collection<String> incumbents, float pop, float vap, float cvap, float geoComp,
-                              float graphComp, float popFat){
+    public int getRemainingDistrictings(Job curJob, Minorities selectedMinority, double minorityThreshold, int majMin,
+                                        Collection<String> incumbents, double pop, double vap, double cvap, double geoComp,
+                                        double graphComp, double popFat){
         // construct a constraints object, pass in the constraints to setCurrentConstraints
         this.setCurrentJob(curJob);
         Constraints currentConstraints = new Constraints(incumbents, selectedMinority, minorityThreshold, majMin, pop,

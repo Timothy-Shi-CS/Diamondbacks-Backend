@@ -5,10 +5,10 @@ package com.example.Diamondbacks;
  */
 public class Measure {
     private MeasureType measureType; //Type of measure
-    private float measureWeight; //the weight of the measure set by the user
-    private float measureScore; //the score of the measure calculated(preprocessing or on the fly)
+    private double measureWeight; //the weight of the measure set by the user
+    private double measureScore; //the score of the measure calculated(preprocessing or on the fly)
 
-    public Measure(MeasureType measureType, float measureWeight, float measureScore) {
+    public Measure(MeasureType measureType, double measureWeight, double measureScore) {
         this.measureType = measureType;
         this.measureWeight = measureWeight;
         this.measureScore = measureScore;
@@ -22,7 +22,7 @@ public class Measure {
         this.measureType = measureType;
     }
 
-    public float getMeasureWeight() {
+    public double getMeasureWeight() {
         return measureWeight;
     }
 
@@ -30,11 +30,11 @@ public class Measure {
         this.measureWeight = measureWeight;
     }
 
-    public float getMeasureScore() {
+    public double getMeasureScore() {
         return measureScore;
     }
 
-    public void setMeasureScore(float measureScore) {
+    public void setMeasureScore(double measureScore) {
         this.measureScore = measureScore;
     }
 

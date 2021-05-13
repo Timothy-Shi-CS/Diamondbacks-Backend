@@ -10,10 +10,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.MediaType;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 // http://localhost:8080/Diamondbacks-1.0-SNAPSHOT/api/controller
 @Path("/controller")
@@ -22,7 +19,7 @@ public class Controller {
     @Context
     ServletContext servletContext;
 
-    private final State STATE = new State();
+    private State state = new State();
     private Job currentJob;
 
     private EntityManagerFactory emf = Persistence.createEntityManagerFactory("Diamondbacks");
@@ -35,23 +32,7 @@ public class Controller {
 
         EntityManager em = emf.createEntityManager();
         EntityTransaction et = null;
-        try {
-            et = em.getTransaction();
-            et.begin();
-            Customer cust = new Customer();
-            cust.setId(15);
-            cust.setFirstName("Billy");
-            cust.setLastName("Hardy");
-            em.persist(cust);
-            et.commit();
-        } catch (Exception ex) {
-            if (et != null) {
-                et.rollback();
-            }
-            ex.printStackTrace();
-        } finally {
-            emf.close();
-        }
+
         return "Success!";
     }
 
@@ -59,7 +40,7 @@ public class Controller {
     @Path("/loadprecicntgeometries")
     public Response loadPrecinctGeometries() {
         StateHandler stateHandler = new StateHandler();
-        stateHandler.loadPrecinctGeometries(this.STATE);
+        stateHandler.loadPrecinctGeometries(this.state);
         return Response.status(Response.Status.OK).entity("Hello").build();
     }
 
@@ -75,7 +56,7 @@ public class Controller {
     public Response callBAWHandler(@PathParam("id") String id, @PathParam("minority") String minority) {
         BoxAndWhiskerHandler baw = new BoxAndWhiskerHandler();
         Minorities minorityName = Minorities.valueOf(((String) (servletContext.getAttribute("minority"))).toUpperCase());
-        baw.makeBoxAndWhisker(this.STATE, id, minorityName);
+        baw.makeBoxAndWhisker(this.state, id, minorityName);
         return Response.status(Response.Status.OK).entity("Hello").build();
     }
 
@@ -109,11 +90,25 @@ public class Controller {
     public Response setStateAndJob(@PathParam("stateName") String stateName, @PathParam("jobID") String jobID) {
         StateHandler stateHandler = new StateHandler();
         JobHandler jobHandler = new JobHandler();
-        stateHandler.setState(stateName, STATE);
-        currentJob = jobHandler.getJobByID(jobID, em);
-        servletContext.setAttribute("state", STATE);
-        servletContext.setAttribute("currentJob", currentJob);
-        return Response.status(Response.Status.OK).entity("hello").build();
+        stateHandler.setState(stateName, state);
+        if (servletContext.getAttribute("currentJob") != null) {
+            servletContext.setAttribute("currentJob", null);
+        }
+        currentJob = jobHandler.getJobByID(jobID, em, emf);
+//        jobHandler.loadDistrictMinority(currentJob);
+//        jobHandler.loadSecDistrictMinority(currentJob);
+
+        state.setCurrentJob(currentJob);
+        servletContext.setAttribute("state", state);
+        Query incumQ = jobHandler.getIncumbents(state, em);
+        return Response.status(Response.Status.OK).entity(incumQ.getResultList()).build();
+    }
+
+    @GET
+    @Path("/setWeights")
+    public Response setWeights() {
+        State state = (State) servletContext.getAttribute("state");
+        return Response.status(Response.Status.OK).entity(state).build();
     }
 
     @GET
@@ -166,10 +161,8 @@ public class Controller {
     @Path("/jobs={stateName}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getJobs(@PathParam("stateName") String stateName) {
-        em = emf.createEntityManager();
-        StateHandler state = new StateHandler();
-        List jobs = state.getJobs(stateName, em);
-        em.close();
+        StateHandler stateHandler = new StateHandler();
+        List jobs = stateHandler.getJobs(stateName, em);
         return Response.status(Response.Status.OK).entity(jobs).build();
     }
 
@@ -183,22 +176,20 @@ public class Controller {
                                          @PathParam("graphComp") String graphComp, @PathParam("popFat") String popFat) {
         ConstraintHandler constraintHandler = new ConstraintHandler();
         Collection<String> incumbentsProtected = convertIncumbentsArray(incumbentIDs);
-        Minorities minorityName = null;
-        switch (minority) {
-            case "hispanic":
-                minorityName = Minorities.HISPANIC;
-                break;
-            case "black":
-                minorityName = Minorities.BLACK;
-                break;
-            case "asian":
-                minorityName = Minorities.ASIAN;
-                break;
-        }
+        Minorities minorityName = Minorities.valueOf(minority.toUpperCase());
         servletContext.setAttribute("minority", minorityName);
-        currentJob = (Job) servletContext.getAttribute("currentJob");
+        State state = (State) servletContext.getAttribute("state");
+        currentJob = state.getCurrentJob();
         int remainingDistrictings = constraintHandler.getRemainingDistrictings(currentJob, minorityName,
-                Float.parseFloat(minorityThreshold), Integer.parseInt(majMin), incumbentsProtected, Float.parseFloat(totalPop), Float.parseFloat(vaPop), Float.parseFloat(cvaPop), Float.parseFloat(geoComp), Float.parseFloat(graphComp), Float.parseFloat(popFat));
+                Double.parseDouble(minorityThreshold), Integer.parseInt(majMin), incumbentsProtected, Double.parseDouble(totalPop), Double.parseDouble(vaPop), Double.parseDouble(cvaPop), Double.parseDouble(geoComp), Double.parseDouble(graphComp), Double.parseDouble(popFat));
+        System.out.println(remainingDistrictings);
+        servletContext.setAttribute("state",state);
+//        int count=0;
+//        for(Districting districting: state.getCurrentJob().getListDistrictings()){
+//            if(districting.getSatisfiesConstraints()==true){
+//                count++;
+//            }
+//        }
         //return the number of districtings remaining
         return Response.status(Response.Status.OK).entity(Integer.toString(remainingDistrictings)).build();
     }

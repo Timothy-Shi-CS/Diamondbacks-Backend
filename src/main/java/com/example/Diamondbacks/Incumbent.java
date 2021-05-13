@@ -1,10 +1,7 @@
 package com.example.Diamondbacks;
 
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "Incumbents")
@@ -13,12 +10,32 @@ public class Incumbent {
 //    private PoliticalParty candidateParty; //the political party of the candidate
 //    private int districtFrom; // the district which the candidate is from based on enacted plan
 
+    @Id
+    private String incumbentID;
+
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @Column(name = "party", nullable = false)
+    private String party;
+
+    @Column(name = "districtNum", nullable = false)
+    private Long districtNum;
 
     @ManyToOne
-    private Districting districting;
+    private State state;
 
-    @Id
-    private String incumbentID; //unique candidate ID for each candidate
+    public Incumbent() {
+
+    }
+
+    public Incumbent(String incumbentID, Long districtNum, String name, String party, State state) {
+        this.incumbentID = incumbentID;
+        this.districtNum = districtNum;
+        this.name = name;
+        this.party = party;
+        this.state = state;
+    }
 
 //    @Override
 //    public String toString() {
@@ -54,12 +71,43 @@ public class Incumbent {
 //        this.districtFrom = districtFrom;
 //    }
 
-    public String getCandidateID() {
+    public void setIncumbentID(String incumbentID) {
+        this.incumbentID = incumbentID;
+    }
+
+    public String getIncumbentID() {
         return incumbentID;
     }
 
-    public void setCandidateID(String candidateID) {
-        String [] dbID=candidateID.split("-");
-        this.incumbentID = dbID[dbID.length-1];
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public Long getDistrictNum() {
+        return districtNum;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getParty() {
+        return party;
+    }
+
+    public void setDistrictNum(Long districtNum) {
+        this.districtNum = districtNum;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setParty(String party) {
+        this.party = party;
     }
 }

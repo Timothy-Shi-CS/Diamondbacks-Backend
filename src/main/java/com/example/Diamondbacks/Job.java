@@ -27,6 +27,9 @@ public class Job implements Serializable {
     @Transient
     private Districting currentAverageDistricting;
 
+    @Transient
+    private BoxAndWhisker boxAndWhisker;
+
     @Id
     private String id;
 
@@ -126,11 +129,29 @@ public class Job implements Serializable {
     public int countRemainDistrictings(){
         // write method here to count districtings that fit constraints
         int count = 0;
-        for(Districting dist: this.getListDistrictings()){
-            if(dist.satisfyConstraints(this.getCurrentConstraints())){
+        int districtings=0;
+        for(Districting districting: this.getListDistrictings()){
+//            if(count==2000){
+//                return count;
+//            }
+//            if(districtings==50000){
+//                return count;
+//            }
+
+//            System.out.println(districting.getGeographic_comp());
+
+            if(districting.satisfyConstraints(this.getCurrentConstraints())){
+                districting.setSatisfiesConstraints(true);
                 count++;
+                System.out.println(count);
+
+            }else{
+                districting.setSatisfiesConstraints(false);
             }
+            districtings++;
         }
+        System.out.println(count);
+
         return count;
     }
 
@@ -173,9 +194,9 @@ public class Job implements Serializable {
         Comparator<Districting> devEnactedAreaComparator = new Comparator<Districting>() {
             @Override
             public int compare(Districting d1, Districting d2) {
-                float enactedGeo1 = d1.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_ENACTED_GEO).getMeasureScore();
-                float enactedGeo2 = d2.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_ENACTED_GEO).getMeasureScore();
-                return Float.compare(enactedGeo1, enactedGeo2);
+                double enactedGeo1 = d1.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_ENACTED_GEO).getMeasureScore();
+                double enactedGeo2 = d2.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_ENACTED_GEO).getMeasureScore();
+                return Double.compare(enactedGeo1, enactedGeo2);
             }
         };
         //sort by objective function value
@@ -196,9 +217,9 @@ public class Job implements Serializable {
         Comparator<Districting> devEnactedPopulationComparator = new Comparator<Districting>() {
             @Override
             public int compare(Districting d1, Districting d2) {
-                float enactedPop1 = d1.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_ENACTED_POP).getMeasureScore();
-                float enactedPop2 = d2.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_ENACTED_POP).getMeasureScore();
-                return Float.compare(enactedPop1, enactedPop2);
+                Double enactedPop1 = d1.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_ENACTED_POP).getMeasureScore();
+                Double enactedPop2 = d2.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_ENACTED_POP).getMeasureScore();
+                return Double.compare(enactedPop1, enactedPop2);
             }
         };
         //sort by objective function value
@@ -378,5 +399,13 @@ public class Job implements Serializable {
 
     public void setState(State state){
         this.state = state;
+    }
+
+    public BoxAndWhisker getBoxAndWhisker() {
+        return boxAndWhisker;
+    }
+
+    public void setBoxAndWhisker(BoxAndWhisker boxAndWhisker) {
+        this.boxAndWhisker = boxAndWhisker;
     }
 }

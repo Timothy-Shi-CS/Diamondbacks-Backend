@@ -5,19 +5,19 @@ import java.util.Collection;
 public class Constraints {
     private Collection<String> incumbentsID;
     private Minorities minoritySelected;
-    private float minorityThreshold;
+    private double minorityThreshold;
     private int majorityMinorityDistricts;
-    private float totalPopulationEquality;
-    private float votingAgePopulationEquality;
-    private float citizenAgePopulationEquality;
-    private float geographicCompactness;
-    private float graphCompactness;
-    private float populationFatness;
+    private double totalPopulationEquality;
+    private double votingAgePopulationEquality;
+    private double citizenAgePopulationEquality;
+    private double geographicCompactness;
+    private double graphCompactness;
+    private double populationFatness;
 
-    public Constraints(Collection<String> incumbentsID, Minorities minoritySelected, float minorityThreshold,
-                       int majorityMinorityDistricts, float totalPopulationEquality, float votingAgePopulationEquality,
-                       float citizenAgePopulationEquality, float geographicCompactness, float graphCompactness,
-                       float populationFatness) {
+    public Constraints(Collection<String> incumbentsID, Minorities minoritySelected, double minorityThreshold,
+                       int majorityMinorityDistricts, double totalPopulationEquality, double votingAgePopulationEquality,
+                       double citizenAgePopulationEquality, double geographicCompactness, double graphCompactness,
+                       double populationFatness) {
         this.incumbentsID = incumbentsID;
         this.minoritySelected = minoritySelected;
         this.minorityThreshold = minorityThreshold;
@@ -38,11 +38,11 @@ public class Constraints {
         this.minoritySelected = minoritySelected;
     }
 
-    public float getMinorityThreshold() {
+    public double getMinorityThreshold() {
         return minorityThreshold;
     }
 
-    public void setMinorityThreshold(float minorityThreshold) {
+    public void setMinorityThreshold(double minorityThreshold) {
         this.minorityThreshold = minorityThreshold;
     }
 
@@ -62,51 +62,51 @@ public class Constraints {
         this.majorityMinorityDistricts = majorityMinorityDistricts;
     }
 
-    public float getTotalPopulationEquality() {
+    public double getTotalPopulationEquality() {
         return totalPopulationEquality;
     }
 
-    public void setTotalPopulationEquality(float totalPopulationEquality) {
+    public void setTotalPopulationEquality(double totalPopulationEquality) {
         this.totalPopulationEquality = totalPopulationEquality;
     }
 
-    public float getVotingAgePopulationEquality() {
+    public double getVotingAgePopulationEquality() {
         return votingAgePopulationEquality;
     }
 
-    public void setVotingAgePopulationEquality(float votingAgePopulationEquality) {
+    public void setVotingAgePopulationEquality(double votingAgePopulationEquality) {
         this.votingAgePopulationEquality = votingAgePopulationEquality;
     }
 
-    public float getCitizenAgePopulationEquality() {
+    public double getCitizenAgePopulationEquality() {
         return citizenAgePopulationEquality;
     }
 
-    public void setCitizenAgePopulationEquality(float citizenAgePopulationEquality) {
+    public void setCitizenAgePopulationEquality(double citizenAgePopulationEquality) {
         this.citizenAgePopulationEquality = citizenAgePopulationEquality;
     }
 
-    public float getGeographicCompactness() {
+    public double getGeographicCompactness() {
         return geographicCompactness;
     }
 
-    public void setGeographicCompactness(float geographicCompactness) {
+    public void setGeographicCompactness(double geographicCompactness) {
         this.geographicCompactness = geographicCompactness;
     }
 
-    public float getGraphCompactness() {
+    public double getGraphCompactness() {
         return graphCompactness;
     }
 
-    public void setGraphCompactness(float graphCompactness) {
+    public void setGraphCompactness(double graphCompactness) {
         this.graphCompactness = graphCompactness;
     }
 
-    public float getPopulationFatness() {
+    public double getPopulationFatness() {
         return populationFatness;
     }
 
-    public void setPopulationFatness(float populationFatness) {
+    public void setPopulationFatness(double populationFatness) {
         this.populationFatness = populationFatness;
     }
 }
