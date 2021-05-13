@@ -75,14 +75,18 @@ public class Job implements Serializable {
         Integer end_avg = currentAverages.get(end);
         float threshold = 0.05f;
         for(Districting dist: this.getListDistrictings()) {
-            Integer start_val = dist.getSortedMinorityData().get(start).get(minoritySelected);
-            Integer mid_val = dist.getSortedMinorityData().get(mid).get(minoritySelected);
-            Integer end_val = dist.getSortedMinorityData().get(end).get(minoritySelected);
-            if(percentError(start_avg, start_val)<threshold
-                    && percentError(mid_avg, mid_val)<threshold
-                    && percentError(end_avg, end_val)<threshold){
-                averagedDistricting = dist;
-                break;
+            if(dist.getSatisfiesConstraints()){
+                //if the dsitricting satisfies the constraints
+                // add data to the box and whisker object
+                Integer start_val = dist.getSortedMinorityData().get(start).get(minoritySelected);
+                Integer mid_val = dist.getSortedMinorityData().get(mid).get(minoritySelected);
+                Integer end_val = dist.getSortedMinorityData().get(end).get(minoritySelected);
+                if(percentError(start_avg, start_val)<threshold
+                        && percentError(mid_avg, mid_val)<threshold
+                        && percentError(end_avg, end_val)<threshold){
+                    averagedDistricting = dist;
+                    break;
+                }
             }
         }
         //sets the current average districting after finding a good fit

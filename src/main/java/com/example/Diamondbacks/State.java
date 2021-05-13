@@ -120,7 +120,7 @@ public class State {
         currentBAW.setCurrentDistrictingData(currentDistrictingData);
         currentBAW.calculateBoxAndWhiskerData();
         //after setting the BAW object calculate the average districting for the constrained job
-        this.getConstrainedJob().calAverageDistricting(currentBAW);
+        this.getCurrentJob().calAverageDistricting(currentBAW);
     }
 
     /**
@@ -161,7 +161,6 @@ public class State {
                 ", stateName=" + stateName +
                 ", jobSummaries=" + jobSummaries +
                 ", currentJob=" + currentJob +
-                ", constrainedJob=" + constrainedJob +
                 ", currentBoxAndWhisker=" + currentBoxAndWhisker +
                 '}';
     }
