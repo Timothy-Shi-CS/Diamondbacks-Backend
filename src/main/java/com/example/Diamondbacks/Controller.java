@@ -90,12 +90,16 @@ public class Controller {
     public Response setStateAndJob(@PathParam("stateName") String stateName, @PathParam("jobID") String jobID) {
         StateHandler stateHandler = new StateHandler();
         JobHandler jobHandler = new JobHandler();
-        stateHandler.setState(stateName, state);
+
         if (servletContext.getAttribute("state") != null) {
             State curstate = (State) servletContext.getAttribute("state");
             curstate.setCurrentJob(null);
+            curstate.setEnactedDistricting(null);
             servletContext.setAttribute("state", curstate);
         }
+
+        stateHandler.setState(stateName, state);
+        stateHandler.setEnactedDistricting(state, stateName);
         currentJob = jobHandler.getJobByID(jobID, em, emf);
 //        jobHandler.loadDistrictMinority(currentJob);
 //        jobHandler.loadSecDistrictMinority(currentJob);
@@ -116,12 +120,22 @@ public class Controller {
         StateHandler stateHandler = new StateHandler();
         int count = 0;
         for (Districting districting : state.getCurrentJob().getListDistrictings()) {
-            if (districting.getSatisfiesConstraints() == true) {
+            if (districting.getSatisfiesConstraints()) {
                 count++;
             }
         }
+        state = stateHandler.setDistrictsForDistrictings(state);
+        System.out.println(count + ", " + populationEquality + ", " + devAvgDistGeo + ", " + devAvgDistPop + ", " + devEnDistGeo + ", " + devEnDistPop + ", " + geo + ", " + graph + ", " + popFat);
         servletContext.setAttribute("state", stateHandler.setObjectiveValueAndCalcBAW(state, Double.parseDouble(populationEquality), Double.parseDouble(devAvgDistGeo), Double.parseDouble(devAvgDistPop), Double.parseDouble(devEnDistGeo), Double.parseDouble(devEnDistPop), Double.parseDouble(geo), Double.parseDouble(graph), Double.parseDouble(popFat)));
-        return Response.status(Response.Status.OK).entity(count + ", " + populationEquality + ", " + devAvgDistGeo + ", " + devAvgDistPop + ", " + devEnDistGeo + ", " + devEnDistPop + ", " + geo + ", " + graph + ", " + popFat).build();
+
+        Job curJob = state.getCurrentJob();
+
+        List<Districting> top10Dists = (List<Districting>) curJob.findTopDistrictingsObjectFunction();
+        HashMap <String,ObjectiveValue> top10 = new HashMap<>();
+        for(Districting districting:top10Dists){
+            top10.put(districting.getRecomb_file(),districting.getDistrictingMeasures());
+        }
+        return Response.status(Response.Status.OK).entity(top10).build();
     }
 
     @GET

@@ -68,6 +68,9 @@ public class Districting {
     @Transient
     private Map<Integer, BAWData> bawData;
 
+    @Transient
+    private Map<Integer, List<String>> districtData;
+
 //    @Transient
 //    private String[] list_incumbent_protected_origin;
 
@@ -89,11 +92,11 @@ public class Districting {
         this.list_incumbent_protected_origin = protectedIncumbentCandidateList;
         this.recomb_file = districtingID;
         this.sortedMinorityData = sortedMinorityData;
-        this.satisfiesConstraints=true;
+        this.satisfiesConstraints = true;
     }
 
     public Districting() {
-        this.satisfiesConstraints=true;
+        this.satisfiesConstraints = true;
     }
 
     /**
@@ -184,19 +187,6 @@ public class Districting {
         int count = 0;
         Minorities minorityLookUp = userConstraints.getMinoritySelected();
         double minorityMin = userConstraints.getMinorityThreshold();
-//        String query = "from District d where d.districting.id=:districtingID";
-//        Query q = em.createQuery(query).setParameter("districtingID", this.getId());
-//        List<District> districts = q.getResultList();
-//        if(districts.size()>0){
-//            for (District dist:districts){
-//                CensusInfo censusInfo = new CensusInfo();
-//                Map<Minorities, Double> minorities = new HashMap<>();
-//                minorities.put(Minorities.ASIAN, dist.getASIAN());
-//                minorities.put(Minorities.BLACK, dist.getBLACK());
-//                minorities.put(Minorities.HISPANIC, dist.getHISPANIC());
-//                censusInfo.setMinorities(minorities);
-//                dist.setCensusInfo(censusInfo);
-//            }
         for (Integer key : districtsMinority.keySet()) {
             //if the minority of the specified type has percentage > the one user selected
             if (minorityLookUp == Minorities.ASIAN) {
@@ -241,12 +231,16 @@ public class Districting {
         //resetting the previous dev from Average Districting
         totMeasure.setMeasureScore(0);
         //iterates through all districts in the districting to calculate the SSE
-        for (int districtID : this.getDistrictsMap().keySet()) {
+        for (int districtID : this.getDistrictData().keySet()) {
+            float avgArea = Float.parseFloat(avgDistricting.getDistrictData().get(districtID).get(2));
+            float recombArea = Float.parseFloat(this.getDistrictData().get(districtID).get(2));
+            float sse = (float) Math.pow(avgArea - recombArea, 2);
+            this.getDistrictData().get(districtID).set(6,String.valueOf(sse));
             //calculates the SSE for the district
-            Measure currentMeasure = this.getDistrictsMap().get(districtID)
-                    .calDevFromAvgDistGeo(avgDistricting.getDistrictsMap().get(districtID));
+//            Measure currentMeasure = this.getDistrictsMap().get(districtID)
+//                    .calDevFromAvgDistGeo(avgDistricting.getDistrictsMap().get(districtID));
             //add the SSE to the overall score
-            totMeasure.setMeasureScore(totMeasure.getMeasureScore() + currentMeasure.getMeasureScore());
+            totMeasure.setMeasureScore(totMeasure.getMeasureScore() + sse);
         }
         return totMeasure;
     }
@@ -260,16 +254,20 @@ public class Districting {
      */
     public Measure calDevFromAvgDistPop(Districting avgDistricting) {
         //sum of square differences by population at districting level
-        Measure totMeasure = this.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_AVERAGE_GEO);
+        Measure totMeasure = this.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_AVERAGE_POP);
         //resetting the previous dev from Average Districting
         totMeasure.setMeasureScore(0);
         //iterates through all districts in the districting to calculate the SSE
-        for (int districtID : this.getDistrictsMap().keySet()) {
+        for (int districtID : this.getDistrictData().keySet()) {
+            float avgPop = Float.parseFloat(avgDistricting.getDistrictData().get(districtID).get(1));
+            float recombPop = Float.parseFloat(this.getDistrictData().get(districtID).get(1));
+            float sse = (float) Math.pow(avgPop - recombPop, 2);
+            this.getDistrictData().get(districtID).set(7,String.valueOf(sse));
             //calculates the SSE for the district
-            Measure currentMeasure = this.getDistrictsMap().get(districtID)
-                    .calDevFromAvgDistPop(avgDistricting.getDistrictsMap().get(districtID));
+//            Measure currentMeasure = this.getDistrictsMap().get(districtID)
+//                    .calDevFromAvgDistPop(avgDistricting.getDistrictsMap().get(districtID));
             //add the SSE to the overall score
-            totMeasure.setMeasureScore(totMeasure.getMeasureScore() + currentMeasure.getMeasureScore());
+            totMeasure.setMeasureScore(totMeasure.getMeasureScore() + sse);
         }
         return totMeasure;
     }
@@ -480,5 +478,13 @@ public class Districting {
 
     public void setSatisfiesConstraints(boolean satisfiesConstraints) {
         this.satisfiesConstraints = satisfiesConstraints;
+    }
+
+    public Map<Integer, List<String>> getDistrictData() {
+        return districtData;
+    }
+
+    public void setDistrictData(Map<Integer, List<String>> districtData) {
+        this.districtData = districtData;
     }
 }

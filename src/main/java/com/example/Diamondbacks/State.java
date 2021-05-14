@@ -95,32 +95,22 @@ public class State {
         Constraints userConstraints = this.getCurrentJob().getCurrentConstraints();
         Minorities minorityToPlot = userConstraints.getMinoritySelected();
         Map<Integer, Collection<Integer>> dataToPlot = new HashMap<Integer, Collection<Integer>>();
-        //Iterate through the constrained job
-        boolean first=true;
+        //Iterate through the job for districtings that satisfy constraints
         for (Districting districting : this.getCurrentJob().getListDistrictings()) {
             //for each district in the district add the data
             // if the constraint is satified
             if (districting.getSatisfiesConstraints()) {
-//                if(first){
-//                    this.setCurrentDistricting(districting);
-//                    first=false;
-//                }
                 ObjectiveValue objv = districting.getDistrictingMeasures();
                 HashMap<MeasureType, Measure> measures = (HashMap<MeasureType, Measure>) objv.getMeasures();
                 measures.get(MeasureType.GEOMETRIC_COMPACTNESS).setMeasureWeight(geo.floatValue());
                 measures.get(MeasureType.GRAPH_COMPACTNESS).setMeasureWeight(graph.floatValue());
                 measures.get(MeasureType.POPULATION_FATNESS).setMeasureWeight(popFat.floatValue());
-//                measures.put(MeasureType.GEOMETRIC_COMPACTNESS, new Measure(MeasureType.GEOMETRIC_COMPACTNESS, geo, districting.getGeographic_comp()));
-//                measures.put(MeasureType.GRAPH_COMPACTNESS, new Measure(MeasureType.GRAPH_COMPACTNESS, graph, districting.getGraph_comp()));
-//                measures.put(MeasureType.POPULATION_FATNESS, new Measure(MeasureType.POPULATION_FATNESS, popFat, districting.getPopulation_fatness()));
                 ///
                 measures.put(MeasureType.DEV_ENACTED_GEO, new Measure(MeasureType.DEV_ENACTED_GEO, devEnDistGeo, districting.getDev_enacted_geometric()));
                 measures.put(MeasureType.DEV_ENACTED_POP, new Measure(MeasureType.DEV_ENACTED_POP, devEnDistPop, districting.getDev_enacted_population()));
                 measures.put(MeasureType.DEV_AVERAGE_GEO, new Measure(MeasureType.DEV_AVERAGE_GEO, devAvgDistGeo, -1));
                 measures.put(MeasureType.DEV_AVERAGE_POP, new Measure(MeasureType.DEV_AVERAGE_POP, devAvgDistPop, -1));
                 ///
-//                measures.put(MeasureType.TOT_POP_EQU, new Measure(MeasureType.TOT_POP_EQU, popEqual, districting.getTot_pop_equality()));
-//                measures.put(MeasureType.VOT_POP_EQU, new Measure(MeasureType.VOT_POP_EQU, popEqual, districting.getVot_pop_equality()));
                 measures.get(MeasureType.TOT_POP_EQU).setMeasureWeight(popEqual.floatValue());
                 measures.get(MeasureType.VOT_POP_EQU).setMeasureWeight(popEqual.floatValue());
 
@@ -181,9 +171,14 @@ public class State {
      */
     public Map<Integer, Integer> findEnactedDistictingData(Minorities minorityToPlot) {
         Map<Integer, Integer> enactedDistrictingData = new HashMap<Integer, Integer>();
-        for (Integer districtID : this.enactedDistricting.getSortedMinorityData().keySet()) {
-            enactedDistrictingData.put(districtID, this.enactedDistricting.getSortedMinorityData().
-                    get(districtID).get(minorityToPlot));
+        for (Integer districtID : this.enactedDistricting.getBawData().keySet()) {
+            int countMinority = this.enactedDistricting.getBawData().get(districtID).getTotAsianPop();
+            if(minorityToPlot==Minorities.BLACK){
+                countMinority = this.enactedDistricting.getBawData().get(districtID).getTotBlackPop();
+            }else if(minorityToPlot==Minorities.HISPANIC){
+                countMinority = this.enactedDistricting.getBawData().get(districtID).getTotHispanicPop();
+            }
+            enactedDistrictingData.put(districtID, countMinority);
         }
         return enactedDistrictingData;
     }

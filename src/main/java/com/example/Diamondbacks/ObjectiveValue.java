@@ -19,6 +19,7 @@ public class ObjectiveValue {
             }
         }
         this.setOverallObjectiveValueScore(total_score);
+        System.out.println(total_score);
         return total_score;
     }
 

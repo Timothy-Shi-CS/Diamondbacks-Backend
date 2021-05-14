@@ -227,27 +227,6 @@ public class JobHandler {
         }
 
         curJob.setListDistrictings(districtings);
-//        int counter = 1;
-//        for (Districting districting : districtings) {
-//            System.out.println(counter);
-//            System.out.println(districting.getDistrictingID());
-//            System.out.println(districting.getList_incumbent_protected_origin());
-//            System.out.println(districting.getBawData());
-//
-//            System.out.println(districting.getCal_pop_diff_percent());
-//            System.out.println(districting.getDistrictsMinority());
-//            System.out.println(districting.getDev_enacted_geometric());
-//            System.out.println(districting.getDev_enacted_population());
-//            System.out.println(districting.getDev_avg_geometric());
-//            System.out.println(districting.getDev_avg_population());
-//            System.out.println(districting.getGraph_comp());
-//            System.out.println(districting.getPopulation_fatness());
-//            System.out.println(districting.getGeographic_comp());
-//            System.out.println(districting.getTot_pop_equality());
-//            System.out.println(districting.getVot_pop_equality());
-//            System.out.println(districting.getDistrictsMinority());
-//            counter++;
-//        }
 
         //get the incumbents for this state
         return curJob;
