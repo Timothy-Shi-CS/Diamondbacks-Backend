@@ -125,6 +125,7 @@ public class Job implements Serializable {
             if(dist.getSatisfiesConstraints()) {
                 dist.calDevFromAvgDistGeo(this.getcurrentAverageDistricting());
                 dist.calDevFromAvgDistPop(this.getcurrentAverageDistricting());
+                dist.calTotPerimeter();
                 dist.getDistrictingMeasures().calOverallObjectiveValueScore();
             }
         }
@@ -264,15 +265,15 @@ public class Job implements Serializable {
      * @return a pair of districting with very different area by a specific district
      */
     public Collection<Districting> findVeryDifferentAreaPairDeviations() {
-        //this should return it in pairs?
-        //pick a district, then sort the list by the area of that list
-        //return the min and max of that list(very different area in terms of the district selected)
+        //using the total perimeter attribute
+        //sort by the total perimeter(sum of all perimeters of all districts in districting)
+        //pair smallest with largest = very different area
         Integer districtToCompareArea = 1;
         Comparator<Districting> areaComparator = new Comparator<Districting>() {
             @Override
             public int compare(Districting d1, Districting d2) {
-                float area1 = d1.getDistrictsMap().get(districtToCompareArea).getDistrictGeometry().getArea();
-                float area2 = d2.getDistrictsMap().get(districtToCompareArea).getDistrictGeometry().getArea();
+                float area1 = d1.getTotPerimeter();
+                float area2 = d2.getTotPerimeter();
                 return -1*Float.compare(area1, area2);
             }
         };
@@ -281,42 +282,42 @@ public class Job implements Serializable {
         districtings.sort(areaComparator);
         List<Districting> result = new ArrayList<Districting>();
         //the first element and the last element have very different area
-        result.add(districtings.get(0));
-        result.add(districtings.get(districtings.size() - 1));
+        result.addAll(districtings.subList(0, 5));
+        result.addAll(districtings.subList(districtings.size() - 6, districtings.size() - 1));
         return result;
     }
 
-    /**
-     * This method sorts the constrained job by the population of a specific district to find the pair of the districting
-     * with very different population
-     *
-     * @return a pair of districting with very different population by a specific district
-     */
-    public Collection<Districting> findVeryDifferentPopulationPairDeviations() {
-        //this should return it in pairs?
-        //pick a district, then sort the list by the population of that list
-        //return the min and max of that list(very different population in terms of the district selected)
-        Integer districtToCompareArea = 1;
-        Comparator<Districting> populationComparator = new Comparator<Districting>() {
-            @Override
-            public int compare(Districting d1, Districting d2) {
-                float population1 = d1.getDistrictsMap().get(districtToCompareArea).getCensusInfo().getPopulationData()
-                        .get(CensusValues.TOTAL_POPULATION);
-                float population2 = d2.getDistrictsMap().get(districtToCompareArea).getCensusInfo().getPopulationData()
-                        .get(CensusValues.TOTAL_POPULATION);
-                return -1*Float.compare(population1, population2);
-            }
-        };
-
-        //sort by objective function value
-        List<Districting> districtings = (List<Districting>) this.getListDistrictings();
-        districtings.sort(populationComparator);
-        List<Districting> result = new ArrayList<Districting>();
-        //the first element and the last element have very different population
-        result.add(districtings.get(0));
-        result.add(districtings.get(districtings.size() - 1));
-        return result;
-    }
+//    /**
+//     * This method sorts the constrained job by the population of a specific district to find the pair of the districting
+//     * with very different population
+//     *
+//     * @return a pair of districting with very different population by a specific district
+//     */
+//    public Collection<Districting> findVeryDifferentPopulationPairDeviations() {
+//        //this should return it in pairs?
+//        //pick a district, then sort the list by the population of that list
+//        //return the min and max of that list(very different population in terms of the district selected)
+//        Integer districtToCompareArea = 1;
+//        Comparator<Districting> populationComparator = new Comparator<Districting>() {
+//            @Override
+//            public int compare(Districting d1, Districting d2) {
+//                float population1 = d1.getDistrictsMap().get(districtToCompareArea).getCensusInfo().getPopulationData()
+//                        .get(CensusValues.TOTAL_POPULATION);
+//                float population2 = d2.getDistrictsMap().get(districtToCompareArea).getCensusInfo().getPopulationData()
+//                        .get(CensusValues.TOTAL_POPULATION);
+//                return -1*Float.compare(population1, population2);
+//            }
+//        };
+//
+//        //sort by objective function value
+//        List<Districting> districtings = (List<Districting>) this.getListDistrictings();
+//        districtings.sort(populationComparator);
+//        List<Districting> result = new ArrayList<Districting>();
+//        //the first element and the last element have very different population
+//        result.addAll(districtings.subList(0, 5));
+//        result.addAll(districtings.subList(districtings.size() - 6, districtings.size() - 1));
+//        return result;
+//    }
 
 //    public Collection<Districting> getInterestingDistictions(){
 //        this.getTopDistrictingsObjectFunction();

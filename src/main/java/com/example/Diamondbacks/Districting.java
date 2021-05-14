@@ -71,6 +71,9 @@ public class Districting {
     @Transient
     private Map<Integer, List<String>> districtData;
 
+    @Transient
+    private float totPerimeter;
+
 //    @Transient
 //    private String[] list_incumbent_protected_origin;
 
@@ -272,6 +275,14 @@ public class Districting {
         return totMeasure;
     }
 
+    public float calTotPerimeter(){
+        float perimeter = 0;
+        for(District dist:this.getDistrictsMap().values()){
+            perimeter+=dist.getDistrictGeometry().getPerimeter();
+        }
+        this.setTotPerimeter(perimeter);
+        return perimeter;
+    }
     public District findDistrictByID(String districtID, EntityManager em) {
         Query q = em.createNativeQuery("SELECT * FROM Diamondbacks.Districts WHERE districtID = " + districtID);
         List districtInfo = q.getResultList();
@@ -486,5 +497,13 @@ public class Districting {
 
     public void setDistrictData(Map<Integer, List<String>> districtData) {
         this.districtData = districtData;
+    }
+
+    public float getTotPerimeter() {
+        return totPerimeter;
+    }
+
+    public void setTotPerimeter(float totPerimeter) {
+        this.totPerimeter = totPerimeter;
     }
 }
