@@ -8,7 +8,7 @@ public class ObjectiveValue {
     private Map<MeasureType, Measure> measures; //hashmap of all possible measure types
 
     public double sigmoidFunction(Double sse){
-        return 1/(1+Math.exp(Math.pow(-10,-25)*sse));
+        return 1/(1+Math.exp(Math.pow(-10,-23)*sse));
     }
     /**
      * The method iterates through the measures hashmap and calculates the overall total score
