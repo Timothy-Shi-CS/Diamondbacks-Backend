@@ -272,18 +272,32 @@ public class Job implements Serializable {
         Comparator<Districting> areaComparator = new Comparator<Districting>() {
             @Override
             public int compare(Districting d1, Districting d2) {
-                float area1 = d1.getTotPerimeter();
-                float area2 = d2.getTotPerimeter();
+                float area1 = -1;
+                float area2 = -1;
+                if(d1.getSatisfiesConstraints()){
+                    area1 = d1.getTotPerimeter();
+                }
+                if(d2.getSatisfiesConstraints()){
+                    area2 = d2.getTotPerimeter();
+                }
                 return -1*Float.compare(area1, area2);
             }
         };
+        int indexValid = 0;
+        for(Districting districting:this.getListDistrictings()){
+            if(districting.getSatisfiesConstraints()){
+                indexValid++;
+            }else{
+                break;
+            }
+        }
         //sort by objective function value
         List<Districting> districtings = (List<Districting>) this.getListDistrictings();
         districtings.sort(areaComparator);
         List<Districting> result = new ArrayList<Districting>();
         //the first element and the last element have very different area
         result.addAll(districtings.subList(0, 5));
-        result.addAll(districtings.subList(districtings.size() - 6, districtings.size() - 1));
+        result.addAll(districtings.subList(indexValid - 6, indexValid - 1));
         return result;
     }
 
