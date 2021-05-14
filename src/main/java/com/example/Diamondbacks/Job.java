@@ -224,7 +224,7 @@ public class Job implements Serializable {
             public int compare(Districting d1, Districting d2) {
                 double enactedGeo1 = d1.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_ENACTED_GEO).getMeasureScore();
                 double enactedGeo2 = d2.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_ENACTED_GEO).getMeasureScore();
-                return Double.compare(enactedGeo1, enactedGeo2);
+                return -1*Double.compare(enactedGeo1, enactedGeo2);
             }
         };
         //sort by objective function value
@@ -248,7 +248,7 @@ public class Job implements Serializable {
             public int compare(Districting d1, Districting d2) {
                 Double enactedPop1 = d1.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_ENACTED_POP).getMeasureScore();
                 Double enactedPop2 = d2.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_ENACTED_POP).getMeasureScore();
-                return Double.compare(enactedPop1, enactedPop2);
+                return -1*Double.compare(enactedPop1, enactedPop2);
             }
         };
         //sort by objective function value
@@ -273,7 +273,7 @@ public class Job implements Serializable {
             public int compare(Districting d1, Districting d2) {
                 float area1 = d1.getDistrictsMap().get(districtToCompareArea).getDistrictGeometry().getArea();
                 float area2 = d2.getDistrictsMap().get(districtToCompareArea).getDistrictGeometry().getArea();
-                return Float.compare(area1, area2);
+                return -1*Float.compare(area1, area2);
             }
         };
         //sort by objective function value
@@ -304,7 +304,7 @@ public class Job implements Serializable {
                         .get(CensusValues.TOTAL_POPULATION);
                 float population2 = d2.getDistrictsMap().get(districtToCompareArea).getCensusInfo().getPopulationData()
                         .get(CensusValues.TOTAL_POPULATION);
-                return Float.compare(population1, population2);
+                return -1*Float.compare(population1, population2);
             }
         };
 
@@ -327,9 +327,42 @@ public class Job implements Serializable {
 //        return null;
 //    }
 
-    public Map<Integer, Float> findDistrictingsByMajorMinorityRange() {
+    public Collection<Boolean> findDistrictingsByMajorMinorityRange() {
         //shouldn't this be all districtings? since it is being constrainted by this?
-        return null;
+        Minorities minoritySelected = this.getCurrentConstraints().getMinoritySelected();
+        Collection<Districting> listDistrictings = this.findTopDistrictingsObjectFunction();
+        Collection<Boolean> closeToAvgDistricting = new ArrayList<>();
+
+        for(Districting districting: listDistrictings){
+            boolean isClose = true;
+            for(Integer districtID: districting.getDistrictsMap().keySet()){
+                District avgDist = this.getcurrentAverageDistricting().getDistrictsMap().get(districtID);
+                District curDist = districting.getDistrictsMap().get(districtID);
+                if(minoritySelected == Minorities.HISPANIC){
+                    float ans = percentError(avgDist.getHISPANIC().intValue(), curDist.getHISPANIC().intValue());
+                    if(ans > 0.05){
+                        isClose = false;
+                        break;
+                    }
+                }else if(minoritySelected == Minorities.ASIAN){
+                    float ans = percentError(avgDist.getASIAN().intValue(), curDist.getASIAN().intValue());
+                    if(ans > 0.05){
+                        isClose = false;
+                        break;
+                    }
+                }else if(minoritySelected == Minorities.BLACK){
+                    float ans = percentError(avgDist.getBLACK().intValue(), curDist.getBLACK().intValue());
+                    if(ans > 0.05){
+                        isClose = false;
+                        break;
+                    }
+                }
+            }
+            closeToAvgDistricting.add(isClose);
+        }
+        //list of booleans if districtings are close to the BAW averages
+        //for the top 10 districting
+        return closeToAvgDistricting;
     }
 
     public float calMajMinDevFromAvg(Map<Integer, Float> map) {
