@@ -86,6 +86,8 @@ public class Districting {
     private Map<Integer, Map<Minorities, Integer>> sortedMinorityData; //count of minority for each district
     // read in from JSON as integers
 
+    @Transient
+    private ConstraintType failedReason;
 
     public Districting(CensusInfo censusInfo, ObjectiveValue districtingMeasures, Map<Integer, District> districtsMap,
                        Collection<String> protectedIncumbentCandidateList, String districtingID,
@@ -117,8 +119,8 @@ public class Districting {
             Collection<String> protectedCandidateIds = new ArrayList<>(this.getList_incumbent_protected_origin());
 
             if (!protectedCandidateIds.containsAll(userConstraints.getIncumbentsID())) {
-
                 //if not all specified incumbents are protected
+                this.setFailedReason(ConstraintType.INCUMBENT);
                 return false;
             }
         }
@@ -130,7 +132,7 @@ public class Districting {
                 if (this.districtingMeasures.getMeasures().get(MeasureType.TOT_POP_EQU).getMeasureScore()
                         > userConstraints.getTotalPopulationEquality()) {
                     System.out.println("failed totalpop: " + this.districtingMeasures.getMeasures().get(MeasureType.TOT_POP_EQU).getMeasureScore() + ", user: " + userConstraints.getTotalPopulationEquality());
-
+                    this.setFailedReason(ConstraintType.EQU_POP);
                     return false;
                 }
             }
@@ -139,6 +141,7 @@ public class Districting {
                 if (this.districtingMeasures.getMeasures().get(MeasureType.VOT_POP_EQU).getMeasureScore()
                         > userConstraints.getVotingAgePopulationEquality()) {
                     System.out.println("failed votepop");
+                    this.setFailedReason(ConstraintType.EQU_POP);
                     return false;
                 }
             }
@@ -146,6 +149,7 @@ public class Districting {
                 if (this.districtingMeasures.getMeasures().get(MeasureType.GEOMETRIC_COMPACTNESS).getMeasureScore()
                         > userConstraints.getGeographicCompactness()) {
                     System.out.println("failed geo");
+                    this.setFailedReason(ConstraintType.COMPACTNESS);
                     return false;
                 }
             }
@@ -153,6 +157,7 @@ public class Districting {
                 if (this.districtingMeasures.getMeasures().get(MeasureType.GRAPH_COMPACTNESS).getMeasureScore()
                         > userConstraints.getGraphCompactness()) {
                     System.out.println("failed graphpop");
+                    this.setFailedReason(ConstraintType.COMPACTNESS);
                     return false;
                 }
             }
@@ -160,6 +165,7 @@ public class Districting {
                 if (this.districtingMeasures.getMeasures().get(MeasureType.POPULATION_FATNESS).getMeasureScore()
                         > userConstraints.getPopulationFatness()) {
                     System.out.println("failed popfat");
+                    this.setFailedReason(ConstraintType.COMPACTNESS);
                     return false;
                 }
             }
@@ -171,6 +177,7 @@ public class Districting {
             //check if the majority minority district counts is >= to the user selected counts
             if (this.countMajorityMinorityDistrict(userConstraints) < userConstraints.getMajorityMinorityDistricts()) {
                 System.out.println("failed majmin: " + this.countMajorityMinorityDistrict(userConstraints) + ", user: " + userConstraints.getMajorityMinorityDistricts());
+                this.setFailedReason(ConstraintType.MAJ_MIN_DIST);
                 return false;
             }
 
@@ -515,5 +522,13 @@ public class Districting {
 
     public void setSortedTotPop(Collection<Integer> sortedTotPop) {
         this.sortedTotPop = sortedTotPop;
+    }
+
+    public ConstraintType getFailedReason() {
+        return failedReason;
+    }
+
+    public void setFailedReason(ConstraintType failedReason) {
+        this.failedReason = failedReason;
     }
 }

@@ -39,6 +39,11 @@ public class Job implements Serializable {
     @Transient
     private Districting currentDistricting;
 
+    @Transient
+    private int districtingRemoved;
+    @Transient
+    private Map<ConstraintType, Integer> removedReasons;
+
     @ManyToOne
     private State state;
 
@@ -158,6 +163,13 @@ public class Job implements Serializable {
         // write method here to count districtings that fit constraints
         int count = 0;
         int districtings = 0;
+        int removedDistricting = 0;
+        Map<ConstraintType, Integer> failedReasons = new HashMap<>();
+
+        failedReasons.put(ConstraintType.MAJ_MIN_DIST, 0);
+        failedReasons.put(ConstraintType.INCUMBENT, 0);
+        failedReasons.put(ConstraintType.EQU_POP, 0);
+        failedReasons.put(ConstraintType.COMPACTNESS, 0);
         for (Districting districting : this.getListDistrictings()) {
 //            if(count==2000){
 //                return count;
@@ -175,11 +187,15 @@ public class Job implements Serializable {
 
             } else {
                 districting.setSatisfiesConstraints(false);
+                ConstraintType reason = districting.getFailedReason();
+                failedReasons.put(reason, failedReasons.get(reason)+1);
+                removedDistricting++;
             }
             districtings++;
         }
         System.out.println(count);
-
+        this.setDistrictingRemoved(removedDistricting);
+        this.setRemovedReasons(failedReasons);
         return count;
     }
 
@@ -501,5 +517,21 @@ public class Job implements Serializable {
 
     public void setBoxAndWhisker(BoxAndWhisker boxAndWhisker) {
         this.boxAndWhisker = boxAndWhisker;
+    }
+
+    public int getDistrictingRemoved() {
+        return districtingRemoved;
+    }
+
+    public void setDistrictingRemoved(int districtingRemoved) {
+        this.districtingRemoved = districtingRemoved;
+    }
+
+    public Map<ConstraintType, Integer> getRemovedReasons() {
+        return removedReasons;
+    }
+
+    public void setRemovedReasons(Map<ConstraintType, Integer> removedReasons) {
+        this.removedReasons = removedReasons;
     }
 }
