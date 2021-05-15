@@ -7,12 +7,14 @@ import org.wololo.geojson.GeoJSONFactory;
 import org.wololo.geojson.Geometry;
 import org.wololo.jts2geojson.GeoJSONReader;
 
+import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.io.*;
 
@@ -124,13 +126,15 @@ public class State {
         return dataToPlot;
     }
 
-    public Map<Integer, Collection<Float>> calAllBoxAndWhiskerPercent() {
+    public Map<Integer, Float[]> calAllBoxAndWhiskerPercent() {
         Constraints userConstraints = this.getCurrentJob().getCurrentConstraints();
         Minorities minorityToPlot = userConstraints.getMinoritySelected();
         Map<Integer, Collection<Float>> dataToPlot = new HashMap<Integer, Collection<Float>>();
-
+        Map<Integer, Float> avgVals = new HashMap<>();
+        int numDist = 0;
         for (Districting districting : this.getCurrentJob().getListDistrictings()) {
             if (districting.getSatisfiesConstraints()) {
+                numDist++;
                 for (Integer districtID : districting.getBawData().keySet()) {
                     int countTotPop = (int) ((ArrayList) districting.getSortedTotPop()).get(districtID);
                     int countMinority = districting.getBawData().get(districtID).getTotAsianPop();
@@ -142,13 +146,30 @@ public class State {
                     if (!dataToPlot.containsKey(districtID)) {
                         //if the key does not exist, intitize it to an empty array list
                         dataToPlot.put(districtID, new ArrayList<Float>());
+                        avgVals.put(districtID,0f);
                     }
                     float minorityPercent = (float) countMinority / countTotPop;
                     dataToPlot.get(districtID).add(minorityPercent);
+                    avgVals.put(districtID,avgVals.get(districtID)+minorityPercent);
                 }
             }
         }
-        return dataToPlot;
+        Map<Integer, Float[]> stats = new HashMap<>();
+        DecimalFormat df = new DecimalFormat("#.###");
+        df.setRoundingMode(RoundingMode.DOWN);
+        for (Integer districtID : dataToPlot.keySet()){
+            List<Float> currentPercents = (List<Float>)dataToPlot.get(districtID);
+            Collections.sort(currentPercents);
+            int len = currentPercents.size();
+            Float min = Float.parseFloat(df.format(currentPercents.get(0)));
+            Float q1 = Float.parseFloat(df.format(currentPercents.get(len/4)));
+            Float avg = Float.parseFloat(df.format(avgVals.get(districtID)/numDist));
+            Float q3 = Float.parseFloat(df.format(currentPercents.get(3*len/4)));
+            Float max = Float.parseFloat(df.format(currentPercents.get(len-1)));
+            Float[] bars = new Float[]{min, q1, avg, q3, max};
+            stats.put(districtID, bars);
+        }
+        return stats;
     }
 
     /**
