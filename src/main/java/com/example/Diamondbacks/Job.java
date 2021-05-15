@@ -206,6 +206,8 @@ public class Job implements Serializable {
         //sort by objective function value
         List<Districting> districtings = (List<Districting>) this.getListDistrictings();
         districtings.sort(objValComparator);
+        System.out.println("AYOOOOOO 1: "+districtings.get(0).getDistrictingMeasures().getOverallObjectiveValueScore()+", 2: "+districtings.get(1).getDistrictingMeasures().getOverallObjectiveValueScore()+
+        ", 3: "+districtings.get(2).getDistrictingMeasures().getOverallObjectiveValueScore());
         //get the top 10 from the sorted
         return districtings.subList(0, 10);
     }
@@ -223,8 +225,14 @@ public class Job implements Serializable {
         Comparator<Districting> devEnactedAreaComparator = new Comparator<Districting>() {
             @Override
             public int compare(Districting d1, Districting d2) {
-                double enactedGeo1 = d1.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_ENACTED_GEO).getMeasureScore();
-                double enactedGeo2 = d2.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_ENACTED_GEO).getMeasureScore();
+                double enactedGeo1 = -1;
+                double enactedGeo2 = -1;
+                if(d1.getSatisfiesConstraints()){
+                    enactedGeo1 = d1.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_ENACTED_GEO).getMeasureScore();
+                }
+                if(d2.getSatisfiesConstraints()){
+                    enactedGeo2 = d2.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_ENACTED_GEO).getMeasureScore();
+                }
                 return -1*Double.compare(enactedGeo1, enactedGeo2);
             }
         };
@@ -247,8 +255,15 @@ public class Job implements Serializable {
         Comparator<Districting> devEnactedPopulationComparator = new Comparator<Districting>() {
             @Override
             public int compare(Districting d1, Districting d2) {
-                Double enactedPop1 = d1.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_ENACTED_POP).getMeasureScore();
-                Double enactedPop2 = d2.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_ENACTED_POP).getMeasureScore();
+
+                double enactedPop1 = -1;
+                double enactedPop2 = -1;
+                if(d1.getSatisfiesConstraints()){
+                    enactedPop1 = d1.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_ENACTED_POP).getMeasureScore();
+                }
+                if(d2.getSatisfiesConstraints()){
+                    enactedPop2 = d2.getDistrictingMeasures().getMeasures().get(MeasureType.DEV_ENACTED_POP).getMeasureScore();
+                }
                 return -1*Double.compare(enactedPop1, enactedPop2);
             }
         };

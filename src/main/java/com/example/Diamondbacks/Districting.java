@@ -3,8 +3,6 @@ package com.example.Diamondbacks;
 import javax.persistence.*;
 import java.util.*;
 
-import org.json.simple.JSONObject;
-
 @Entity
 @Table(name = "Districtings")
 public class Districting {
@@ -280,8 +278,9 @@ public class Districting {
 
     public float calTotPerimeter(){
         float perimeter = 0;
-        for(District dist:this.getDistrictsMap().values()){
-            perimeter+=dist.getDistrictGeometry().getPerimeter();
+        for(int districtID : this.getDistrictData().keySet()){
+            perimeter+=Float.parseFloat(this.getDistrictData().get(districtID).get(3));
+//            perimeter+=dist.getDistrictGeometry().getPerimeter();
         }
         this.setTotPerimeter(perimeter);
         return perimeter;

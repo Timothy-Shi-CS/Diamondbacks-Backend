@@ -95,6 +95,8 @@ public class Controller {
             State curstate = (State) servletContext.getAttribute("state");
             curstate.setCurrentJob(null);
             curstate.setEnactedDistricting(null);
+            curstate.setCurrentBoxAndWhisker(null);
+            curstate.setCurrentDistricting(null);
             servletContext.setAttribute("state", curstate);
         }
 
@@ -118,24 +120,35 @@ public class Controller {
                                @PathParam("graph") String graph, @PathParam("popFat") String popFat) {
         State state = (State) servletContext.getAttribute("state");
         StateHandler stateHandler = new StateHandler();
-        int count = 0;
-        for (Districting districting : state.getCurrentJob().getListDistrictings()) {
-            if (districting.getSatisfiesConstraints()) {
-                count++;
-            }
-        }
+
+        state = stateHandler.resetDistricts(state);
         state = stateHandler.setDistrictsForDistrictings(state);
-        System.out.println(count + ", " + populationEquality + ", " + devAvgDistGeo + ", " + devAvgDistPop + ", " + devEnDistGeo + ", " + devEnDistPop + ", " + geo + ", " + graph + ", " + popFat);
+        System.out.println(populationEquality + ", " + devAvgDistGeo + ", " + devAvgDistPop + ", " + devEnDistGeo + ", " + devEnDistPop + ", " + geo + ", " + graph + ", " + popFat);
         servletContext.setAttribute("state", stateHandler.setObjectiveValueAndCalcBAW(state, Double.parseDouble(populationEquality), Double.parseDouble(devAvgDistGeo), Double.parseDouble(devAvgDistPop), Double.parseDouble(devEnDistGeo), Double.parseDouble(devEnDistPop), Double.parseDouble(geo), Double.parseDouble(graph), Double.parseDouble(popFat)));
 
         Job curJob = state.getCurrentJob();
 
         List<Districting> top10Dists = (List<Districting>) curJob.findTopDistrictingsObjectFunction();
-        HashMap <String,ObjectiveValue> top10 = new HashMap<>();
-        for(Districting districting:top10Dists){
-            top10.put(districting.getRecomb_file(),districting.getDistrictingMeasures());
+        List<ObjectiveValue> res = new ArrayList<>();
+//        LinkedHashMap<Integer, HashMap<String,ObjectiveValue>> res = new LinkedHashMap<>();
+        for (Districting districting : top10Dists) {
+            districting.getDistrictingMeasures().setFileName(districting.getRecomb_file());
+            res.add(districting.getDistrictingMeasures());
         }
-        return Response.status(Response.Status.OK).entity(top10).build();
+        Districting districtingDeviationFromEnactedGeo = curJob.findTopDistrictingsByDeviationFromEnactedGeo();
+        Districting districtingDeviationFromEnactedPop = curJob.findTopDistrictingsByDeviationFromEnactedPop();
+
+        districtingDeviationFromEnactedPop.getDistrictingMeasures().setFileName(districtingDeviationFromEnactedPop.getRecomb_file());
+        districtingDeviationFromEnactedGeo.getDistrictingMeasures().setFileName(districtingDeviationFromEnactedGeo.getRecomb_file());
+        res.add(districtingDeviationFromEnactedPop.getDistrictingMeasures());
+        res.add(districtingDeviationFromEnactedGeo.getDistrictingMeasures());
+
+        List<Districting> areaPair = (List<Districting>) curJob.findVeryDifferentAreaPairDeviations();
+        for (Districting districting : areaPair) {
+            districting.getDistrictingMeasures().setFileName(districting.getRecomb_file());
+            res.add(districting.getDistrictingMeasures());
+        }
+        return Response.status(Response.Status.OK).entity(res).build();
     }
 
     @GET
@@ -143,6 +156,39 @@ public class Controller {
     public Response calculateDeviation(@PathParam("id") String districtingID) {
 //        DistrictingHandler districting =
         return Response.status(Response.Status.OK).entity("Hello").build();
+    }
+
+    @GET
+    @Path("/setDistricting/districtingID={id}")
+    public Response setDistricting(@PathParam("id") String id) {
+        State curState = (State) servletContext.getAttribute("state");
+        Job curJob = curState.getCurrentJob();
+        for (Districting districting : curJob.getListDistrictings()) {
+            if (districting.getRecomb_file().equals("\"" + id + "\"")) {
+                curState.setCurrentDistricting(districting);
+                break;
+            }
+        }
+        servletContext.setAttribute("state", curState);
+
+        return Response.status(Response.Status.OK).entity(((State) servletContext.getAttribute("state")).getCurrentDistricting().getRecomb_file()).build();
+    }
+
+    @GET
+    @Path("/getBAW")
+    public Response getBAW() {
+        State curState = (State) servletContext.getAttribute("state");
+
+
+        List<Object> res = new ArrayList<>();
+        Map<Integer, Float> curDistrictingData = curState.calCurrentBoxAndWhiskerPercent();
+        Map<Integer, Float> enactedDistrictingData = curState.calEnactedBoxAndWhiskerPercent();
+        Map<Integer, Collection<Float>> bawData =  curState.calAllBoxAndWhiskerPercent();
+
+        res.add(curDistrictingData);
+        res.add(enactedDistrictingData);
+        res.add(bawData);
+        return Response.status(Response.Status.OK).entity(res).build();
     }
 
     @GET

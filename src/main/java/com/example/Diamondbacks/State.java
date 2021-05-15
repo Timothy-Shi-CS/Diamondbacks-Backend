@@ -83,45 +83,48 @@ public class State {
     private void updatePrecinctMap() {
 
     }
-    private Map<Integer, Float> calEnactedBoxAndWhiskerPercent(){
+
+    public Map<Integer, Float> calEnactedBoxAndWhiskerPercent() {
         Constraints userConstraints = this.getCurrentJob().getCurrentConstraints();
         Minorities minorityToPlot = userConstraints.getMinoritySelected();
         Map<Integer, Float> dataToPlot = new HashMap<Integer, Float>();
 
         Districting districting = this.getEnactedDistricting();
         for (Integer districtID : districting.getBawData().keySet()) {
-            int countTotPop = (int)((ArrayList)districting.getSortedTotPop()).get(districtID);
+            int countTotPop = (int) ((ArrayList) districting.getSortedTotPop()).get(districtID);
             int countMinority = districting.getBawData().get(districtID).getTotAsianPop();
-            if(minorityToPlot==Minorities.BLACK){
+            if (minorityToPlot == Minorities.BLACK) {
                 countMinority = districting.getBawData().get(districtID).getTotBlackPop();
-            }else if(minorityToPlot==Minorities.HISPANIC){
+            } else if (minorityToPlot == Minorities.HISPANIC) {
                 countMinority = districting.getBawData().get(districtID).getTotHispanicPop();
             }
-            float minorityPercent = (float)countMinority/countTotPop;
+            float minorityPercent = (float) countMinority / countTotPop;
             dataToPlot.put(districtID, minorityPercent);
         }
         return dataToPlot;
     }
-    private Map<Integer, Float> calCurrentBoxAndWhiskerPercent(){
+
+    public Map<Integer, Float> calCurrentBoxAndWhiskerPercent() {
         Constraints userConstraints = this.getCurrentJob().getCurrentConstraints();
         Minorities minorityToPlot = userConstraints.getMinoritySelected();
         Map<Integer, Float> dataToPlot = new HashMap<Integer, Float>();
 
         Districting districting = this.getCurrentDistricting();
         for (Integer districtID : districting.getBawData().keySet()) {
-            int countTotPop = (int)((ArrayList)districting.getSortedTotPop()).get(districtID);
+            int countTotPop = (int) ((ArrayList) districting.getSortedTotPop()).get(districtID);
             int countMinority = districting.getBawData().get(districtID).getTotAsianPop();
-            if(minorityToPlot==Minorities.BLACK){
+            if (minorityToPlot == Minorities.BLACK) {
                 countMinority = districting.getBawData().get(districtID).getTotBlackPop();
-            }else if(minorityToPlot==Minorities.HISPANIC){
+            } else if (minorityToPlot == Minorities.HISPANIC) {
                 countMinority = districting.getBawData().get(districtID).getTotHispanicPop();
             }
-            float minorityPercent = (float)countMinority/countTotPop;
+            float minorityPercent = (float) countMinority / countTotPop;
             dataToPlot.put(districtID, minorityPercent);
         }
         return dataToPlot;
     }
-    private Map<Integer, Collection<Float>> calAllBoxAndWhiskerPercent(){
+
+    public Map<Integer, Collection<Float>> calAllBoxAndWhiskerPercent() {
         Constraints userConstraints = this.getCurrentJob().getCurrentConstraints();
         Minorities minorityToPlot = userConstraints.getMinoritySelected();
         Map<Integer, Collection<Float>> dataToPlot = new HashMap<Integer, Collection<Float>>();
@@ -129,18 +132,18 @@ public class State {
         for (Districting districting : this.getCurrentJob().getListDistrictings()) {
             if (districting.getSatisfiesConstraints()) {
                 for (Integer districtID : districting.getBawData().keySet()) {
-                    int countTotPop = (int)((ArrayList)districting.getSortedTotPop()).get(districtID);
+                    int countTotPop = (int) ((ArrayList) districting.getSortedTotPop()).get(districtID);
                     int countMinority = districting.getBawData().get(districtID).getTotAsianPop();
-                    if(minorityToPlot==Minorities.BLACK){
+                    if (minorityToPlot == Minorities.BLACK) {
                         countMinority = districting.getBawData().get(districtID).getTotBlackPop();
-                    }else if(minorityToPlot==Minorities.HISPANIC){
+                    } else if (minorityToPlot == Minorities.HISPANIC) {
                         countMinority = districting.getBawData().get(districtID).getTotHispanicPop();
                     }
                     if (!dataToPlot.containsKey(districtID)) {
                         //if the key does not exist, intitize it to an empty array list
                         dataToPlot.put(districtID, new ArrayList<Float>());
                     }
-                    float minorityPercent = (float)countMinority/countTotPop;
+                    float minorityPercent = (float) countMinority / countTotPop;
                     dataToPlot.get(districtID).add(minorityPercent);
                 }
             }
@@ -181,9 +184,9 @@ public class State {
                 districting.setDistrictingMeasures(objv);
                 for (Integer districtID : districting.getBawData().keySet()) {
                     int countMinority = districting.getBawData().get(districtID).getTotAsianPop();
-                    if(minorityToPlot==Minorities.BLACK){
+                    if (minorityToPlot == Minorities.BLACK) {
                         countMinority = districting.getBawData().get(districtID).getTotBlackPop();
-                    }else if(minorityToPlot==Minorities.HISPANIC){
+                    } else if (minorityToPlot == Minorities.HISPANIC) {
                         countMinority = districting.getBawData().get(districtID).getTotHispanicPop();
                     }
                     if (!dataToPlot.containsKey(districtID)) {
@@ -191,10 +194,10 @@ public class State {
                         dataToPlot.put(districtID, new ArrayList<Integer>());
                     }
                     dataToPlot.get(districtID).add(countMinority);
-                    totalPop.add(districting.getDistrictsMap().get(districtID).getCensusInfo().getPopulationData().get(CensusValues.TOTAL_POPULATION));
+                    totalPop.add(Integer.parseInt(districting.getDistrictData().get(districtID+1).get(1)));
 
                 }
-                Collections.sort((List)totalPop);
+                Collections.sort((List) totalPop);
                 districting.setSortedTotPop(totalPop);
             }
 
@@ -203,7 +206,7 @@ public class State {
         //Map<Integer, Integer> currentDistrictingData = findCurrentDistictingData(minorityToPlot);
         // Map<Integer, Integer> enactedDistrictingData = findEnactedDistictingData(minorityToPlot);
         //update the current BoxAndWhisker object with new data.
-        if(this.getCurrentBoxAndWhisker()==null){
+        if (this.getCurrentBoxAndWhisker() == null) {
             this.setCurrentBoxAndWhisker(new BoxAndWhisker());
         }
         BoxAndWhisker currentBAW = this.getCurrentBoxAndWhisker();
@@ -211,6 +214,16 @@ public class State {
         currentBAW.setEnactedDistrictingData(this.findEnactedDistictingData(minorityToPlot));
         //currentBAW.setCurrentDistrictingData(currentDistrictingData);
         currentBAW.calculateBoxAndWhiskerData();
+        Districting enacted=this.getEnactedDistricting();
+
+        Collection<Integer> totalPop = new ArrayList<>();
+        for (Integer districtID : enacted.getBawData().keySet()) {
+            totalPop.add(Integer.parseInt(enacted.getDistrictData().get(districtID+1).get(1)));
+        }
+
+        Collections.sort((List) totalPop);
+        enacted.setSortedTotPop(totalPop);
+
         //after setting the BAW object calculate the average districting for the constrained job
         this.getCurrentJob().calAverageDistricting(currentBAW);
     }
@@ -240,9 +253,9 @@ public class State {
         Map<Integer, Integer> enactedDistrictingData = new HashMap<Integer, Integer>();
         for (Integer districtID : this.enactedDistricting.getBawData().keySet()) {
             int countMinority = this.enactedDistricting.getBawData().get(districtID).getTotAsianPop();
-            if(minorityToPlot==Minorities.BLACK){
+            if (minorityToPlot == Minorities.BLACK) {
                 countMinority = this.enactedDistricting.getBawData().get(districtID).getTotBlackPop();
-            }else if(minorityToPlot==Minorities.HISPANIC){
+            } else if (minorityToPlot == Minorities.HISPANIC) {
                 countMinority = this.enactedDistricting.getBawData().get(districtID).getTotHispanicPop();
             }
             enactedDistrictingData.put(districtID, countMinority);

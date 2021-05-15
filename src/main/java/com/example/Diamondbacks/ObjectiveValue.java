@@ -6,9 +6,10 @@ import java.util.Map;
 public class ObjectiveValue {
     private float overallObjectiveValueScore; //the total object value score
     private Map<MeasureType, Measure> measures; //hashmap of all possible measure types
+    private String fileName;
 
     public double sigmoidFunction(Double sse){
-        return 1/(1+Math.exp(Math.pow(-10,-23)*sse));
+        return 1/(1+Math.exp(Math.pow(-10,-25)*sse));
     }
     /**
      * The method iterates through the measures hashmap and calculates the overall total score
@@ -46,5 +47,13 @@ public class ObjectiveValue {
 
     public void setMeasures(Map<MeasureType, Measure> measures) {
         this.measures = measures;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 }

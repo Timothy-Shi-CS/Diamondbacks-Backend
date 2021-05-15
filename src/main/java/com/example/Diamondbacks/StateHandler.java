@@ -44,6 +44,19 @@ public class StateHandler {
         return state;
     }
 
+    public State resetDistricts(State state) {
+        state.setCurrentBoxAndWhisker(null);
+        List<Districting> districtings = (List<Districting>) state.getCurrentJob().getListDistrictings();
+        for(Districting districting:districtings){
+            districting.setDistrictData(null);
+            districting.getDistrictingMeasures().getMeasures().remove(MeasureType.DEV_ENACTED_GEO);
+            districting.getDistrictingMeasures().getMeasures().remove(MeasureType.DEV_ENACTED_POP);
+            districting.getDistrictingMeasures().getMeasures().remove(MeasureType.DEV_AVERAGE_GEO);
+            districting.getDistrictingMeasures().getMeasures().remove(MeasureType.DEV_AVERAGE_POP);
+        }
+        return state;
+    }
+
     public State setDistrictsForDistrictings(State state) {
         JsonFactory f = new MappingJsonFactory();
         JsonToken current;
@@ -318,8 +331,70 @@ public class StateHandler {
                     jp.nextToken();
                     enactedDistricting.setPopulation_fatness(jp.readValueAs(Double.TYPE));
                 } else if (fieldName.equals("precincts_by_district")) {
-                    break;
+                    current = jp.nextToken();
+                    HashMap<Integer, List<String>> districtData = new HashMap<>();
+                    int districtCounter = 1;
+                    if (current == JsonToken.START_OBJECT) {
+                        while (jp.nextToken() != JsonToken.END_OBJECT) {
+                            current = jp.getCurrentToken();
+                            if (current == JsonToken.FIELD_NAME) {
+                                jp.nextToken();
 
+                                ArrayList<String> districtDataValues = new ArrayList<>();
+                                while (jp.nextToken() != JsonToken.END_OBJECT) {
+                                    if (jp.getCurrentName().equals("district_id")) {
+                                        jp.nextToken();
+                                        districtDataValues.add(jp.getText());
+                                    } else if (jp.getCurrentName().equals("population")) {
+                                        jp.nextToken();
+                                        districtDataValues.add(jp.getText());
+                                    } else if (jp.getCurrentName().equals("area")) {
+                                        jp.nextToken();
+                                        districtDataValues.add(jp.getText());
+                                    } else if (jp.getCurrentName().equals("perimeter")) {
+                                        jp.nextToken();
+                                        districtDataValues.add(jp.getText());
+                                    } else if (jp.getCurrentName().equals("district_tot_pop_equality")) {
+                                        jp.nextToken();
+                                        districtDataValues.add(jp.getText());
+                                    } else if (jp.getCurrentName().equals("district_vot_pop_equality")) {
+                                        jp.nextToken();
+                                        districtDataValues.add(jp.getText());
+                                    } else if (jp.getCurrentName().equals("district_dev_avg_geometric")) {
+                                        jp.nextToken();
+                                        districtDataValues.add(jp.getText());
+                                    } else if (jp.getCurrentName().equals("district_dev_avg_population")) {
+                                        jp.nextToken();
+                                        districtDataValues.add(jp.getText());
+                                    } else if (jp.getCurrentName().equals("district_dev_enacted_geometric")) {
+                                        jp.nextToken();
+                                        districtDataValues.add(jp.getText());
+                                    } else if (jp.getCurrentName().equals("district_dev_enacted_population")) {
+                                        jp.nextToken();
+                                        districtDataValues.add(jp.getText());
+                                    } else if (jp.getCurrentName().equals("district_geographic_comp")) {
+                                        jp.nextToken();
+                                        districtDataValues.add(jp.getText());
+                                    } else if (jp.getCurrentName().equals("district_graph_comp")) {
+                                        jp.nextToken();
+                                        districtDataValues.add(jp.getText());
+                                    } else if (jp.getCurrentName().equals("district_population_fatness")) {
+                                        jp.nextToken();
+                                        districtDataValues.add(jp.getText());
+                                    } else {
+                                        current = jp.nextToken();
+                                        if (current == JsonToken.START_ARRAY) {
+                                            while (jp.nextToken() != JsonToken.END_ARRAY) {
+                                            }
+                                        }
+                                    }
+                                }
+                                districtData.put(districtCounter, districtDataValues);
+                                districtCounter++;
+                            }
+                        }
+                    }
+                    enactedDistricting.setDistrictData(districtData);
                 } else {
                     jp.nextToken();
                 }
