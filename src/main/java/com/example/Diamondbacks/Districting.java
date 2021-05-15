@@ -74,6 +74,9 @@ public class Districting {
     @Transient
     private float totPerimeter;
 
+    @Transient
+    private Collection<Integer> sortedTotPop;
+
 //    @Transient
 //    private String[] list_incumbent_protected_origin;
 
@@ -505,5 +508,13 @@ public class Districting {
 
     public void setTotPerimeter(float totPerimeter) {
         this.totPerimeter = totPerimeter;
+    }
+
+    public Collection<Integer> getSortedTotPop() {
+        return sortedTotPop;
+    }
+
+    public void setSortedTotPop(Collection<Integer> sortedTotPop) {
+        this.sortedTotPop = sortedTotPop;
     }
 }
