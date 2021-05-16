@@ -43,6 +43,9 @@ public class State {
     @Transient
     private BoxAndWhisker currentBoxAndWhisker; //box and whisker data for plotting
 
+    @Transient
+    private Map<Integer, Float[]> statsForBAW; //box and whisker data for plotting
+
     public static String readFileAsString(String file) throws Exception {
         return new String(Files.readAllBytes(Paths.get(file)));
     }
@@ -169,6 +172,7 @@ public class State {
             Float[] bars = new Float[]{min, q1, avg, q3, max};
             stats.put(districtID, bars);
         }
+        this.setStatsForBAW(stats);
         return stats;
     }
 
@@ -180,6 +184,7 @@ public class State {
         Constraints userConstraints = this.getCurrentJob().getCurrentConstraints();
         Minorities minorityToPlot = userConstraints.getMinoritySelected();
         Map<Integer, Collection<Integer>> dataToPlot = new HashMap<Integer, Collection<Integer>>();
+        this.setStatsForBAW(null);
         //Iterate through the job for districtings that satisfy constraints
         for (Districting districting : this.getCurrentJob().getListDistrictings()) {
             //for each district in the district add the data
@@ -342,5 +347,16 @@ public class State {
 
     public void setCurrentBoxAndWhisker(BoxAndWhisker currentBoxAndWhisker) {
         this.currentBoxAndWhisker = currentBoxAndWhisker;
+    }
+
+    public Map<Integer, Float[]> getStatsForBAW() {
+        if(statsForBAW==null){
+            this.calAllBoxAndWhiskerPercent();
+        }
+        return statsForBAW;
+    }
+
+    public void setStatsForBAW(Map<Integer, Float[]> statsForBAW) {
+        this.statsForBAW = statsForBAW;
     }
 }
