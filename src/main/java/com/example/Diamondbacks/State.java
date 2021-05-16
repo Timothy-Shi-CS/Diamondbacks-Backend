@@ -176,6 +176,21 @@ public class State {
         return stats;
     }
 
+    public Map<Integer, Float[]> statsForPlot(){
+        Map<Integer, Float[]> result = new HashMap<>();
+        Map<Integer, Float> currentData = this.calCurrentBoxAndWhiskerPercent();
+        Map<Integer, Float> enactedData = this.calEnactedBoxAndWhiskerPercent();
+        for(Integer distId: this.getStatsForBAW().keySet()){
+            Float[] data = new Float[9];
+            data[0] = currentData.get(distId);
+            data[1] = enactedData.get(distId);
+            for(int i=0; i<this.getStatsForBAW().get(distId).length; i++){
+                data[2+i] = this.getStatsForBAW().get(distId)[i];
+            }
+            result.put(distId, data);
+        }
+        return result;
+    }
     /**
      * This method calculates the data necessary for the box and whisker object
      * based on the constrained job
