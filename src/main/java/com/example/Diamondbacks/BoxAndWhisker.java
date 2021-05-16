@@ -7,10 +7,10 @@ public class BoxAndWhisker {
     private Map<Integer, Integer> currentDistrictingData;
     private Map<Integer, Integer> enactedDistrictingData;
     private Map<Integer, Integer> averageMinorityData;
-    private Map<Integer, Integer> firstQuartileMinorityData;
-    private Map<Integer, Integer> thirdQuartileMinorityData;
-    private Map<Integer, Integer> minMinorityData;
-    private Map<Integer, Integer> maxMinorityData;
+//    private Map<Integer, Integer> firstQuartileMinorityData;
+//    private Map<Integer, Integer> thirdQuartileMinorityData;
+//    private Map<Integer, Integer> minMinorityData;
+//    private Map<Integer, Integer> maxMinorityData;
     private Map<Integer, Collection<Integer>> minorityData;
 
 
@@ -48,10 +48,10 @@ public class BoxAndWhisker {
         };
 
         this.averageMinorityData = new HashMap<>();
-        this.firstQuartileMinorityData = new HashMap<>();
-        this.thirdQuartileMinorityData = new HashMap<>();
-        this.minMinorityData = new HashMap<>();
-        this.maxMinorityData = new HashMap<>();
+//        this.firstQuartileMinorityData = new HashMap<>();
+//        this.thirdQuartileMinorityData = new HashMap<>();
+//        this.minMinorityData = new HashMap<>();
+//        this.maxMinorityData = new HashMap<>();
 
         //get min, max, q1, q2, avg data for each district
         for (Integer districtID : this.getMinorityData().keySet()) {
@@ -59,17 +59,17 @@ public class BoxAndWhisker {
             districtData.sort(IntegerComparator);
 //            Double tmp = districtData.stream().mapToDouble(val -> val).average().orElse(0.0);
 //            Float avg_data = tmp.floatValue();
-            Integer min_data = districtData.get(0);
-            Integer q1_data = districtData.get((districtData.size() / 4));
+//            Integer min_data = districtData.get(0);
+//            Integer q1_data = districtData.get((districtData.size() / 4));
             Integer avg_data = districtData.get(2 * (districtData.size() / 4));
-            Integer q3_data = districtData.get(3 * (districtData.size() / 4));
-            Integer max_data = districtData.get(districtData.size() - 1);
+//            Integer q3_data = districtData.get(3 * (districtData.size() / 4));
+//            Integer max_data = districtData.get(districtData.size() - 1);
 
-            this.firstQuartileMinorityData.put(districtID, q1_data);
+//            this.firstQuartileMinorityData.put(districtID, q1_data);
             this.averageMinorityData.put(districtID, avg_data);
-            this.thirdQuartileMinorityData.put(districtID, q3_data);
-            this.minMinorityData.put(districtID, min_data);
-            this.maxMinorityData.put(districtID, max_data);
+//            this.thirdQuartileMinorityData.put(districtID, q3_data);
+//            this.minMinorityData.put(districtID, min_data);
+//            this.maxMinorityData.put(districtID, max_data);
         }
     }
 
